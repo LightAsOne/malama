@@ -51,6 +51,13 @@ body {
 .slogan {
     color: white; /* White text color */
     font-size: 18px; /* Adjust size as needed */
+    margin-bottom: 20px; /* Space between slogan and timer */
+}
+
+.countdown {
+    color: white; /* White text color */
+    font-size: 24px; /* Timer font size */
+    margin-top: 20px; /* Space between slogan and timer */
 }
 
 @keyframes pulsate {
