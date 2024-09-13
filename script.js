@@ -25,11 +25,11 @@ const countdownTimer = setInterval(() => {
 let currentIndex = 1; // Start with the middle video
 
 const videos = [
-    "https://www.youtube.com/embed/jlXVFzqLQ0s",
-    "https://www.youtube.com/embed/jlXVFzqLQ0s",
-    "https://www.youtube.com/embed/jlXVFzqLQ0s",
-    "https://www.youtube.com/embed/jlXVFzqLQ0s",
-    "https://www.youtube.com/embed/VIDEO_ID_5"
+    "https://www.youtube.com/embed/jlXVFzqLQ0",// Cancel after first upload
+	"https://www.youtube.com/embed/jlXVFzqLQ0s",
+	
+	
+    
 ];
 
 const videoElements = document.querySelectorAll('.carousel-window iframe');
