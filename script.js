@@ -17,6 +17,45 @@ const countdownTimer = setInterval(() => {
     const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
 
     // Display the countdown
-    document.getElementById("countdown-timer").innerHTML = 
-        `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    document.getElementById("days").innerHTML = String(days).padStart(2, '0');
+    document.getElementById("hours").innerHTML = String(hours).padStart(2, '0');
+    document.getElementById("minutes").innerHTML = String(minutes).padStart(2, '0');
+    document.getElementById("seconds").innerHTML = String(seconds).padStart(2, '0');
 }, 1000);
+let currentIndex = 1; // Start with the middle video
+
+const videos = [
+    "https://www.youtube.com/embed/jlXVFzqLQ0s",
+    "https://www.youtube.com/embed/jlXVFzqLQ0s",
+    "https://www.youtube.com/embed/jlXVFzqLQ0s",
+    "https://www.youtube.com/embed/jlXVFzqLQ0s",
+    "https://www.youtube.com/embed/VIDEO_ID_5"
+];
+
+const videoElements = document.querySelectorAll('.carousel-window iframe');
+
+// Function to update the carousel videos
+function updateCarousel() {
+    videoElements[0].src = videos[currentIndex - 1] || "";
+    videoElements[1].src = videos[currentIndex] || "";
+    videoElements[2].src = videos[currentIndex + 1] || "";
+}
+
+// Scroll up functionality
+document.getElementById('scroll-up').addEventListener('click', function() {
+    if (currentIndex > 1) {
+        currentIndex--;
+        updateCarousel();
+    }
+});
+
+// Scroll down functionality
+document.getElementById('scroll-down').addEventListener('click', function() {
+    if (currentIndex < videos.length - 2) {
+        currentIndex++;
+        updateCarousel();
+    }
+});
+
+// Initial update for the carousel
+updateCarousel();

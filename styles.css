@@ -1,18 +1,15 @@
-/* Reset some default styles */
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
+/* General Styling */
+body {
+    background-color: black;
+    font-family: 'Roboto', sans-serif;
+    color: white;
 }
 
-body {
-    background-color: black; /* Black background */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden; /* Hide scrollbars if the logo is too big */
-    font-family: 'Roboto', sans-serif; /* Apply Roboto font */
+.logo {
+    width: 600px; /* Updated logo width */
+    height: 400px; /* Logo height remains the same */
+    object-fit: contain; /* Maintain aspect ratio */
+    margin-bottom: 20px; /* Space between logo and slogan */
 }
 
 .container {
@@ -25,6 +22,7 @@ body {
     text-align: center;
 }
 
+/* Pulsating Date */
 .date {
     color: white; /* White text color */
     font-size: 36px; /* Base font size for larger text */
@@ -41,13 +39,6 @@ body {
     font-size: 36px; /* Larger font size for the day */
 }
 
-.logo {
-    width: 600px; /* Updated logo width */
-    height: 400px; /* Logo height remains the same */
-    object-fit: contain; /* Maintain aspect ratio */
-    margin-bottom: 20px; /* Space between logo and slogan */
-}
-
 .slogan {
     color: white; /* White text color */
     font-size: 18px; /* Adjust size as needed */
@@ -58,16 +49,148 @@ body {
     color: white; /* White text color */
     font-size: 24px; /* Timer font size */
     margin-top: 20px; /* Space between slogan and timer */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.countdown span {
+    margin: 0 2px;
+}
+
+.colon {
+    animation: pulsate 1s infinite;
 }
 
 @keyframes pulsate {
     0% {
-        opacity: 0.5;
-    }
-    50% {
         opacity: 1;
     }
-    100% {
+    50% {
         opacity: 0.5;
     }
+    100% {
+        opacity: 1;
+    }
+}
+/* Carousel Styling */
+.carousel-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+.carousel {
+    width: 100%;
+    max-width: 400px; /* Increased max-width for better visibility */
+    height: 480px; /* Increased height to fit more content */
+    position: relative;
+    overflow: hidden;
+}
+
+.carousel-window {
+    height: 150px; /* Increased height of each window */
+    opacity: 0.5; /* Top and bottom windows are semi-transparent */
+    margin: 5px 0; /* 5px margin for spacing between videos */
+    transition: opacity 0.3s ease;
+}
+
+.middle-window {
+    opacity: 1; /* Middle window fully visible */
+}
+
+.carousel-window iframe {
+    width: 100%;
+    height: 150px; /* Increased height of iframe */
+    border: none;
+}
+
+
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .carousel {
+        max-width: 300px;
+        height: 360px; /* Adjusted height for medium screens */
+    }
+
+    .carousel-window {
+        height: 120px; /* Adjusted height of each window */
+        margin: 5px 0; /* 5px margin for spacing between videos */
+    }
+
+    .carousel-window iframe {
+        height: 120px; /* Adjusted height of iframe */
+    }
+}
+
+@media (max-width: 576px) {
+    .carousel {
+        max-width: 250px;
+        height: 300px; /* Adjusted height for small screens */
+    }
+
+    .carousel-window {
+        height: 100px; /* Adjusted height of each window */
+        margin: 5px 0; /* 5px margin for spacing between videos */
+    }
+
+    .carousel-window iframe {
+        height: 100px; /* Adjusted height of iframe */
+    }
+}
+.social-icons {
+    display: flex;
+    gap: 15px; /* Space between icons */
+    margin: 20px 0; /* Space between logo and icons */
+}
+
+.social-icon {
+    color: white; /* Icon color */
+    font-size: 24px; /* Icon size */
+    text-decoration: none; /* Remove underline */
+}
+
+.social-icon:hover {
+    color: #ccc; /* Hover effect color */
+}
+/* General Styling for Social Icons */
+.social-icon {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    margin: 10px;
+}
+
+.youtube-icon {
+    color: red; /* Red color for YouTube icon */
+}
+
+.youtube-icon .subscribe-text {
+    color: white; /* White color for Subscribe text */
+    margin-left: 5px;
+    font-size: 14px; /* Adjust font size if needed */
+}
+
+.youtube-icon i {
+    font-size: 24px; /* Adjust icon size if needed */
+}
+/* Right Column Background Color */
+.col-lg-3 {
+    background-color: #1a1a1a; /* Lighter black color (you can adjust this value) */
+    padding: 20px; /* Optional padding to ensure content isn't flush with edges */
+    border-radius: 8px; /* Optional rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional shadow for a bit of depth */
+}
+
+/* Carousel Container Styling (Adjust to fit within the right column) */
+.carousel-container {
+    width: 100%;
+    height: auto;
 }
