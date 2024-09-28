@@ -1,4 +1,6 @@
-// Set the target date and time (12:00 PM on November 1st, 2024)
+// JavaScript: script.js
+
+// Set the target date and time (12:00 PM on November 1, 2024)
 const targetDate = new Date("November 1, 2024 12:00:00").getTime();
 
 const countdownTimer = setInterval(() => {
@@ -22,40 +24,65 @@ const countdownTimer = setInterval(() => {
     document.getElementById("minutes").innerHTML = String(minutes).padStart(2, '0');
     document.getElementById("seconds").innerHTML = String(seconds).padStart(2, '0');
 }, 1000);
-let currentIndex = 1; // Start with the middle video
 
-const videos = [
-    "https://www.youtube.com/embed/jlXVFzqLQ0",// Cancel after first upload
-	"https://www.youtube.com/embed/jlXVFzqLQ0s",
-	
-	
+// Video Configuration
+let videos = [
+    "https://www.youtube.com/embed/jlXVFzqLQ0s", // Day 1 Video
     
+	
+    // Add more video links as days progress
 ];
 
-const videoElements = document.querySelectorAll('.carousel-window iframe');
+// Current day index starts at the latest video
+let currentIndex = videos.length - 1;
 
-// Function to update the carousel videos
-function updateCarousel() {
-    videoElements[0].src = videos[currentIndex - 1] || "";
-    videoElements[1].src = videos[currentIndex] || "";
-    videoElements[2].src = videos[currentIndex + 1] || "";
+// Function to update video elements and navigation visibility
+function updateVideoContent() {
+    const leftVideo = document.querySelector('.left-video');
+    const centerVideo = document.querySelector('.center-video');
+    const rightVideo = document.querySelector('.right-video');
+    const leftButton = document.getElementById('scroll-left');
+    const rightButton = document.getElementById('scroll-right');
+    const navLabels = document.querySelectorAll('.nav-label');
+
+    // Update the visibility of buttons and labels based on available videos
+    if (currentIndex === 0) {
+        leftButton.style.display = 'none'; // Hide left button on first day
+        navLabels[0].style.display = 'none'; // Hide "Previous Day" label
+    } else {
+        leftButton.style.display = 'inline-block';
+        navLabels[0].style.display = 'inline-block';
+    }
+
+    if (currentIndex === videos.length - 1) {
+        rightButton.style.display = 'none'; // Hide right button on latest day
+        navLabels[1].style.display = 'none'; // Hide "Next Day" label
+    } else {
+        rightButton.style.display = 'inline-block';
+        navLabels[1].style.display = 'inline-block';
+    }
+
+    // Set the video sources
+    leftVideo.src = currentIndex > 0 ? videos[currentIndex - 1] : ''; // Previous day's video
+    centerVideo.src = videos[currentIndex]; // Current day's video
+    rightVideo.src = currentIndex < videos.length - 1 ? videos[currentIndex + 1] : ''; // Next day's video if available
 }
 
-// Scroll up functionality
-document.getElementById('scroll-up').addEventListener('click', function() {
-    if (currentIndex > 1) {
-        currentIndex--;
-        updateCarousel();
+// Initial video update
+updateVideoContent();
+
+// Scroll left functionality to view older videos
+document.getElementById('scroll-left').addEventListener('click', () => {
+    if (currentIndex > 0) {
+        currentIndex--; // Move to the previous day
+        updateVideoContent();
     }
 });
 
-// Scroll down functionality
-document.getElementById('scroll-down').addEventListener('click', function() {
-    if (currentIndex < videos.length - 2) {
-        currentIndex++;
-        updateCarousel();
+// Scroll right functionality to view newer videos
+document.getElementById('scroll-right').addEventListener('click', () => {
+    if (currentIndex < videos.length - 1) {
+        currentIndex++; // Move to the next day
+        updateVideoContent();
     }
 });
-
-// Initial update for the carousel
-updateCarousel();

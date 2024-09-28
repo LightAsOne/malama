@@ -5,13 +5,6 @@ body {
     color: white;
 }
 
-.logo {
-    width: 400px; /* Updated logo width */
-    height: 300px; /* Logo height remains the same */
-    object-fit: contain; /* Maintain aspect ratio */
-    margin-bottom: 20px; /* Space between logo and slogan */
-}
-
 .container {
     display: flex;
     flex-direction: column;
@@ -22,33 +15,24 @@ body {
     text-align: center;
 }
 
-/* Pulsating Date */
+/* Adjust Date Styling */
 .date {
-    color: white; /* White text color */
-    font-size: 36px; /* Base font size for larger text */
-    margin-bottom: 20px; /* Space between date and logo */
-    animation: pulsate 4s infinite; /* Slower pulsating animation */
-}
-
-.date-month {
-    font-size: 24px; /* Smaller font size for the month */
-    display: block;
-}
-
-.date-day {
-    font-size: 36px; /* Larger font size for the day */
+    color: white;
+    font-size: 48px; /* Increase font size for the date */
+    margin-bottom: 10px; /* Reduce spacing between date and countdown */
 }
 
 .slogan {
-    color: white; /* White text color */
-    font-size: 18px; /* Adjust size as needed */
-    margin-bottom: 20px; /* Space between slogan and timer */
+    color: white;
+    font-size: 32px; /* Keep the slogan size as specified */
+    margin-bottom: 15px; /* Adjust spacing between slogan and date */
 }
 
+/* Adjust Countdown Styling */
 .countdown {
-    color: white; /* White text color */
-    font-size: 24px; /* Timer font size */
-    margin-top: 20px; /* Space between slogan and timer */
+    color: white;
+    font-size: 24px; /* Keep countdown font size */
+    margin-bottom: 30px; /* Increase spacing between countdown and video */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -58,139 +42,97 @@ body {
     margin: 0 2px;
 }
 
-.colon {
-    animation: pulsate 1s infinite;
-}
-
-@keyframes pulsate {
-    0% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.5;
-    }
-    100% {
-        opacity: 1;
-    }
-}
 /* Carousel Styling */
 .carousel-container {
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    position: relative;
-    height: 80%;
+    align-items: center;
     width: 100%;
-}
-
-.carousel {
-    width: 100%;
-    max-width: 400px; /* Increased max-width for better visibility */
-    height: 600 px; /* Increased height to fit more content */
+    max-width: 800px; /* Adjust the maximum width as needed */
     position: relative;
-    overflow: hidden;
 }
 
 .carousel-window {
-    height: 200px; /* Increased height of each window */
-    opacity: 0.5; /* Top and bottom windows are semi-transparent */
-    margin: 5px 0; /* 5px margin for spacing between videos */
-    transition: opacity 0.3s ease;
+    width: 200px; /* Reduced width for portrait video */
+    height: 350px; /* Reduced height for portrait video */
+    margin: 0 10px;
+    overflow: hidden;
+    position: relative;
 }
 
-.middle-window {
-    opacity: 1; /* Middle window fully visible */
-}
-
-.carousel-window iframe {
+.portrait-video {
     width: 100%;
-    height: 180px; /* Increased height of iframe */
+    height: 100%;
     border: none;
 }
 
-
+.blurred-video {
+    filter: blur(10px);
+    opacity: 0.5;
+    transform: scale(0.9);
 }
 
-/* Responsive Adjustments */
+/* Media Query for Mobile Devices */
 @media (max-width: 768px) {
-    .carousel {
-        max-width: 300px;
-        height: 360px; /* Adjusted height for medium screens */
+    .blurred-video {
+        display: none; /* Hide side videos on mobile */
     }
 
+    .carousel-container {
+        justify-content: center; /* Center the container */
+    }
+
+    /* Central video styling for mobile to maintain portrait aspect */
     .carousel-window {
-        height: 120px; /* Adjusted height of each window */
-        margin: 5px 0; /* 5px margin for spacing between videos */
+        width: 200px; /* Adjusted width for mobile */
+        height: 350px; /* Adjusted height for mobile */
+        margin: 0 auto; /* Center the single window */
     }
 
-    .carousel-window iframe {
-        height: 120px; /* Adjusted height of iframe */
+    .center-video {
+        width: 100%;
+        height: 100%; /* Maintain full height to keep portrait aspect */
     }
 }
 
-@media (max-width: 576px) {
-    .carousel {
-        max-width: 250px;
-        height: 300px; /* Adjusted height for small screens */
-    }
-
-    .carousel-window {
-        height: 100px; /* Adjusted height of each window */
-        margin: 5px 0; /* 5px margin for spacing between videos */
-    }
-
-    .carousel-window iframe {
-        height: 100px; /* Adjusted height of iframe */
-    }
+/* Navigation Buttons Styling */
+.navigation-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+.navigation-buttons .btn {
+    margin: 0 10px;
+}
+
+/* Styling for Navigation Labels */
+.nav-label {
+    color: white;
+    font-size: 14px; /* Smaller text size */
+    margin: 0 10px; /* Space between label and button */
+}
+
+/* Social Icons Styling */
 .social-icons {
     display: flex;
-    gap: 15px; /* Space between icons */
-    margin: 20px 0; /* Space between logo and icons */
+    gap: 15px;
+    margin: 20px 0;
 }
 
 .social-icon {
-    color: white; /* Icon color */
-    font-size: 24px; /* Icon size */
-    text-decoration: none; /* Remove underline */
-}
-
-.social-icon:hover {
-    color: #ccc; /* Hover effect color */
-}
-/* General Styling for Social Icons */
-.social-icon {
-    display: flex;
-    align-items: center;
+    color: white;
+    font-size: 24px;
     text-decoration: none;
-    color: inherit;
-    margin: 10px;
 }
 
-.youtube-icon {
-    color: red; /* Red color for YouTube icon */
+/* Red YouTube Subscribe Button */
+.youtube-icon .fab.fa-youtube { 
+    color: red; /* Red color for the YouTube icon */
 }
 
 .youtube-icon .subscribe-text {
-    color: white; /* White color for Subscribe text */
+    color: red; /* Red color for the Subscribe text */
     margin-left: 5px;
-    font-size: 14px; /* Adjust font size if needed */
-}
-
-.youtube-icon i {
-    font-size: 24px; /* Adjust icon size if needed */
-}
-/* Right Column Background Color */
-.col-lg-3 {
-    background-color: #1a1a1a; /* Lighter black color (you can adjust this value) */
-    padding: 20px; /* Optional padding to ensure content isn't flush with edges */
-    border-radius: 8px; /* Optional rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional shadow for a bit of depth */
-}
-
-/* Carousel Container Styling (Adjust to fit within the right column) */
-.carousel-container {
-    width: 100%;
-    height: auto;
+    font-size: 14px;
 }
