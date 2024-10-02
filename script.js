@@ -28,7 +28,7 @@ const countdownTimer = setInterval(() => {
 // Video Configuration
 let videos = [
     "https://www.youtube.com/embed/jlXVFzqLQ0s", // Day 1 Video
-    "https://youtube.com/shorts/vx8yoBPKBs4?feature=share",
+    "https://www.youtube.com/shorts/vx8yoBPKBs4",
 	
     // Add more video links as days progress
 ];
