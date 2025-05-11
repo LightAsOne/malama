@@ -206,5 +206,19 @@ locationInput.addEventListener('input', () => {
   }, 400);
 });
 </script>
+	<script>
+    const moreBtn = document.getElementById('more-button-settings');
+    const moreMenu = document.getElementById('more-menu-settings');
+
+    moreBtn.addEventListener('click', e => {
+      e.preventDefault();
+      moreMenu.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', e => {
+      if (!moreMenu.contains(e.target) && !moreBtn.contains(e.target)) {
+        moreMenu.classList.add('hidden');
+      }
+    }); </script>
 </body>
 </html>
