@@ -121,6 +121,55 @@
 
 <!-- Main JS -->
 <script src="app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  auth.onAuthStateChanged(async user => {
+    if (!user) {
+      alert("You're not logged in.");
+      window.location.href = "index.html";
+      return;
+    }
 
+    const doc = await db.collection('users').doc(user.uid).get();
+    if (doc.exists) {
+      const data = doc.data();
+      document.getElementById('profile-first-name').value = data.firstName || '';
+      document.getElementById('profile-last-name').value = data.lastName || '';
+      document.getElementById('profile-email').value = data.email || '';
+      document.getElementById('profile-phone').value = data.phone || '';
+      document.getElementById('profile-location').value = data.location || '';
+      document.getElementById('profile-lat').value = data.lat || '';
+      document.getElementById('profile-lng').value = data.lng || '';
+    }
+  });
+
+  document.getElementById('settings-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const user = auth.currentUser;
+    if (!user) return alert("Not logged in.");
+
+    const profileData = {
+      firstName: document.getElementById('profile-first-name').value.trim(),
+      lastName: document.getElementById('profile-last-name').value.trim(),
+      email: document.getElementById('profile-email').value.trim(),
+      phone: document.getElementById('profile-phone').value.trim(),
+      location: document.getElementById('profile-location').value.trim(),
+      lat: document.getElementById('profile-lat').value.trim(),
+      lng: document.getElementById('profile-lng').value.trim()
+    };
+
+    try {
+      await db.collection('users').doc(user.uid).set(profileData, { merge: true });
+      alert("✅ Settings saved.");
+    } catch (err) {
+      alert("Failed to save settings.");
+    }
+  });
+
+  document.getElementById('settings-logout').addEventListener('click', () => {
+    auth.signOut().then(() => window.location.href = "index.html");
+  });
+});
+</script>
 </body>
 </html>
