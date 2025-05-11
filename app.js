@@ -49,18 +49,30 @@ if (profile && profile.firstName) {
   if (!currentUser) showLogin();
   else showApp();
 
-  loginForm.addEventListener('submit', e => {
-    e.preventDefault();
-    const email = document.getElementById('login-email').value.trim().toLowerCase();
-    const pwd   = document.getElementById('login-password').value;
-    const users = JSON.parse(localStorage.getItem('users') || '{}');
-    if (users[email] && users[email].password === pwd) {
-      localStorage.setItem('currentUser', email);
-      showApp();
-    } else {
-      alert('Invalid email or password');
-    }
-  });
+  loginForm.addEventListener('submit', async e => {
+  e.preventDefault();
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value.trim();
+
+  try {
+    const userCredential = await auth.signInWithEmailAndPassword(email, password);
+    const user = userCredential.user;
+
+    console.log("✅ Logged in as:", user.email);
+
+    // Show main app UI
+    document.getElementById('login-page').classList.add('hidden');
+    document.querySelector('.app').classList.remove('hidden');
+    document.querySelector('.bottom-nav').classList.remove('hidden');
+
+    // Optional: cache user locally for offline fallback
+    localStorage.setItem('currentUserUID', user.uid);
+
+  } catch (error) {
+    console.error("❌ Login error:", error);
+    alert("Login failed: " + error.message);
+  }
+});
 
   // Setup
   const now = new Date();
