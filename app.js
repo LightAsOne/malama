@@ -1,24 +1,4 @@
-window.addEventListener('load', () => {
-  auth.onAuthStateChanged(user => {
-    if (user) {
-      // ✅ User is already authenticated with Firebase (online or cached session)
-      showApp();
-    } else {
-      const cachedUID = localStorage.getItem('currentUserUID');
-
-      if (!navigator.onLine && cachedUID) {
-        console.warn("⚠️ Offline fallback: using cached UID", cachedUID);
-        showApp(); // Let them use the app offline
-      } else {
-        // Show login page
-        document.getElementById('login-page').classList.remove('hidden');
-      }
-    }
-  });
-});
 document.addEventListener('DOMContentLoaded', () => {
- 
-
   // Elements
   const loginPage    = document.getElementById('login-page');
   const loginForm    = document.getElementById('login-form');
@@ -27,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const bottomNav    = document.querySelector('.bottom-nav');
   const settingsPage = document.getElementById('settings-page');
 
+  // Show/hide helpers
   function showLogin() {
     loginPage.classList.remove('hidden');
     appHeader.classList.add('hidden');
@@ -34,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     bottomNav.classList.add('hidden');
     settingsPage.classList.add('hidden');
   }
+
   function showApp() {
     loginPage.classList.add('hidden');
     appHeader.classList.remove('hidden');
@@ -42,26 +24,49 @@ document.addEventListener('DOMContentLoaded', () => {
     settingsPage.classList.add('hidden');
   }
 
+  // 🔐 Firebase Auth login check
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      showApp();
+    } else {
+      const cachedUID = localStorage.getItem('currentUserUID');
+      if (!navigator.onLine && cachedUID) {
+        console.warn("⚠️ Offline fallback: using cached UID", cachedUID);
+        showApp();
+      } else {
+        showLogin();
+      }
+    }
+  });
+
+  // Optional greeting from localStorage user data
   const currentUser = localStorage.getItem('currentUser');
   const users = JSON.parse(localStorage.getItem('users') || '{}');
-const profile = users[currentUser]?.profile;
-if (profile && profile.firstName) {
-  const greetingEl = document.getElementById('header-greeting');
-  if (greetingEl) greetingEl.textContent = `Aloha, ${profile.firstName}`;
-}
-  if (!currentUser) showLogin();
-  else showApp();
+  const profile = users[currentUser]?.profile;
+  if (profile?.firstName) {
+    const greetingEl = document.getElementById('header-greeting');
+    if (greetingEl) greetingEl.textContent = `Aloha, ${profile.firstName}`;
+  }
 
+  // Firebase login handler
   loginForm.addEventListener('submit', async e => {
-  e.preventDefault();
-  const email = document.getElementById('login-email').value.trim();
-  const password = document.getElementById('login-password').value.trim();
+    e.preventDefault();
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value.trim();
 
-  try {
-    const userCredential = await auth.signInWithEmailAndPassword(email, password);
-    const user = userCredential.user;
+    try {
+      const userCredential = await auth.signInWithEmailAndPassword(email, password);
+      const user = userCredential.user;
 
-    console.log("✅ Logged in as:", user.email);
+      console.log("✅ Logged in as:", user.email);
+      localStorage.setItem('currentUserUID', user.uid);
+      showApp();
+    } catch (error) {
+      console.error("❌ Login error:", error);
+      alert("Login failed: " + error.message);
+    }
+  });
+});
 
     // Show main app UI
     document.getElementById('login-page').classList.add('hidden');
