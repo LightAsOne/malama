@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', () => {
   const loginPage = document.getElementById('login-page');
   const loginForm = document.getElementById('login-form');
@@ -7,58 +8,57 @@ document.addEventListener('DOMContentLoaded', () => {
   const settingsPage = document.getElementById('settings-page');
 
   function showLogin() {
-    loginPage.classList.remove('hidden');
-    appHeader.classList.add('hidden');
-    appMain.classList.add('hidden');
-    bottomNav.classList.add('hidden');
+    loginPage?.classList.remove('hidden');
+    appHeader?.classList.add('hidden');
+    appMain?.classList.add('hidden');
+    bottomNav?.classList.add('hidden');
     settingsPage?.classList.add('hidden');
   }
 
   function showApp() {
-  loginPage?.classList.add('hidden');
-  appHeader?.classList.remove('hidden');
-  appMain?.classList.remove('hidden');
-  bottomNav?.classList.remove('hidden');
-  settingsPage?.classList.add('hidden');
-}
-
- auth.onAuthStateChanged(async user => {
-  if (user) {
-    showApp();
-
-    // Try load from Firestore
-    try {
-      const doc = await db.collection('users').doc(user.uid).get();
-      if (doc.exists) {
-        const profile = doc.data();
-        const greetingEl = document.getElementById('header-greeting');
-        const tideInfoEl = document.getElementById('header-tide-info');
-        if (greetingEl && profile.firstName) {
-          greetingEl.textContent = `Aloha, ${profile.firstName}`;
-        }
-        if (tideInfoEl && profile.location) {
-          tideInfoEl.innerHTML = `<strong>${profile.location}</strong>`;
-        }
-      }
-    } catch (err) {
-      console.error("Failed to load profile from Firestore:", err);
-    }
-
-  } else {
-    const cachedUID = localStorage.getItem('currentUserUID');
-    if (!navigator.onLine && cachedUID) {
-      console.warn("⚠️ Offline fallback: using cached UID", cachedUID);
-      showApp();
-    } else {
-      showLogin();
-    }
+    loginPage?.classList.add('hidden');
+    appHeader?.classList.remove('hidden');
+    appMain?.classList.remove('hidden');
+    bottomNav?.classList.remove('hidden');
+    settingsPage?.classList.add('hidden');
   }
-});
+
+  auth.onAuthStateChanged(async user => {
+    if (user) {
+      showApp();
+
+      try {
+        const doc = await db.collection('users').doc(user.uid).get();
+        if (doc.exists) {
+          const profile = doc.data();
+          const greetingEl = document.getElementById('header-greeting');
+          const tideInfoEl = document.getElementById('header-tide-info');
+          if (greetingEl && profile.firstName) {
+            greetingEl.textContent = `Aloha, ${profile.firstName}`;
+          }
+          if (tideInfoEl && profile.location) {
+            tideInfoEl.innerHTML = `<strong>${profile.location}</strong>`;
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load profile from Firestore:", err);
+      }
+
+    } else {
+      const cachedUID = localStorage.getItem('currentUserUID');
+      if (!navigator.onLine && cachedUID) {
+        console.warn("⚠️ Offline fallback: using cached UID", cachedUID);
+        showApp();
+      } else {
+        showLogin();
+      }
+    }
+  });
 
   loginForm?.addEventListener('submit', async e => {
     e.preventDefault();
-    const email = document.getElementById('login-email').value.trim();
-    const password = document.getElementById('login-password').value.trim();
+    const email = document.getElementById('login-email')?.value.trim();
+    const password = document.getElementById('login-password')?.value.trim();
 
     try {
       const userCredential = await auth.signInWithEmailAndPassword(email, password);
@@ -69,6 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
       alert("Login failed: " + error.message);
     }
   });
+
+  // Skip calendar and tide setup on settings.html
+  if (!document.querySelector('#calendar-body')) return;
+
 
   // Setup
   const now = new Date();
