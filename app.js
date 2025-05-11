@@ -319,16 +319,19 @@ function renderTideChart(tideData, locationInfo) {
     headerTideInfo.appendChild(locationText);
 
     if (locationInfo.useGPS) {
-      reverseGeocode(locationInfo.lat, locationInfo.lng).then(name => {
-        locationText.innerHTML = `<strong>${name}</strong> (GPS)`;
-      });
-    } else {
-      const currentUserKey = localStorage.getItem('currentUser');
-const users = JSON.parse(localStorage.getItem('users') || '{}');
-const user = users[currentUserKey];
-const locationName = user?.profile?.location || '—';
-locationText.innerHTML = `<strong>${locationName}</strong>`;
-    }
+  reverseGeocode(locationInfo.lat, locationInfo.lng).then(name => {
+    locationText.innerHTML = `<strong>${name}</strong> (GPS)`;
+  });
+} else {
+  // Delay this slightly to avoid being overridden
+  setTimeout(() => {
+    const currentUserKey = localStorage.getItem('currentUser');
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    const user = users[currentUserKey];
+    const locationName = user?.profile?.location || '—';
+    locationText.innerHTML = `<strong>${locationName}</strong>`;
+  }, 100); // Adjust delay if needed
+}
 
    tideToggle.querySelector('#gpsToggle')?.addEventListener('change', async () => {
   // 🗓 Use selected date if available
