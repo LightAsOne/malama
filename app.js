@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     appHeader.classList.add('hidden');
     appMain.classList.add('hidden');
     bottomNav.classList.add('hidden');
-    settingsPage.classList.add('hidden');
+    settingsPage?.classList.add('hidden');
   }
 
   function showApp() {
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     appHeader.classList.remove('hidden');
     appMain.classList.remove('hidden');
     bottomNav.classList.remove('hidden');
-    settingsPage.classList.add('hidden');
+    settingsPage?.classList.add('hidden');
   }
 
   auth.onAuthStateChanged(user => {
@@ -36,15 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  const currentUser = localStorage.getItem('currentUser');
-  const users = JSON.parse(localStorage.getItem('users') || '{}');
-  const profile = users[currentUser]?.profile;
-  if (profile?.firstName) {
-    const greetingEl = document.getElementById('header-greeting');
-    if (greetingEl) greetingEl.textContent = `Aloha, ${profile.firstName}`;
-  }
-
-  loginForm.addEventListener('submit', async e => {
+  loginForm?.addEventListener('submit', async e => {
     e.preventDefault();
     const email = document.getElementById('login-email').value.trim();
     const password = document.getElementById('login-password').value.trim();
@@ -52,46 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const userCredential = await auth.signInWithEmailAndPassword(email, password);
       const user = userCredential.user;
-
-      console.log("✅ Logged in as:", user.email);
       localStorage.setItem('currentUserUID', user.uid);
       showApp();
     } catch (error) {
-      console.error("❌ Login error:", error);
       alert("Login failed: " + error.message);
     }
   });
-});
-
-
-  // Optional greeting from localStorage user data
-  const currentUser = localStorage.getItem('currentUser');
-  const users = JSON.parse(localStorage.getItem('users') || '{}');
-  const profile = users[currentUser]?.profile;
-  if (profile?.firstName) {
-    const greetingEl = document.getElementById('header-greeting');
-    if (greetingEl) greetingEl.textContent = `Aloha, ${profile.firstName}`;
-  }
-
-  // Firebase login handler
-  loginForm.addEventListener('submit', async e => {
-    e.preventDefault();
-    const email = document.getElementById('login-email').value.trim();
-    const password = document.getElementById('login-password').value.trim();
-
-    try {
-      const userCredential = await auth.signInWithEmailAndPassword(email, password);
-      const user = userCredential.user;
-
-      console.log("✅ Logged in as:", user.email);
-      localStorage.setItem('currentUserUID', user.uid);
-      showApp();
-    } catch (error) {
-      console.error("❌ Login error:", error);
-      alert("Login failed: " + error.message);
-    }
-  });
-});
 
   // Setup
   const now = new Date();
