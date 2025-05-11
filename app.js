@@ -114,7 +114,8 @@ if (currentDateEl) {
     if (phase < 0.77) return 'Last Quarter';
     return 'Waning Crescent';
   })();
-  document.querySelector('.moon-phase').textContent = phaseName;
+  const moonEl = document.querySelector('.moon-phase');
+if (moonEl) moonEl.textContent = phaseName;
 
   const todayISO = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
 
