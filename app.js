@@ -200,7 +200,9 @@ tideContainer.appendChild(tideToggle);
 tideContainer.appendChild(locationText);
 
 async function getTideLocation() {
-  const useGPS = document.getElementById('gpsToggle')?.checked;
+  const gpsToggleEl = document.getElementById('gpsToggle');
+  const useGPS = gpsToggleEl && gpsToggleEl.checked;
+
   if (useGPS && navigator.geolocation) {
     return new Promise((resolve) => {
       navigator.geolocation.getCurrentPosition(
@@ -212,6 +214,7 @@ async function getTideLocation() {
     return { ...getSavedLocation(), useGPS: false };
   }
 }
+
 function updateAstroTimes(date, lat, lng) {
   const sunTimes = SunCalc.getTimes(date, lat, lng);
   document.getElementById('sunrise-time').textContent =
