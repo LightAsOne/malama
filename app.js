@@ -290,8 +290,11 @@ function renderTideChart(tideData, locationInfo) {
         locationText.innerHTML = `<strong>${name}</strong> (GPS)`;
       });
     } else {
-      const user = JSON.parse(localStorage.getItem('users'))[localStorage.getItem('currentUser')];
-      locationText.innerHTML = `<strong>${user?.profile?.location || '—'}</strong>`;
+      const currentUserKey = localStorage.getItem('currentUser');
+const users = JSON.parse(localStorage.getItem('users') || '{}');
+const user = users[currentUserKey];
+const locationName = user?.profile?.location || '—';
+locationText.innerHTML = `<strong>${locationName}</strong>`;
     }
 
    tideToggle.querySelector('#gpsToggle')?.addEventListener('change', async () => {
