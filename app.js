@@ -464,10 +464,16 @@ function renderTideChart(tideData, locationInfo) {
 
 
 (async () => {
+  // 1. Setup toggle before chart
   const loc = await getTideLocation();
+
+  // 2. Build toggle + header location UI first
+  renderTideChart([], loc); // render empty to build toggle and location label
+
+  // 3. Then fetch and render actual data
   const tideData = await fetchTideData(loc.lat, loc.lng);
   renderTideChart(tideData, loc);
-  updateAstroTimes(now, loc.lat, loc.lng); // ← this line adds location to SunCalc
+  updateAstroTimes(now, loc.lat, loc.lng);
 })();
   // Calendar
   let currentYear = now.getFullYear();
