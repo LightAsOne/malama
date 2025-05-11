@@ -463,18 +463,51 @@ function renderTideChart(tideData, locationInfo) {
 
 
 
+// 🛠 PATCH: initialize UI with toggle + saved location FIRST
 (async () => {
-  // 1. Setup toggle before chart
+  const useGPS = localStorage.getItem('gpsEnabled') === 'true';
+  const toggleEl = document.createElement('label');
+  toggleEl.innerHTML = `<input type="checkbox" id="gpsToggle"> GPS Location`;
+
+  const gpsCheckbox = toggleEl.querySelector('#gpsToggle');
+  if (gpsCheckbox) gpsCheckbox.checked = useGPS;
+
+  const tideInfoEl = document.getElementById('header-tide-info');
+  const locationNote = document.createElement('div');
+  locationNote.id = 'tide-location-note';
+  locationNote.style.fontSize = '0.75rem';
+  locationNote.style.color = '#666';
+
+  if (tideInfoEl) {
+    tideInfoEl.innerHTML = '';
+    tideInfoEl.appendChild(toggleEl);
+    tideInfoEl.appendChild(locationNote);
+  }
+
   const loc = await getTideLocation();
 
-  // 2. Build toggle + header location UI first
-  renderTideChart([], loc); // render empty to build toggle and location label
+  if (loc.useGPS) {
+    const name = await reverseGeocode(loc.lat, loc.lng);
+    locationNote.innerHTML = `<strong>${name}</strong> (GPS)`;
+  } else {
+    const currentUserKey = localStorage.getItem('currentUser');
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    const user = users[currentUserKey];
+    locationNote.innerHTML = `<strong>${user?.profile?.location || '—'}</strong>`;
+  }
 
-  // 3. Then fetch and render actual data
   const tideData = await fetchTideData(loc.lat, loc.lng);
   renderTideChart(tideData, loc);
-  updateAstroTimes(now, loc.lat, loc.lng);
+  updateAstroTimes(new Date(), loc.lat, loc.lng);
 })();
+
+// 🛠 Remember GPS preference
+document.addEventListener('change', e => {
+  if (e.target.id === 'gpsToggle') {
+    localStorage.setItem('gpsEnabled', e.target.checked ? 'true' : 'false');
+  }
+});
+
   // Calendar
   let currentYear = now.getFullYear();
   let currentMonth = now.getMonth();
