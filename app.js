@@ -200,10 +200,12 @@ tideContainer.appendChild(tideToggle);
 tideContainer.appendChild(locationText);
 
 async function getTideLocation() {
-  const gpsToggleEl = document.getElementById('gpsToggle');
-  const useGPS = gpsToggleEl && gpsToggleEl.checked;
+  const useGPSStored = localStorage.getItem('useGPS') === 'true';
 
-  if (useGPS && navigator.geolocation) {
+  const gpsToggleEl = document.getElementById('gpsToggle');
+  if (gpsToggleEl) gpsToggleEl.checked = useGPSStored;
+
+  if (useGPSStored && navigator.geolocation) {
     return new Promise((resolve) => {
       navigator.geolocation.getCurrentPosition(
         pos => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude, useGPS: true }),
@@ -214,6 +216,7 @@ async function getTideLocation() {
     return { ...getSavedLocation(), useGPS: false };
   }
 }
+
 
 function updateAstroTimes(date, lat, lng) {
   const sunTimes = SunCalc.getTimes(date, lat, lng);
@@ -463,48 +466,24 @@ function renderTideChart(tideData, locationInfo) {
 
 
 
-// 🛠 PATCH: initialize UI with toggle + saved location FIRST
 (async () => {
-  const useGPS = localStorage.getItem('gpsEnabled') === 'true';
-  const toggleEl = document.createElement('label');
-  toggleEl.innerHTML = `<input type="checkbox" id="gpsToggle"> GPS Location`;
-
-  const gpsCheckbox = toggleEl.querySelector('#gpsToggle');
-  if (gpsCheckbox) gpsCheckbox.checked = useGPS;
-
-  const tideInfoEl = document.getElementById('header-tide-info');
-  const locationNote = document.createElement('div');
-  locationNote.id = 'tide-location-note';
-  locationNote.style.fontSize = '0.75rem';
-  locationNote.style.color = '#666';
-
-  if (tideInfoEl) {
-    tideInfoEl.innerHTML = '';
-    tideInfoEl.appendChild(toggleEl);
-    tideInfoEl.appendChild(locationNote);
-  }
-
   const loc = await getTideLocation();
 
-  if (loc.useGPS) {
-    const name = await reverseGeocode(loc.lat, loc.lng);
-    locationNote.innerHTML = `<strong>${name}</strong> (GPS)`;
-  } else {
-    const currentUserKey = localStorage.getItem('currentUser');
-    const users = JSON.parse(localStorage.getItem('users') || '{}');
-    const user = users[currentUserKey];
-    locationNote.innerHTML = `<strong>${user?.profile?.location || '—'}</strong>`;
-  }
+  // 1. Render header and toggle immediately
+  renderTideChart([], loc);  // build toggle + location now
 
+  // 2. Fetch and update actual data
   const tideData = await fetchTideData(loc.lat, loc.lng);
   renderTideChart(tideData, loc);
-  updateAstroTimes(new Date(), loc.lat, loc.lng);
+  updateAstroTimes(now, loc.lat, loc.lng);
 })();
+
 
 // 🛠 Remember GPS preference
 document.addEventListener('change', e => {
   if (e.target.id === 'gpsToggle') {
-    localStorage.setItem('gpsEnabled', e.target.checked ? 'true' : 'false');
+    localStorage.setItem('useGPS', gpsInput.checked ? 'true' : 'false');
+
   }
 });
 
