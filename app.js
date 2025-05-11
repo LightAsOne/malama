@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
   } catch (error) {
     console.error("❌ Login error:", error);
     alert("Login failed: " + error.message);
-  }
+  
 });
 
   // Setup
