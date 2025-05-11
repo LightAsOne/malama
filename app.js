@@ -1,3 +1,21 @@
+window.addEventListener('load', () => {
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      // ✅ User is already authenticated with Firebase (online or cached session)
+      showApp();
+    } else {
+      const cachedUID = localStorage.getItem('currentUserUID');
+
+      if (!navigator.onLine && cachedUID) {
+        console.warn("⚠️ Offline fallback: using cached UID", cachedUID);
+        showApp(); // Let them use the app offline
+      } else {
+        // Show login page
+        document.getElementById('login-page').classList.remove('hidden');
+      }
+    }
+  });
+});
 document.addEventListener('DOMContentLoaded', () => {
   // Initialize users in localStorage if not present
   if (!localStorage.getItem('users')) {
