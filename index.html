@@ -191,29 +191,15 @@
     <button onclick="window.location.href='index.html'">Home</button>
     <button onclick="window.location.href='settings.html'">Settings</button>
   </div>
-<!-- Firebase SDKs -->
 <!-- Firebase CDN Scripts -->
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
 
-<script>
-  // Your Firebase config
-  const firebaseConfig = {
-    apiKey: "AIzaSyA6C65XgjxpN1a7IowyRaJxr7poqsYV9TA",
-    authDomain: "malama-247ad.firebaseapp.com",
-    projectId: "malama-247ad",
-    storageBucket: "malama-247ad.firebasestorage.app",
-    messagingSenderId: "83778882351",
-    appId: "1:83778882351:web:599a8aebcc5ebd7b8eefda",
-    measurementId: "G-3NS9NX3HPZ"
-  };
+<!-- Firebase Init (single shared script) -->
+<script src="firebase-init.js"></script>
 
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
-</script>
+
 
   <!-- SunCalc for lunar phase -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.9.0/suncalc.min.js"></script>
