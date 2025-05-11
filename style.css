@@ -12,13 +12,7 @@ html, body {
   overflow: hidden;
 }
 
-body {
-  display: flex;
-  flex-direction: column;
-  font-family: 'Open Sans', sans-serif;
-  background: #F5F5F5;
-  color: #333;
-}
+
 
 /* Utility */
 .hidden {
@@ -347,15 +341,15 @@ td.current-day {
 
 /* BODY & APP adjustments */
 body {
+  height: 100vh;
   margin: 0;
   padding: 0;
+  overflow-y: auto; /* ✅ Allow scrolling */
+  display: flex;
+  flex-direction: column;
   font-family: 'Open Sans', sans-serif;
   background: #F5F5F5;
   color: #333;
-  height: 100vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
 }
 
 .app {
