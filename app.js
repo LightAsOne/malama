@@ -17,22 +17,7 @@ window.addEventListener('load', () => {
   });
 });
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize users in localStorage if not present
-  if (!localStorage.getItem('users')) {
-    const defaultUser = {
-      'aron.michielli@gmail.com': {
-        password: '1234',
-        profile: {
-          firstName: 'Aron',
-          lastName: 'Michielli',
-          email: 'aron.michielli@gmail.com',
-          phone: '0448297333',
-          location: 'Port Douglas'
-        }
-      }
-    };
-    localStorage.setItem('users', JSON.stringify(defaultUser));
-  }
+ 
 
   // Elements
   const loginPage    = document.getElementById('login-page');
