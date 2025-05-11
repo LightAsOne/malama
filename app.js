@@ -15,12 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function showApp() {
-    loginPage.classList.add('hidden');
-    appHeader.classList.remove('hidden');
-    appMain.classList.remove('hidden');
-    bottomNav.classList.remove('hidden');
-    settingsPage?.classList.add('hidden');
-  }
+  loginPage?.classList.add('hidden');
+  appHeader?.classList.remove('hidden');
+  appMain?.classList.remove('hidden');
+  bottomNav?.classList.remove('hidden');
+  settingsPage?.classList.add('hidden');
+}
 
   auth.onAuthStateChanged(user => {
     if (user) {
