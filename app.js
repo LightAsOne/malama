@@ -68,20 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-    // Show main app UI
-    document.getElementById('login-page').classList.add('hidden');
-    document.querySelector('.app').classList.remove('hidden');
-    document.querySelector('.bottom-nav').classList.remove('hidden');
-
-    // Optional: cache user locally for offline fallback
-    localStorage.setItem('currentUserUID', user.uid);
-
-  } catch (error) {
-    console.error("❌ Login error:", error);
-    alert("Login failed: " + error.message);
-  
-});
-
   // Setup
   const now = new Date();
   const englishDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
