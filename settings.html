@@ -171,5 +171,40 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 });
 </script>
+	<script>
+const locationInput = document.getElementById('profile-location');
+const suggestionBox = document.getElementById('location-suggestions');
+const latInput = document.getElementById('profile-lat');
+const lngInput = document.getElementById('profile-lng');
+const API_KEY = 'e4ba9531fa864ceaa8fdeab1d3da42c3'; // Replace this
+
+let debounceTimer;
+locationInput.addEventListener('input', () => {
+  clearTimeout(debounceTimer);
+  const query = locationInput.value.trim();
+  if (query.length < 3) return;
+
+  debounceTimer = setTimeout(() => {
+    fetch(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(query)}&key=${API_KEY}&limit=1`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.results.length > 0) {
+          const result = data.results[0];
+          latInput.value = result.geometry.lat.toFixed(5);
+          lngInput.value = result.geometry.lng.toFixed(5);
+          suggestionBox.textContent = result.formatted;
+        } else {
+          latInput.value = '';
+          lngInput.value = '';
+          suggestionBox.textContent = 'No result found.';
+        }
+      })
+      .catch(err => {
+        console.error('Geocoding error:', err);
+        suggestionBox.textContent = 'Error retrieving location.';
+      });
+  }, 400);
+});
+</script>
 </body>
 </html>
