@@ -124,11 +124,15 @@ if (moonEl) moonEl.textContent = phaseName;
     .then(data => {
       const todayEntry = data.find(entry => entry.date === todayISO);
       if (todayEntry) {
-        document.getElementById('hawaiian-lunar-info').innerHTML = `
-          <strong>Mālama:</strong> ${todayEntry.malama}<br>
-          <strong>Anahulu:</strong> ${todayEntry.anahulu}<br>
-          <strong>Pō:</strong> ${todayEntry.hawaiianMoonNight}
-        `;
+       const lunarInfo = document.getElementById('hawaiian-lunar-info');
+if (lunarInfo) {
+  lunarInfo.innerHTML = `
+    <strong>Mālama:</strong> ${todayEntry.malama}<br>
+    <strong>Anahulu:</strong> ${todayEntry.anahulu}<br>
+    <strong>Pō:</strong> ${todayEntry.hawaiianMoonNight}
+  `;
+}
+
 
         // 🌕 Set the correct Moon Phase Image
        let imageName = todayEntry.hawaiianMoonNight.trim();
