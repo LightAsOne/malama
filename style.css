@@ -1,0 +1,438 @@
+/* Reset & base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Open Sans', sans-serif;
+  background: #F5F5F5;
+  color: #333;
+}
+
+/* Utility */
+.hidden {
+  display: none !important;
+}
+
+/* HEADER */
+.app-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  border-bottom: 1px solid #ddd;
+  padding: 1rem;
+}
+
+/* Layout */
+.app {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  max-width: 1024px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding-bottom: 6rem; /* ensures bottom content isn't hidden behind nav */
+}
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  text-align: center;
+}
+
+/* Top Row */
+.top-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  padding: 1rem;
+  flex: 1;
+}
+
+/* Moon & Tide */
+.moon-tide {
+  display: flex;
+  flex-direction: column;
+}
+
+.moon-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.info {
+  flex: 1;
+  padding: 1rem;
+}
+
+.info .current-date {
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+.info .current-date span {
+  display: block;
+}
+
+.info .current-date .english {
+  font-size: 70%;
+}
+
+.info .current-date .hawaiian {
+  font-size: 100%;
+}
+
+.info .moon-phase {
+  font-style: italic;
+  color: #666;
+  font-size: 75%;
+}
+
+.moon-image {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 280px;
+  padding: 1rem;
+  gap: 0.5rem;
+}
+
+.moon-photo {
+  flex-shrink: 0;
+  width: 170px;
+  display: flex;
+  justify-content: center;
+}
+
+.moon-photo img {
+  max-width: 100%;
+  max-height: 230px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.astro-times {
+  flex: 1;
+  font-size: 70%;
+  color: #666;
+  text-align: center;
+}
+
+.astro-times div {
+  margin-bottom: 0.25rem;
+}
+
+.icon {
+  margin-right: 0.25rem;
+  font-size: 1rem;
+}
+
+.icon.moon {
+  color: #6495ED;
+}
+
+.icon.sun {
+  color: #FDB813;
+}
+
+/* Calendar Grid */
+.calendar-grid {
+  flex: 1;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 0.25rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+td.current-day {
+  background: #D2B48C;
+  color: black;
+}
+
+/* Today Snapshot */
+.today-box {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.today-snapshot {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+.today-snapshot span {
+  display: block;
+  width: 100%;
+}
+
+/* Core Pillars */
+.pillars {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+
+.pillar {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  padding: 1rem;
+  flex: 1;
+  min-width: 150px;
+}
+
+.pillar h2 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.pillar p {
+  font-size: 0.8rem;
+}
+
+/* LOGIN & SETTINGS Modal */
+.login-page {
+  max-width: 400px;
+  margin: 3rem auto;
+}
+
+#settings-page {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  z-index: 1000;
+  width: 90%;
+  max-width: 400px;
+}
+
+/* Bottom Nav */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-top: 1px solid #ddd;
+  display: flex;
+  justify-content: space-around;
+  padding: 0.5rem 0;
+}
+
+.bottom-nav a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #333;
+}
+
+.bottom-nav svg {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 0.25rem;
+}
+
+/* More menu */
+.more-menu {
+  position: fixed;
+  bottom: 60px;
+  right: 16px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  z-index: 1000;
+  width: 140px;
+}
+
+.more-menu.hidden {
+  display: none !important;
+}
+
+.more-menu button {
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.more-menu button:hover {
+  background: #f5f5f5;
+}
+
+/* Calendar Month Navigation */
+.calendar-month {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  gap: 1rem;
+}
+
+.month-nav {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.month-nav:hover {
+  color: #A67C52;
+}
+
+.selected-day {
+  background: #A67C52;
+  color: white;
+}
+/* HEADER - make it fixed */
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  z-index: 1000;
+  background: white;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+/* BODY & APP adjustments */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Open Sans', sans-serif;
+  background: #F5F5F5;
+  color: #333;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.app {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  padding-top: 80px; /* add padding so content isn't hidden under fixed header */
+  max-width: 1024px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding-bottom: 6rem; /* avoid bottom nav overlap */
+}
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  z-index: 1000;
+  background: white;
+  border-bottom: 1px solid #ddd;
+  padding: 0 1rem;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1024px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+}
+
+#header-greeting {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #444;
+  white-space: nowrap;
+}
+
+.header-content h1 {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+}
+#header-tide-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  color: #555;
+}
+
+#header-tide-info label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: normal;
+}
+#calendar-body td:hover {
+  background-color: #f0f0f0;
+}
+#calendar-body td {
+  padding: 4px 0;
+  height: 20px;
+  font-size: 0.6rem;
+}
+#calendar-body tr {
+  line-height: 1;
+}
+.tide {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
