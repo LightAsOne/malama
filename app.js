@@ -1,13 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Elements
-  const loginPage    = document.getElementById('login-page');
-  const loginForm    = document.getElementById('login-form');
-  const appHeader    = document.querySelector('.app-header');
-  const appMain      = document.querySelector('.app');
-  const bottomNav    = document.querySelector('.bottom-nav');
+  const loginPage = document.getElementById('login-page');
+  const loginForm = document.getElementById('login-form');
+  const appHeader = document.querySelector('.app-header');
+  const appMain = document.querySelector('.app');
+  const bottomNav = document.querySelector('.bottom-nav');
   const settingsPage = document.getElementById('settings-page');
 
-  // Show/hide helpers
   function showLogin() {
     loginPage.classList.remove('hidden');
     appHeader.classList.add('hidden');
@@ -24,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
     settingsPage.classList.add('hidden');
   }
 
-  // 🔐 Firebase Auth login check
   auth.onAuthStateChanged(user => {
     if (user) {
       showApp();
@@ -38,6 +35,34 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
+
+  const currentUser = localStorage.getItem('currentUser');
+  const users = JSON.parse(localStorage.getItem('users') || '{}');
+  const profile = users[currentUser]?.profile;
+  if (profile?.firstName) {
+    const greetingEl = document.getElementById('header-greeting');
+    if (greetingEl) greetingEl.textContent = `Aloha, ${profile.firstName}`;
+  }
+
+  loginForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value.trim();
+
+    try {
+      const userCredential = await auth.signInWithEmailAndPassword(email, password);
+      const user = userCredential.user;
+
+      console.log("✅ Logged in as:", user.email);
+      localStorage.setItem('currentUserUID', user.uid);
+      showApp();
+    } catch (error) {
+      console.error("❌ Login error:", error);
+      alert("Login failed: " + error.message);
+    }
+  });
+});
+
 
   // Optional greeting from localStorage user data
   const currentUser = localStorage.getItem('currentUser');
