@@ -94,10 +94,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const engDateStr = `${engDay}, ${dayNum} ${engMonth} ${year}`;
   const hawDateStr = `${hawDay}, ${dayNum} ${hawMonth}`;
 
- document.querySelector('.current-date').innerHTML = `
-  <span class="english">${engDateStr}</span>
-  <span class="hawaiian">${hawDateStr}</span>
-`;
+ const currentDateEl = document.querySelector('.current-date');
+if (currentDateEl) {
+  currentDateEl.innerHTML = `
+    <span class="english">${engDateStr}</span>
+    <span class="hawaiian">${hawDateStr}</span>
+  `;
+}
+
 
   const phase = SunCalc.getMoonIllumination(date).phase;
   const phaseName = (() => {
