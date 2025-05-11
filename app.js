@@ -217,10 +217,18 @@ function formatTime(date) {
 }
 
 function getSavedLocation() {
-  const user = JSON.parse(localStorage.getItem('users'))[localStorage.getItem('currentUser')];
-  const lat = parseFloat(user?.profile?.lat) || -16.5;
-  const lng = parseFloat(user?.profile?.lng) || 145.5;
-  return { lat, lng };
+  const currentUserKey = localStorage.getItem('currentUser');
+  const users = JSON.parse(localStorage.getItem('users') || '{}');
+  const user = users[currentUserKey];
+
+  const lat = parseFloat(user?.profile?.lat);
+  const lng = parseFloat(user?.profile?.lng);
+
+  if (!isNaN(lat) && !isNaN(lng)) {
+    return { lat, lng };
+  } else {
+    return { lat: -16.5, lng: 145.5 }; // Default fallback
+  }
 }
 
 async function fetchTideData(lat, lng) {
