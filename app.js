@@ -22,19 +22,38 @@ document.addEventListener('DOMContentLoaded', () => {
   settingsPage?.classList.add('hidden');
 }
 
-  auth.onAuthStateChanged(user => {
-    if (user) {
+ auth.onAuthStateChanged(async user => {
+  if (user) {
+    showApp();
+
+    // Try load from Firestore
+    try {
+      const doc = await db.collection('users').doc(user.uid).get();
+      if (doc.exists) {
+        const profile = doc.data();
+        const greetingEl = document.getElementById('header-greeting');
+        const tideInfoEl = document.getElementById('header-tide-info');
+        if (greetingEl && profile.firstName) {
+          greetingEl.textContent = `Aloha, ${profile.firstName}`;
+        }
+        if (tideInfoEl && profile.location) {
+          tideInfoEl.innerHTML = `<strong>${profile.location}</strong>`;
+        }
+      }
+    } catch (err) {
+      console.error("Failed to load profile from Firestore:", err);
+    }
+
+  } else {
+    const cachedUID = localStorage.getItem('currentUserUID');
+    if (!navigator.onLine && cachedUID) {
+      console.warn("⚠️ Offline fallback: using cached UID", cachedUID);
       showApp();
     } else {
-      const cachedUID = localStorage.getItem('currentUserUID');
-      if (!navigator.onLine && cachedUID) {
-        console.warn("⚠️ Offline fallback: using cached UID", cachedUID);
-        showApp();
-      } else {
-        showLogin();
-      }
+      showLogin();
     }
-  });
+  }
+});
 
   loginForm?.addEventListener('submit', async e => {
     e.preventDefault();
