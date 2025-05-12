@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     lngInput.disabled = useGPS;
   }
 
- gpsCheckbox.addEventListener('change', () => {
+gpsCheckbox.addEventListener('change', () => {
   updateLocationFieldState(gpsCheckbox.checked);
   if (gpsCheckbox.checked && navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
@@ -151,6 +151,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         latInput.setAttribute('readonly', true);
         lngInput.setAttribute('readonly', true);
         document.getElementById('location-suggestions').textContent = 'Using GPS coordinates.';
+
+        // Reverse geocode for location name
+        fetch(`https://api.opencagedata.com/geocode/v1/json?q=${pos.coords.latitude}+${pos.coords.longitude}&key=e4ba9531fa864ceaa8fdeab1d3da42c3&limit=1`)
+          .then(res => res.json())
+          .then(data => {
+            const result = data.results?.[0];
+            if (result) {
+              locationInput.value = result.formatted;
+              document.getElementById('location-suggestions').textContent = result.formatted;
+            } else {
+              locationInput.value = '';
+              document.getElementById('location-suggestions').textContent = 'No location name found.';
+            }
+          })
+          .catch(() => {
+            document.getElementById('location-suggestions').textContent = 'Error getting location name.';
+          });
       },
       err => {
         alert("Failed to get GPS location.");
