@@ -204,7 +204,7 @@ if (lunarInfo) {
 // 🌊 TIDE + GPS LOGIC
 
 let headerTideInfo = null;
-let tideContainer = null;
+
 
 if (document.querySelector('.tide')) {
   headerTideInfo = document.getElementById('header-tide-info');
