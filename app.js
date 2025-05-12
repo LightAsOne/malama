@@ -297,9 +297,9 @@ async function reverseGeocode(lat, lng) {
 }
 
 function renderTideChart(tideData, locationInfo) {
-  if (!tideContainer) return; // skip if not on index page
+  const tideContainer = document.querySelector('.tide');
+  if (!tideContainer) return;
   tideContainer.innerHTML = '';
-
   // Check if tideData is valid
   const isEmpty = !Array.isArray(tideData) || tideData.length < 2;
   if (isEmpty) {
