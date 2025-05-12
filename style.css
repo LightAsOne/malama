@@ -515,31 +515,54 @@ body, html {
   text-align: center;
 }
 /* === Layout fix for moon row === */
+/* Force moon row to use full width and prevent line breaks */
 .moon-row {
   display: flex;
-  flex-wrap: nowrap; /* ensures info and image stay side-by-side */
+  flex-wrap: nowrap;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  width: 100%;
   gap: 1rem;
 }
 
-/* === Astro Times in single row === */
+/* Prevent moon info from shrinking too much */
+.info {
+  flex: 2;
+  min-width: 0;
+}
+
+/* Allow moon image to grow slightly if needed */
+.moon-image {
+  flex: 1;
+  max-width: 180px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Astro times in one line, responsive */
 .astro-times {
   display: flex;
   justify-content: space-between;
-  font-size: 0.85rem;
+  gap: 1rem;
+  font-size: 0.8rem;
   color: #666;
   margin-top: 0.5rem;
   padding: 0 0.5rem;
-  width: 100%;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.sun-times {
-  text-align: left;
+.sun-times,
+.moon-times {
   flex: 1;
+  overflow: hidden;
+  text-align: left;
+  text-wrap: nowrap;
 }
 
+/* Align moon-times text right */
 .moon-times {
   text-align: right;
-  flex: 1;
 }
