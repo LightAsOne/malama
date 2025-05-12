@@ -411,6 +411,17 @@ td.current-day {
   color: #A67C52;
 }
 
+.day-nav {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.day-nav:hover {
+  color: #A67C52;
+}
+
 .selected-day {
   background: #A67C52;
   color: white;
