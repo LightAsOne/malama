@@ -484,3 +484,33 @@ body, html {
   max-width: 100%;
   overflow-x: hidden;
 }
+.moon-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.moon-photo {
+  flex: 0 1 160px;
+  display: flex;
+  justify-content: center;
+  max-width: 100%;
+}
+
+.moon-photo img {
+  width: 100%;
+  max-width: 160px;
+  height: auto;
+  object-fit: contain;
+}
+
+.astro-times {
+  flex: 1;
+  min-width: 140px;
+  max-width: 100%;
+  font-size: 0.85rem;
+  color: #666;
+  text-align: center;
+}
