@@ -138,23 +138,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     lngInput.disabled = useGPS;
   }
 
-  gpsCheckbox.addEventListener('change', () => {
-    updateLocationFieldState(gpsCheckbox.checked);
-    if (gpsCheckbox.checked && navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        pos => {
-          latInput.value = pos.coords.latitude.toFixed(5);
-          lngInput.value = pos.coords.longitude.toFixed(5);
-          document.getElementById('location-suggestions').textContent = 'Using GPS coordinates.';
-        },
-        err => {
-          alert("Failed to get GPS location.");
-          gpsCheckbox.checked = false;
-          updateLocationFieldState(false);
-        }
-      );
-    }
-  });
+ gpsCheckbox.addEventListener('change', () => {
+  updateLocationFieldState(gpsCheckbox.checked);
+  if (gpsCheckbox.checked && navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        console.log('📍 GPS success:', pos.coords.latitude, pos.coords.longitude);
+        latInput.removeAttribute('readonly');
+        lngInput.removeAttribute('readonly');
+        latInput.value = pos.coords.latitude.toFixed(5);
+        lngInput.value = pos.coords.longitude.toFixed(5);
+        latInput.setAttribute('readonly', true);
+        lngInput.setAttribute('readonly', true);
+        document.getElementById('location-suggestions').textContent = 'Using GPS coordinates.';
+      },
+      err => {
+        alert("Failed to get GPS location.");
+        gpsCheckbox.checked = false;
+        updateLocationFieldState(false);
+      }
+    );
+  }
+});
 
   auth.onAuthStateChanged(async user => {
     if (!user) {
