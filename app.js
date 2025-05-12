@@ -206,10 +206,7 @@ const headerTideInfo = document.getElementById('header-tide-info');
 
 
 async function getTideLocation() {
-  const useGPSStored = localStorage.getItem('useGPS') === 'true';
-
-  const gpsToggleEl = document.getElementById('gpsToggle');
-  if (gpsToggleEl) gpsToggleEl.checked = useGPSStored;
+  const useGPSStored = userProfile?.useGPS ?? (localStorage.getItem('useGPS') === 'true');
 
   if (useGPSStored && navigator.geolocation) {
     return new Promise((resolve) => {
