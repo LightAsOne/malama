@@ -147,6 +147,23 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('use-gps-checkbox').checked = data.useGPS || false;
       localStorage.setItem('useGPS', data.useGPS ? 'true' : 'false');
     }
+	  const gpsCheckbox = document.getElementById('use-gps-checkbox');
+gpsCheckbox.addEventListener('change', () => {
+  if (gpsCheckbox.checked && navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        document.getElementById('profile-lat').value = pos.coords.latitude.toFixed(5);
+        document.getElementById('profile-lng').value = pos.coords.longitude.toFixed(5);
+        document.getElementById('location-suggestions').textContent = 'Using GPS coordinates.';
+      },
+      err => {
+        alert("Failed to get GPS location.");
+        gpsCheckbox.checked = false;
+      }
+    );
+  }
+});
+
   });
 
   document.getElementById('settings-form').addEventListener('submit', async e => {
