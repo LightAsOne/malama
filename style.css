@@ -438,3 +438,19 @@ svg {
   max-width: 100%;
   height: auto;
 }
+
+#settings-form label {
+  margin-bottom: 1rem;
+  display: block;
+}
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.form-buttons button {
+  flex: 1;
+  min-width: 100px;
+}
