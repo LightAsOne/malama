@@ -158,7 +158,14 @@ gpsCheckbox.addEventListener('change', () => {
           .then(data => {
             const result = data.results?.[0];
             if (result) {
-              locationInput.value = result.formatted;
+              const components = result.components || {};
+locationInput.value =
+  components.town ||
+  components.city ||
+  components.village ||
+  components.county ||
+  components.state ||
+  result.formatted;
               document.getElementById('location-suggestions').textContent = result.formatted;
             } else {
               locationInput.value = '';
