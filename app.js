@@ -1,19 +1,5 @@
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Attach GPS toggle listener
-  const gpsEl = document.getElementById('gpsToggle');
-  if (gpsEl) {
-    gpsEl.addEventListener('change', async (e) => {
-      localStorage.setItem('useGPS', e.target.checked);
-      const selectedDate = selectedCell
-        ? new Date(currentYear, currentMonth, parseInt(selectedCell.textContent))
-        : new Date();
-      const loc = await getTideLocation();
-      updateMoonTideDate(selectedDate);
-      updateAstroTimes(selectedDate, loc.lat, loc.lng);
-      const tideData = await fetchTideData(loc.lat, loc.lng);
-      renderTideChart(tideData, loc);
-    });
   }
 
   let userProfile = null;
@@ -214,7 +200,8 @@ moonImage.alt = imageName; // keep original for screen readers
   updateAstroTimes(now, -16.5, 145.5);
 // 🌊 TIDE + GPS LOGIC
 
-const tideContainer = document.querySelector('.tide');
+const headerTideInfo = document.getElementById('header-tide-info');
+  const tideContainer = document.querySelector('.tide');
 const tideToggle = document.createElement('label');
 tideToggle.innerHTML = `<input type="checkbox" id="gpsToggle"> Use GPS for Tide`;
 
@@ -224,8 +211,8 @@ locationText.style.fontSize = '0.75rem';
 locationText.style.color = '#666';
 locationText.style.marginTop = '0.25rem';
 
-tideContainer.appendChild(tideToggle);
-tideContainer.appendChild(locationText);
+headerTideInfo.appendChild(tideToggle);
+headerTideInfo.appendChild(locationText);
 
 
 // Attach GPS toggle listener to the newly created input
@@ -371,22 +358,7 @@ function renderTideChart(tideData, locationInfo) {
     const locationName = userProfile?.location || '—';
     locationText.innerHTML = `<strong>${locationName}</strong>`;
   }, 100);
-}
-
-   tideToggle.querySelector('#gpsToggle')?.addEventListener('change', async () => {
-  // 🗓 Use selected date if available
-  const selectedDate = selectedCell
-    ? new Date(currentYear, currentMonth, parseInt(selectedCell.textContent))
-    : new Date(); // fallback to today if no cell is selected
-
-  const loc = await getTideLocation();
-
-  updateMoonTideDate(selectedDate);             // 🌑 Moon phase
-  updateAstroTimes(selectedDate, loc.lat, loc.lng); // 🌞 Sun + Moon times
-  const tideData = await fetchTideData(loc.lat, loc.lng);
-  renderTideChart(tideData, loc);               // 🌊 Tide chart
-});
-  }
+}}
 
   // Continue with chart drawing
   tideData.sort((a, b) => new Date(a.time) - new Date(b.time));
