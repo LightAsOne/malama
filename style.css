@@ -255,13 +255,15 @@ td.current-day {
   color: black;
 }
 
-#calendar-body td:hover {
-  background-color: #f0f0f0;
+#calendar-body td:hover,
+#calendar-body td:active {
+  background-color: #A67C52;
 }
 #calendar-body td {
   padding: 4px 0;
   height: 26px;
   font-size: 0.8rem;
+  touch-action: manipulation;  /* Ensures better tap responsiveness */
 }
 #calendar-body tr {
   line-height: 1;
