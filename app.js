@@ -199,8 +199,8 @@ if (lunarInfo) {
 }
 
   // Initialize with today
-  updateMoonTideDate(now);
-  updateAstroTimes(now, -16.5, 145.5);
+ updateMoonTideDate(selectedDate);
+updateAstroTimes(selectedDate, -16.5, 145.5);
 // 🌊 TIDE + GPS LOGIC
 
 let headerTideInfo = null;
