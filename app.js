@@ -103,6 +103,7 @@ const greetingEl = document.getElementById('header-greeting');
   
 
  function updateMoonTideDate(date) {
+  if (!document.querySelector('.current-date')) return; // ← Skip if not on index page
   const engDay = englishDays[date.getDay()];
   const hawDay = hawaiianDays[date.getDay()];
   const engMonth = englishMonths[date.getMonth()];
