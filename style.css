@@ -227,17 +227,9 @@ td.current-day {
 }
 
 #settings-page {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: white;
-  border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  z-index: 1000;
-  width: 90%;
-  max-width: 400px;
+  position: relative;
+  margin-top: 80px;
+  padding-bottom: 6rem; /* Make room for Save button */
 }
 
 /* Bottom Nav */
@@ -477,4 +469,15 @@ body, html {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 70%;
+}
+.app {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+.tide,
+.moon-photo,
+svg {
+  max-width: 100%;
+  overflow-x: hidden;
 }
