@@ -435,3 +435,15 @@ svg {
   max-width: 100%;
   height: auto;
 }
+.settings-app {
+  max-width: none !important;
+  padding: 1rem 2rem;
+}
+
+.settings-card {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+  box-sizing: border-box;
+}
