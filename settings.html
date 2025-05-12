@@ -127,19 +127,30 @@
 <script src="app.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
-  // Always attach the GPS checkbox listener
   const gpsCheckbox = document.getElementById('use-gps-checkbox');
+  const locationInput = document.getElementById('profile-location');
+  const latInput = document.getElementById('profile-lat');
+  const lngInput = document.getElementById('profile-lng');
+
+  function updateLocationFieldState(useGPS) {
+    locationInput.disabled = useGPS;
+    latInput.disabled = useGPS;
+    lngInput.disabled = useGPS;
+  }
+
   gpsCheckbox.addEventListener('change', () => {
+    updateLocationFieldState(gpsCheckbox.checked);
     if (gpsCheckbox.checked && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         pos => {
-          document.getElementById('profile-lat').value = pos.coords.latitude.toFixed(5);
-          document.getElementById('profile-lng').value = pos.coords.longitude.toFixed(5);
+          latInput.value = pos.coords.latitude.toFixed(5);
+          lngInput.value = pos.coords.longitude.toFixed(5);
           document.getElementById('location-suggestions').textContent = 'Using GPS coordinates.';
         },
         err => {
           alert("Failed to get GPS location.");
           gpsCheckbox.checked = false;
+          updateLocationFieldState(false);
         }
       );
     }
@@ -159,11 +170,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('profile-last-name').value = data.lastName || '';
       document.getElementById('profile-email').value = data.email || '';
       document.getElementById('profile-phone').value = data.phone || '';
-      document.getElementById('profile-location').value = data.location || '';
-      document.getElementById('profile-lat').value = data.lat || '';
-      document.getElementById('profile-lng').value = data.lng || '';
-      document.getElementById('use-gps-checkbox').checked = data.useGPS || false;
-      localStorage.setItem('useGPS', data.useGPS ? 'true' : 'false');
+      locationInput.value = data.location || '';
+      latInput.value = data.lat || '';
+      lngInput.value = data.lng || '';
+      gpsCheckbox.checked = data.useGPS || false;
+      updateLocationFieldState(gpsCheckbox.checked);
+      localStorage.setItem('useGPS', gpsCheckbox.checked ? 'true' : 'false');
     }
   });
 
@@ -172,7 +184,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const user = auth.currentUser;
     if (!user) return alert("Not logged in.");
 
-    const useGPS = document.getElementById('use-gps-checkbox').checked;
+    const useGPS = gpsCheckbox.checked;
     localStorage.setItem('useGPS', useGPS ? 'true' : 'false');
 
     const profileData = {
@@ -180,9 +192,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       lastName: document.getElementById('profile-last-name').value.trim(),
       email: document.getElementById('profile-email').value.trim(),
       phone: document.getElementById('profile-phone').value.trim(),
-      location: document.getElementById('profile-location').value.trim(),
-      lat: document.getElementById('profile-lat').value.trim(),
-      lng: document.getElementById('profile-lng').value.trim(),
+      location: locationInput.value.trim(),
+      lat: latInput.value.trim(),
+      lng: lngInput.value.trim(),
       useGPS: useGPS
     };
 
@@ -198,7 +210,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     auth.signOut().then(() => window.location.href = "index.html");
   });
 });
-
 </script>
 	<script>
 const locationInput = document.getElementById('profile-location');
