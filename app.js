@@ -190,7 +190,8 @@ moonImage.alt = imageName; // keep original for screen readers
     })
     .catch(error => {
       console.error('Error loading lunar data:', error);
-     if (lunarInfo) {
+     const lunarInfo = document.getElementById('hawaiian-lunar-info');
+if (lunarInfo) {
   lunarInfo.innerHTML = `<em>Failed to load lunar data</em>`;
 }
 
