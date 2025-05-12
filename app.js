@@ -610,5 +610,8 @@ function moveDay(offset) {
 document.getElementById('prev-day')?.addEventListener('click', () => moveDay(-1));
 document.getElementById('next-day')?.addEventListener('click', () => moveDay(1));
 
-
+// ✅ This goes here, just before the final closing bracket of DOMContentLoaded
+document.addEventListener('click', () => {
+  document.body.offsetHeight;  // forces reflow on any tap or click
+});
   });
