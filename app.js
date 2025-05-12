@@ -1,6 +1,19 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  // Setup
+  const now = new Date();
+  const englishDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const hawaiianDays = ["Lāpule", "Poʻakahi", "Poʻalua", "Poʻakolu", "Poʻahā", "Poʻalima", "Poʻaono"];
+  const englishMonths = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  const hawaiianMonths = [
+    "Ianuali", "Pepeluali", "Malaki", "ʻApelila", "Mei", "Iune",
+    "Iulai", "ʻAukake", "Kepakemapa", "ʻOkakopa", "Nowemapa", "Kekemapa"
+  ];
+  
   let userProfile = null;
   const loginPage = document.getElementById('login-page');
   const loginForm = document.getElementById('login-form');
@@ -87,18 +100,7 @@ const greetingEl = document.getElementById('header-greeting');
   if (!document.querySelector('#calendar-body')) return;
 
 
-  // Setup
-  const now = new Date();
-  const englishDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  const hawaiianDays = ["Lāpule", "Poʻakahi", "Poʻalua", "Poʻakolu", "Poʻahā", "Poʻalima", "Poʻaono"];
-  const englishMonths = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ];
-  const hawaiianMonths = [
-    "Ianuali", "Pepeluali", "Malaki", "ʻApelila", "Mei", "Iune",
-    "Iulai", "ʻAukake", "Kepakemapa", "ʻOkakopa", "Nowemapa", "Kekemapa"
-  ];
+  
 
  function updateMoonTideDate(date) {
   const engDay = englishDays[date.getDay()];
