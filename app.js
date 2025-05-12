@@ -583,18 +583,32 @@ cell.addEventListener('click', async () => {
       moreMenuSettings.classList.add('hidden');
     }
   });
-  document.addEventListener('change', async (e) => {
-  if (e.target.id === 'gpsToggle') {
+ document.addEventListener('DOMContentLoaded', () => {
+  const gpsToggleEl = document.getElementById('gpsToggle');
+  const locationText = document.getElementById('tide-location-note');
+
+  // Initial setup
+  gpsToggleEl.checked = localStorage.getItem('useGPS') === 'true';
+
+  gpsToggleEl.addEventListener('change', async (e) => {
+    localStorage.setItem('useGPS', e.target.checked);
     const loc = await getTideLocation();
-    try {
-      const tideData = await fetchTideData(loc.lat, loc.lng);
-      renderTideChart(tideData, loc);
-      updateAstroTimes(new Date(), loc.lat, loc.lng); // ← Add this line
-    } catch (err) {
-      tideContainer.appendChild(document.createTextNode('Error loading tide data.'));
-    }
-  }
+    updateMoonTideDate(new Date());
+    updateAstroTimes(new Date(), loc.lat, loc.lng);
+    const tideData = await fetchTideData(loc.lat, loc.lng);
+    renderTideChart(tideData, loc);  // Refresh chart only, do NOT re-create toggle
+  });
+
+  // Initial load
+  (async () => {
+    const loc = await getTideLocation();
+    updateMoonTideDate(new Date());
+    updateAstroTimes(new Date(), loc.lat, loc.lng);
+    const tideData = await fetchTideData(loc.lat, loc.lng);
+    renderTideChart(tideData, loc);
+  })();
 });
+
 
 
   });
