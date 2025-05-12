@@ -307,20 +307,14 @@ function renderTideChart(tideData, locationInfo) {
   const headerTideInfo = document.getElementById('header-tide-info');
   if (headerTideInfo) {
     headerTideInfo.innerHTML = '';
-    const tideToggle = document.createElement('label');
-    const gpsInput = document.createElement('input');
-    gpsInput.type = 'checkbox';
-    gpsInput.id = 'gpsToggle';
-    gpsInput.checked = locationInfo.useGPS;
-    tideToggle.appendChild(gpsInput);
-    tideToggle.appendChild(document.createTextNode(' GPS Location'));
+    
 
     const locationText = document.createElement('div');
     locationText.id = 'tide-location-note';
     locationText.style.fontSize = '0.75rem';
     locationText.style.color = '#666';
 
-    headerTideInfo.appendChild(tideToggle);
+    
     headerTideInfo.appendChild(locationText);
 
     if (locationInfo.useGPS) {
