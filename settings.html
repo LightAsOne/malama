@@ -144,6 +144,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('profile-location').value = data.location || '';
       document.getElementById('profile-lat').value = data.lat || '';
       document.getElementById('profile-lng').value = data.lng || '';
+      document.getElementById('use-gps-checkbox').checked = data.useGPS || false;
+      localStorage.setItem('useGPS', data.useGPS ? 'true' : 'false');
     }
   });
 
@@ -152,6 +154,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const user = auth.currentUser;
     if (!user) return alert("Not logged in.");
 
+    const useGPS = document.getElementById('use-gps-checkbox').checked;
+    localStorage.setItem('useGPS', useGPS ? 'true' : 'false');
+
     const profileData = {
       firstName: document.getElementById('profile-first-name').value.trim(),
       lastName: document.getElementById('profile-last-name').value.trim(),
@@ -159,7 +164,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       phone: document.getElementById('profile-phone').value.trim(),
       location: document.getElementById('profile-location').value.trim(),
       lat: document.getElementById('profile-lat').value.trim(),
-      lng: document.getElementById('profile-lng').value.trim()
+      lng: document.getElementById('profile-lng').value.trim(),
+      useGPS: useGPS
     };
 
     try {
