@@ -329,7 +329,6 @@ function renderTideChart(tideData, locationInfo) {
     const locationName = userProfile?.location || '—';
     locationText.innerHTML = `<strong>${locationName}</strong>`;
   }, 100);
-} // Adjust delay if needed
 }
 
    tideToggle.querySelector('#gpsToggle')?.addEventListener('change', async () => {
