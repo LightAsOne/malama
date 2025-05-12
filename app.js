@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Setup
   const now = new Date();
+  let selectedDate = new Date(); // 🔧 Move selectedDate up here
   const englishDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   const hawaiianDays = ["Lāpule", "Poʻakahi", "Poʻalua", "Poʻakolu", "Poʻahā", "Poʻalima", "Poʻaono"];
   const englishMonths = [
@@ -493,9 +494,12 @@ if (document.querySelector('.tide')) {
       if (d === now.getDate() && month === now.getMonth() && year === now.getFullYear()) {
         cell.classList.add('current-day');
       }
-
+		if (d === selectedDate.getDate() && month === selectedDate.getMonth() && year === selectedDate.getFullYear()) {
+		cell.classList.add('selected-day');
+		selectedCell = cell;
+		}
 cell.addEventListener('click', async () => {
-  const selectedDate = new Date(year, month, d);
+  selectedDate = new Date(year, month, d);
   updateMoonTideDate(selectedDate);
 
   // 🔁 One unified location fetch
@@ -577,6 +581,34 @@ cell.addEventListener('click', async () => {
     }
   }
 });
+function moveDay(offset) {
+  const oldMonth = selectedDate.getMonth();
+  const oldYear = selectedDate.getFullYear();
+
+  selectedDate.setDate(selectedDate.getDate() + offset);
+
+  const newMonth = selectedDate.getMonth();
+  const newYear = selectedDate.getFullYear();
+
+  if (newMonth !== oldMonth || newYear !== oldYear) {
+    currentMonth = newMonth;
+    currentYear = newYear;
+    buildCalendar(currentYear, currentMonth);
+  }
+
+  updateMoonTideDate(selectedDate);
+
+  getTideLocation().then(async loc => {
+    updateAstroTimes(selectedDate, loc.lat, loc.lng);
+    const tideData = await fetchTideData(loc.lat, loc.lng);
+    renderTideChart(tideData, loc);
+
+    buildCalendar(currentYear, currentMonth);
+  });
+}
+
+document.getElementById('prev-day')?.addEventListener('click', () => moveDay(-1));
+document.getElementById('next-day')?.addEventListener('click', () => moveDay(1));
 
 
   });
