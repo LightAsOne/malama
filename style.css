@@ -389,32 +389,17 @@ td.current-day {
   background: #f5f5f5;
 }
 
+/* Calendar Month Navigation */
 .calendar-month {
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 6px;
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-}
-
-.inline-nav {
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
-  padding: 2px 6px;
-  color: inherit;
-}
-
-.inline-nav:hover {
-  color: #444;
-}
-
-.calendar-label {
+  align-items: center;
   font-weight: bold;
-  padding: 0 10px;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  gap: 1rem;
 }
+
 .month-nav {
   background: none;
   border: none;
