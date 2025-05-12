@@ -130,6 +130,13 @@ body {
   width: 100%;
   gap: 1rem;
 }
+.moon-row2 {
+  display: flex;
+  justify-content: center;  /* Centers the two columns within the row */
+  gap: 1rem;
+  width: 100%;
+  align-items: center;
+}
 
 .info {
   flex: 1;
@@ -474,3 +481,23 @@ svg {
   padding: 0.5rem;
 }
 
+.moon-col-75 {
+  width: 75%;
+  padding: 1rem;
+  align-items: center;
+}
+
+.moon-col-25 {
+  width: 25%;
+  padding: 1rem;
+  align-items: center;
+}
+
+.moon-col-50 {
+  width: 50%;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;  /* Centers the content horizontally within the div */
+  align-items: center;      /* Centers the content vertically within the div */
+  text-align: center;       /* Ensures text is centered if it's inside */
+}
