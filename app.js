@@ -1,5 +1,21 @@
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Attach GPS toggle listener
+  const gpsEl = document.getElementById('gpsToggle');
+  if (gpsEl) {
+    gpsEl.addEventListener('change', async (e) => {
+      localStorage.setItem('useGPS', e.target.checked);
+      const selectedDate = selectedCell
+        ? new Date(currentYear, currentMonth, parseInt(selectedCell.textContent))
+        : new Date();
+      const loc = await getTideLocation();
+      updateMoonTideDate(selectedDate);
+      updateAstroTimes(selectedDate, loc.lat, loc.lng);
+      const tideData = await fetchTideData(loc.lat, loc.lng);
+      renderTideChart(tideData, loc);
+    });
+  }
+
   let userProfile = null;
   const loginPage = document.getElementById('login-page');
   const loginForm = document.getElementById('login-form');
@@ -33,7 +49,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (doc.exists) {
           const profile = doc.data();
           userProfile = profile;
-          const greetingEl = document.getElementById('header-greeting');
+          
+          // Initial render with saved location/toggle state
+          (async () => {
+            const today = new Date();
+            const loc = await getTideLocation();
+            updateMoonTideDate(today);
+            updateAstroTimes(today, loc.lat, loc.lng);
+            const tideData = await fetchTideData(loc.lat, loc.lng);
+            renderTideChart(tideData, loc);
+          })();
+const greetingEl = document.getElementById('header-greeting');
           const tideInfoEl = document.getElementById('header-tide-info');
           if (greetingEl && profile.firstName) {
             greetingEl.textContent = `Aloha, ${profile.firstName}`;
@@ -584,20 +610,4 @@ cell.addEventListener('click', async () => {
 });
 
 
-  // Handle GPS toggle changes
-  document.addEventListener('change', async (e) => {
-    if (e.target.id === 'gpsToggle') {
-      localStorage.setItem('useGPS', e.target.checked);
-
-      const selectedDate = selectedCell
-        ? new Date(currentYear, currentMonth, parseInt(selectedCell.textContent))
-        : new Date();
-      const loc = await getTideLocation();
-      updateMoonTideDate(selectedDate);
-      updateAstroTimes(selectedDate, loc.lat, loc.lng);
-      const tideData = await fetchTideData(loc.lat, loc.lng);
-      renderTideChart(tideData, loc);
-    }
   });
-
-});
