@@ -514,3 +514,32 @@ body, html {
   color: #666;
   text-align: center;
 }
+/* === Layout fix for moon row === */
+.moon-row {
+  display: flex;
+  flex-wrap: nowrap; /* ensures info and image stay side-by-side */
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* === Astro Times in single row === */
+.astro-times {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.5rem;
+  padding: 0 0.5rem;
+  width: 100%;
+}
+
+.sun-times {
+  text-align: left;
+  flex: 1;
+}
+
+.moon-times {
+  text-align: right;
+  flex: 1;
+}
