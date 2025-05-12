@@ -203,8 +203,13 @@ if (lunarInfo) {
   updateAstroTimes(now, -16.5, 145.5);
 // 🌊 TIDE + GPS LOGIC
 
-const headerTideInfo = document.getElementById('header-tide-info');
-  const tideContainer = document.querySelector('.tide');
+let headerTideInfo = null;
+let tideContainer = null;
+
+if (document.querySelector('.tide')) {
+  headerTideInfo = document.getElementById('header-tide-info');
+  tideContainer = document.querySelector('.tide');
+}
 
 
 
@@ -273,6 +278,7 @@ function getSavedLocation() {
 }
 
 async function fetchTideData(lat, lng) {
+  if (!document.querySelector('.tide')) return []; // skip if not on index.html
   const apiKey = '6f8295fe-29ae-11f0-8567-0242ac130003-6f829662-29ae-11f0-8567-0242ac130003'; // ← replace with your Stormglass API key
   const start = new Date().toISOString();
   const end = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
@@ -291,6 +297,7 @@ async function reverseGeocode(lat, lng) {
 }
 
 function renderTideChart(tideData, locationInfo) {
+  if (!tideContainer) return; // skip if not on index page
   tideContainer.innerHTML = '';
 
   // Check if tideData is valid
