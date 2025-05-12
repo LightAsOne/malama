@@ -496,7 +496,7 @@ if (document.querySelector('.tide')) {
       }
 
 cell.addEventListener('click', async () => {
-  const selectedDate = new Date(year, month, d);
+  selectedDate = new Date(year, month, d);
   updateMoonTideDate(selectedDate);
 
   // 🔁 One unified location fetch
