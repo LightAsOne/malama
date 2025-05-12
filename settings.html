@@ -186,16 +186,21 @@ locationInput.value =
   }
 });
 
-  auth.onAuthStateChanged(async user => {
-    if (!user) {
-      alert("You're not logged in.");
-      window.location.href = "index.html";
-      return;
-    }
+ auth.onAuthStateChanged(async user => {
+  console.log("👤 Firebase user:", user);
 
+  if (!user) {
+    alert("You're not logged in.");
+    window.location.href = "index.html";
+    return;
+  }
+
+  try {
     const doc = await db.collection('users').doc(user.uid).get();
     if (doc.exists) {
       const data = doc.data();
+      console.log("✅ Firestore data loaded:", data);
+
       document.getElementById('profile-first-name').value = data.firstName || '';
       document.getElementById('profile-last-name').value = data.lastName || '';
       document.getElementById('profile-email').value = data.email || '';
@@ -206,8 +211,14 @@ locationInput.value =
       gpsCheckbox.checked = data.useGPS || false;
       updateLocationFieldState(gpsCheckbox.checked);
       localStorage.setItem('useGPS', gpsCheckbox.checked ? 'true' : 'false');
+    } else {
+      console.warn("⚠️ No Firestore document found for user.");
     }
-  });
+  } catch (err) {
+    console.error("❌ Firestore fetch failed:", err);
+  }
+});
+
 
   document.getElementById('settings-form').addEventListener('submit', async e => {
     e.preventDefault();
