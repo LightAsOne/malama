@@ -311,7 +311,18 @@ async function reverseGeocode(lat, lng) {
 }
 
 function renderTideChart(tideData, locationInfo) {
-  tideContainer.innerHTML = '';
+  const tideContainer = document.querySelector('.tide');
+  tideContainer.innerHTML = ''; // Clear chart
+
+  // Update the location text
+  const locationText = document.getElementById('tide-location-note');
+  if (locationInfo.useGPS) {
+    reverseGeocode(locationInfo.lat, locationInfo.lng).then(name => {
+      locationText.innerHTML = `<strong>${name}</strong> (GPS)`;
+    });
+  } else {
+    locationText.innerHTML = `<strong>${userProfile?.location || '—'}</strong>`;
+  }
 
   // Check if tideData is valid
   const isEmpty = !Array.isArray(tideData) || tideData.length < 2;
@@ -326,42 +337,10 @@ function renderTideChart(tideData, locationInfo) {
     ];
   }
 
-  // Set location in header
-  const headerTideInfo = document.getElementById('header-tide-info');
-  if (headerTideInfo) {
-    headerTideInfo.innerHTML = '';
-    const tideToggle = document.createElement('label');
-    const gpsInput = document.createElement('input');
-    gpsInput.type = 'checkbox';
-    gpsInput.id = 'gpsToggle';
-    gpsInput.checked = locationInfo.useGPS;
-    tideToggle.appendChild(gpsInput);
-    tideToggle.appendChild(document.createTextNode(' GPS Location'));
-
-    const locationText = document.createElement('div');
-    locationText.id = 'tide-location-note';
-    locationText.style.fontSize = '0.75rem';
-    locationText.style.color = '#666';
-
-    headerTideInfo.appendChild(tideToggle);
-    headerTideInfo.appendChild(locationText);
-
-    if (locationInfo.useGPS) {
-  reverseGeocode(locationInfo.lat, locationInfo.lng).then(name => {
-    locationText.innerHTML = `<strong>${name}</strong> (GPS)`;
-  });
-} else {
-  // Non-GPS: use Firestore profile location
-  setTimeout(() => {
-    const locationName = userProfile?.location || '—';
-    locationText.innerHTML = `<strong>${locationName}</strong>`;
-  }, 100);
-}}
-
-  // Continue with chart drawing
   tideData.sort((a, b) => new Date(a.time) - new Date(b.time));
-  const width = tideContainer.clientWidth || 320; // responsive width
-  const height = 100; // fixed height
+
+  const width = tideContainer.clientWidth || 320;
+  const height = 100;
   const padding = 15;
   const svgNS = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(svgNS, 'svg');
@@ -422,18 +401,16 @@ function renderTideChart(tideData, locationInfo) {
   pathEl.setAttribute('stroke-width', '2');
   svg.appendChild(pathEl);
 
-  // Fallback message (inside SVG)
   if (isEmpty) {
     const msg = document.createElementNS(svgNS, 'text');
     msg.setAttribute('x', width / 2);
-    msg.setAttribute('y', scaleY(1.0) - 15); // above the flat line
+    msg.setAttribute('y', scaleY(1.0) - 15);
     msg.setAttribute('text-anchor', 'middle');
     msg.setAttribute('font-size', '12');
     msg.setAttribute('fill', '#888');
     msg.textContent = 'No tide data available';
     svg.appendChild(msg);
   } else {
-    // Normal dots + labels
     points.forEach(p => {
       const x = scaleX(p.xVal);
       const y = scaleY(p.height);
@@ -467,6 +444,7 @@ function renderTideChart(tideData, locationInfo) {
 
   tideContainer.appendChild(svg);
 }
+
 
 
 
