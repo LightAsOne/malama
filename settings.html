@@ -21,48 +21,48 @@
 </header>
 
   <!-- SETTINGS CONTENT -->
- <div class="settings-wrapper">
-  <div class="card" id="settings-page">
+  <div class="app">
+    <div class="card">
       <h2>Settings</h2>
       <form id="settings-form">
         <label>
           First Name:<br>
           <input type="text" id="profile-first-name" required>
-        </label>
+        </label><br><br>
         <label>
           Last Name:<br>
           <input type="text" id="profile-last-name" required>
-        </label>
+        </label><br><br>
         <label>
           Email:<br>
           <input type="email" id="profile-email" required>
-        </label>
+        </label><br><br>
 		<label>
   Password:<br>
   <input type="password" id="profile-password" placeholder="New password (leave blank to keep current)">
-</label>
+</label><br><br>
         <label>
           Phone:<br>
           <input type="tel" id="profile-phone">
-        </label>
+        </label><br><br>
         
 <label>
   Location:<br>
   <input type="text" id="profile-location" placeholder="City, Country" autocomplete="off">
   <div id="location-suggestions" style="font-size: 0.85rem; color: #555;"></div>
-</label>
+</label><br><br>
 <label>
   Latitude:<br>
   <input type="text" id="profile-lat" placeholder="Latitude" readonly>
-</label>
+</label><br><br>
 <label>
   Longitude:<br>
   <input type="text" id="profile-lng" placeholder="Longitude" readonly>
-</label>
+</label><br><br>
 	      <label>
   <input type="checkbox" id="use-gps-checkbox">
   Use GPS for tide location
-</label>
+</label><br><br>
 	      <div>
         <button type="submit">Save</button>
         <button type="button" id="settings-logout">Logout</button>
@@ -186,21 +186,16 @@ locationInput.value =
   }
 });
 
- auth.onAuthStateChanged(async user => {
-  console.log("👤 Firebase user:", user);
+  auth.onAuthStateChanged(async user => {
+    if (!user) {
+      alert("You're not logged in.");
+      window.location.href = "index.html";
+      return;
+    }
 
-  if (!user) {
-    alert("You're not logged in.");
-    window.location.href = "index.html";
-    return;
-  }
-
-  try {
     const doc = await db.collection('users').doc(user.uid).get();
     if (doc.exists) {
       const data = doc.data();
-      console.log("✅ Firestore data loaded:", data);
-
       document.getElementById('profile-first-name').value = data.firstName || '';
       document.getElementById('profile-last-name').value = data.lastName || '';
       document.getElementById('profile-email').value = data.email || '';
@@ -211,14 +206,8 @@ locationInput.value =
       gpsCheckbox.checked = data.useGPS || false;
       updateLocationFieldState(gpsCheckbox.checked);
       localStorage.setItem('useGPS', gpsCheckbox.checked ? 'true' : 'false');
-    } else {
-      console.warn("⚠️ No Firestore document found for user.");
     }
-  } catch (err) {
-    console.error("❌ Firestore fetch failed:", err);
-  }
-});
-
+  });
 
   document.getElementById('settings-form').addEventListener('submit', async e => {
     e.preventDefault();
