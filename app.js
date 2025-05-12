@@ -222,13 +222,15 @@ async function getTideLocation() {
   }
 }
 
-
 function updateAstroTimes(date, lat, lng) {
+  if (!document.getElementById('sunrise-time')) return; // ← Skip if not on index page
+
   const sunTimes = SunCalc.getTimes(date, lat, lng);
   document.getElementById('sunrise-time').textContent =
     sunTimes.sunrise ? formatTime(sunTimes.sunrise) : 'No rise';
   document.getElementById('sunset-time').textContent =
     sunTimes.sunset ? formatTime(sunTimes.sunset) : 'No set';
+
 
   let moonrise = null;
   let moonset = null;
