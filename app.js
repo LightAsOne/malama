@@ -231,9 +231,7 @@ if (gpsInput) {
 }
 async function getTideLocation() {
   const useGPSStored = localStorage.getItem('useGPS') === 'true';
-
-  const gpsToggleEl = document.getElementById('gpsToggle');
-  if (gpsToggleEl) gpsToggleEl.checked = useGPSStored;
+  document.getElementById('gpsToggle').checked = useGPSStored;
 
   if (useGPSStored && navigator.geolocation) {
     return new Promise((resolve) => {
@@ -246,6 +244,7 @@ async function getTideLocation() {
     return { ...getSavedLocation(), useGPS: false };
   }
 }
+
 
 
 function updateAstroTimes(date, lat, lng) {
