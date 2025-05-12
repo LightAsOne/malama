@@ -444,17 +444,19 @@ function renderTideChart(tideData, locationInfo) {
 
 
 
-(async () => {
-  const loc = await getTideLocation();
-
-  // 1. Render header and toggle immediately
-  renderTideChart([], loc);  // build toggle + location now
-
-  // 2. Fetch and update actual data
-  const tideData = await fetchTideData(loc.lat, loc.lng);
-  renderTideChart(tideData, loc);
-  updateAstroTimes(now, loc.lat, loc.lng);
-})();
+if (document.querySelector('.tide')) {
+  (async () => {
+    const loc = await getTideLocation();
+    renderTideChart([], loc);
+    try {
+      const tideData = await fetchTideData(loc.lat, loc.lng);
+      renderTideChart(tideData, loc);
+    } catch (err) {
+      console.warn("Tide fetch failed:", err);
+    }
+    updateAstroTimes(now, loc.lat, loc.lng);
+  })();
+}
 
 
 
