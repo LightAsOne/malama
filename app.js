@@ -201,34 +201,10 @@ moonImage.alt = imageName; // keep original for screen readers
 
 const headerTideInfo = document.getElementById('header-tide-info');
   const tideContainer = document.querySelector('.tide');
-const tideToggle = document.createElement('label');
-tideToggle.innerHTML = `<input type="checkbox" id="gpsToggle"> Use GPS for Tide`;
-
-const locationText = document.createElement('div');
-locationText.id = 'tide-location-note';
-locationText.style.fontSize = '0.75rem';
-locationText.style.color = '#666';
-locationText.style.marginTop = '0.25rem';
-
-headerTideInfo.appendChild(tideToggle);
-headerTideInfo.appendChild(locationText);
 
 
-// Attach GPS toggle listener to the newly created input
-const gpsInput = document.getElementById('gpsToggle');
-if (gpsInput) {
-  gpsInput.addEventListener('change', async (e) => {
-    localStorage.setItem('useGPS', e.target.checked);
-    const selectedDate = selectedCell
-      ? new Date(currentYear, currentMonth, parseInt(selectedCell.textContent))
-      : new Date();
-    const loc = await getTideLocation();
-    updateMoonTideDate(selectedDate);
-    updateAstroTimes(selectedDate, loc.lat, loc.lng);
-    const tideData = await fetchTideData(loc.lat, loc.lng);
-    renderTideChart(tideData, loc);
-  });
-}
+
+
 async function getTideLocation() {
   const useGPSStored = localStorage.getItem('useGPS') === 'true';
 
