@@ -471,6 +471,7 @@ if (document.querySelector('.tide')) {
   // Calendar
   let currentYear = now.getFullYear();
   let currentMonth = now.getMonth();
+  let selectedDate = new Date(); // This will track the selected day for nav buttons
   let selectedCell = null;
 
   function buildCalendar(year, month) {
@@ -578,5 +579,43 @@ cell.addEventListener('click', async () => {
   }
 });
 
+function moveDay(offset) {
+  const oldMonth = selectedDate.getMonth();
+  const oldYear = selectedDate.getFullYear();
 
+  selectedDate.setDate(selectedDate.getDate() + offset);
+
+  const newMonth = selectedDate.getMonth();
+  const newYear = selectedDate.getFullYear();
+
+  // If we’ve entered a new month/year, rebuild the calendar
+  if (newMonth !== oldMonth || newYear !== oldYear) {
+    currentMonth = newMonth;
+    currentYear = newYear;
+    buildCalendar(currentYear, currentMonth);
+  }
+
+  updateMoonTideDate(selectedDate);
+
+  getTideLocation().then(async loc => {
+    updateAstroTimes(selectedDate, loc.lat, loc.lng);
+    const tideData = await fetchTideData(loc.lat, loc.lng);
+    renderTideChart(tideData, loc);
+
+    // Highlight selected day in calendar
+    const day = selectedDate.getDate();
+    const cells = document.querySelectorAll('#calendar-body td');
+    cells.forEach(cell => {
+      const cellDay = parseInt(cell.textContent);
+      if (selectedCell) selectedCell.classList.remove('selected-day');
+      if (cellDay === day && !isNaN(cellDay)) {
+        cell.classList.add('selected-day');
+        selectedCell = cell;
+      }
+    });
+  });
+}
+
+document.getElementById('prev-day')?.addEventListener('click', () => moveDay(-1));
+document.getElementById('next-day')?.addEventListener('click', () => moveDay(1));
   });
