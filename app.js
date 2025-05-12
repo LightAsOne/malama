@@ -1,6 +1,5 @@
 
 document.addEventListener('DOMContentLoaded', () => {
-  }
 
   let userProfile = null;
   const loginPage = document.getElementById('login-page');
