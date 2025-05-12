@@ -227,6 +227,22 @@ locationText.style.marginTop = '0.25rem';
 tideContainer.appendChild(tideToggle);
 tideContainer.appendChild(locationText);
 
+
+// Attach GPS toggle listener to the newly created input
+const gpsInput = document.getElementById('gpsToggle');
+if (gpsInput) {
+  gpsInput.addEventListener('change', async (e) => {
+    localStorage.setItem('useGPS', e.target.checked);
+    const selectedDate = selectedCell
+      ? new Date(currentYear, currentMonth, parseInt(selectedCell.textContent))
+      : new Date();
+    const loc = await getTideLocation();
+    updateMoonTideDate(selectedDate);
+    updateAstroTimes(selectedDate, loc.lat, loc.lng);
+    const tideData = await fetchTideData(loc.lat, loc.lng);
+    renderTideChart(tideData, loc);
+  });
+}
 async function getTideLocation() {
   const useGPSStored = localStorage.getItem('useGPS') === 'true';
 
