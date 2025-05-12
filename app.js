@@ -1,5 +1,6 @@
 
 document.addEventListener('DOMContentLoaded', () => {
+  let userProfile = null;
   const loginPage = document.getElementById('login-page');
   const loginForm = document.getElementById('login-form');
   const appHeader = document.querySelector('.app-header');
@@ -31,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const doc = await db.collection('users').doc(user.uid).get();
         if (doc.exists) {
           const profile = doc.data();
+          userProfile = profile;
           const greetingEl = document.getElementById('header-greeting');
           const tideInfoEl = document.getElementById('header-tide-info');
           if (greetingEl && profile.firstName) {
@@ -256,18 +258,11 @@ function formatTime(date) {
 }
 
 function getSavedLocation() {
-  const currentUserKey = localStorage.getItem('currentUser');
-  const users = JSON.parse(localStorage.getItem('users') || '{}');
-  const user = users[currentUserKey];
-
-  const lat = parseFloat(user?.profile?.lat);
-  const lng = parseFloat(user?.profile?.lng);
-
-  if (!isNaN(lat) && !isNaN(lng)) {
-    return { lat, lng };
-  } else {
-    return { lat: -16.5, lng: 145.5 }; // Default fallback
+  if (userProfile?.lat != null && userProfile?.lng != null) {
+    return { lat: userProfile.lat, lng: userProfile.lng };
   }
+  // fallback to Port Douglas
+  return { lat: -16.5, lng: 145.5 };
 }
 
 async function fetchTideData(lat, lng) {
@@ -329,14 +324,12 @@ function renderTideChart(tideData, locationInfo) {
     locationText.innerHTML = `<strong>${name}</strong> (GPS)`;
   });
 } else {
-  // Delay this slightly to avoid being overridden
+  // Non-GPS: use Firestore profile location
   setTimeout(() => {
-    const currentUserKey = localStorage.getItem('currentUser');
-    const users = JSON.parse(localStorage.getItem('users') || '{}');
-    const user = users[currentUserKey];
-    const locationName = user?.profile?.location || '—';
+    const locationName = userProfile?.location || '—';
     locationText.innerHTML = `<strong>${locationName}</strong>`;
-  }, 100); // Adjust delay if needed
+  }, 100);
+} // Adjust delay if needed
 }
 
    tideToggle.querySelector('#gpsToggle')?.addEventListener('change', async () => {
@@ -479,13 +472,7 @@ function renderTideChart(tideData, locationInfo) {
 })();
 
 
-// 🛠 Remember GPS preference
-document.addEventListener('change', e => {
-  if (e.target.id === 'gpsToggle') {
-    localStorage.setItem('useGPS', gpsInput.checked ? 'true' : 'false');
 
-  }
-});
 
   // Calendar
   let currentYear = now.getFullYear();
@@ -597,5 +584,21 @@ cell.addEventListener('click', async () => {
   }
 });
 
+
+  // Handle GPS toggle changes
+  document.addEventListener('change', async (e) => {
+    if (e.target.id === 'gpsToggle') {
+      localStorage.setItem('useGPS', e.target.checked);
+
+      const selectedDate = selectedCell
+        ? new Date(currentYear, currentMonth, parseInt(selectedCell.textContent))
+        : new Date();
+      const loc = await getTideLocation();
+      updateMoonTideDate(selectedDate);
+      updateAstroTimes(selectedDate, loc.lat, loc.lng);
+      const tideData = await fetchTideData(loc.lat, loc.lng);
+      renderTideChart(tideData, loc);
+    }
+  });
 
 });
