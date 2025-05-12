@@ -117,11 +117,8 @@ body {
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  padding: 2rem;
-  width: 100%;
-  max-width: none;
-  margin: 0;
-  box-sizing: border-box;
+  padding: 1rem;
+  flex: 1;
 }
 
 /* Moon Row Layout */
@@ -329,14 +326,11 @@ td.current-day {
   margin: 80px auto 2rem;
   background: white;
   border-radius: 8px;
-  padding: 1.5rem;
+  padding: 1rem;
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  width: 100%;
-  max-width: 600px;
-  min-width: 320px;
-  align-self: flex-start;
+  width: 90%;
+  max-width: 400px;
 }
-
 
 /* Bottom Nav */
 .bottom-nav {
@@ -440,20 +434,4 @@ td.current-day {
 svg {
   max-width: 100%;
   height: auto;
-}
-
-#settings-form label {
-  margin-bottom: 1rem;
-  display: block;
-}
-.form-buttons {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 1.5rem;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-.form-buttons button {
-  flex: 1;
-  min-width: 100px;
 }
