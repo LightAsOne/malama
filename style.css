@@ -205,12 +205,31 @@ body {
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  font-size: 0.8rem;
+  font-size: 75%;
   color: #666;
   margin-top: 0.5rem;
   padding: 0 0.5rem;
   white-space: nowrap;
   overflow: hidden;
+
+}
+.astro-lines {
+  font-size: 75%;
+}
+.astro-lines div {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  white-space: nowrap;
+  font-size: inherit;
+  gap: 0.4rem; /* Adjust to taste, 0.25rem is also okay */
+}
+
+.astro-lines span {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
 }
 
 .sun-times, .moon-times {
@@ -221,23 +240,27 @@ body {
 
 .sun-times {
   text-align: left;
+ 
 }
 
 .moon-times {
   text-align: right;
+  
 }
 
 .icon {
   margin-right: 0.25rem;
-  font-size: 1rem;
+  
 }
 
 .icon.moon {
   color: #6495ED;
+  
 }
 
 .icon.sun {
   color: #FDB813;
+  
 }
 
 /* Calendar Grid */
