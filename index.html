@@ -42,38 +42,7 @@
   <div class="app hidden">
     <!-- Top Row: Moon & Tide / Calendar Grid -->
     <div class="top-row">
-      <div class="card moon-tide">
-	 
-	        
-  <!-- Wrap these in a flex row -->
-  <div class="moon-row">
-    <div class="info">
-      <div class="current-date"></div>
-      <div id="hawaiian-lunar-info"><em>Loading lunar information...</em></div>
-      <div class="moon-phase"></div>
-    </div>
-
-    <div class="moon-image">
-      <div class="moon-photo">
-        <img id="moon-phase-image" src="" alt="Moon Phase" />
-      </div>
-      
-    </div>
-  </div>
-  <div class="moon-row">
-    <div class="moon-col-75">The lunar phase description</div>
-    <div class="moon-col-25">KAPU</div>
-  </div>
-  <div class="moon-row2">
-    <div class="moon-col-50">Good For</div>
-    <div class="moon-col-50">Not Good for</div>
-  </div>
-
- 
-   
- 
-</div>
- 
+     
 	  <div class="card calendar-grid">
 		  <div class="calendar-month">
   <button id="prev-month" class="month-nav">&laquo;</button>
@@ -81,6 +50,7 @@
   <span id="calendar-month-label"></span>
   <button id="next-day" class="day-nav">&rsaquo;</button>
   <button id="next-month" class="month-nav">&raquo;</button>
+  
 </div>
 	    <table>
           <thead>
@@ -92,19 +62,52 @@
         </table> 
 		 
 	  
-	  <div class="tide"> </div>
-	  <div class="astro-times">
-  <div class="sun-times">
-    <span class="icon">☀️</span>Rise: <span id="sunrise-time">--:--</span> Set: <span id="sunset-time">--:--</span>
-  </div>
-  <div class="moon-times">
+	 
+	 
+ </div>
+
+	 <div class="card moon-tide">       
+  <!-- Wrap these in a flex row -->
+  <div class="moon-row">
+    <div class="info">
+      <div class="current-date"></div>
+      <div id="hawaiian-lunar-info"><em>Loading lunar information...</em></div>
+      <div class="moon-phase"></div>
+  
+    <div> <span class="icon">☀️</span>Rise: <span id="sunrise-time">--:--</span> Set: <span id="sunset-time">--:--</span></div>
+  
+  <div>
     <span class="icon">🌙</span>Rise: <span id="moonrise-time">--:--</span> Set: <span id="moonset-time">--:--</span>
   </div>
 </div>
 
-		
+    <div class="moon-image">
+      <div class="moon-photo">
+        <img id="moon-phase-image" src="" alt="Moon Phase" />
       </div>
+      
     </div>
+	
+  </div>
+  
+   
+<!--
+  <div class="moon-row">
+    <div class="moon-col-75">The lunar phase description</div>
+    <div class="moon-col-25">KAPU</div>
+  </div>
+  <div class="moon-row2">
+    <div class="moon-col-50">Good For</div>
+    <div class="moon-col-50">Not Good for</div>
+  </div>
+  -->
+ </div>
+ 
+</div>
+ 
+	 
+	  
+	  
 
     <!-- Today Snapshot -->
     <div class="today-box">
@@ -114,6 +117,7 @@
 
     <!-- Core Pillars -->
     <div class="pillars">
+	 <div class="tide"> </div>
       <div class="pillar">
         <h2>ʻUhane</h2>
         <p>Spiritual alignment & sacred practice</p>
@@ -218,5 +222,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.9.0/suncalc.min.js"></script>
   <!-- Main JS -->
   <script src="app.js"></script>
+  <div id="loading-screen">
+  <div class="spinner"></div>
+</div>
 </body>
 </html>

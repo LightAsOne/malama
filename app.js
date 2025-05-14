@@ -1,6 +1,15 @@
+function showSpinner() {
+  const loadingScreen = document.getElementById('loading-screen');
+  if (loadingScreen) loadingScreen.style.display = 'flex';
+}
+
+function hideSpinner() {
+  const loadingScreen = document.getElementById('loading-screen');
+  if (loadingScreen) loadingScreen.style.display = 'none';
+}
 
 document.addEventListener('DOMContentLoaded', () => {
-
+showSpinner();
   // Setup
   const now = new Date();
   let selectedDate = new Date(); // 🔧 Move selectedDate up here
@@ -57,6 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateAstroTimes(today, loc.lat, loc.lng);
             const tideData = await fetchTideData(loc.lat, loc.lng);
             renderTideChart(tideData, loc);
+			hideSpinner(); // ✅ hide spinner only after all is loaded
           })();
 const greetingEl = document.getElementById('header-greeting');
           const tideInfoEl = document.getElementById('header-tide-info');
@@ -499,12 +509,12 @@ if (document.querySelector('.tide')) {
 		selectedCell = cell;
 		}
 cell.addEventListener('click', async () => {
+  showSpinner(); // ✅ Show rotella
+
   selectedDate = new Date(year, month, d);
   updateMoonTideDate(selectedDate);
 
-  // 🔁 One unified location fetch
   const loc = await getTideLocation();
-
   updateAstroTimes(selectedDate, loc.lat, loc.lng);
   const tideData = await fetchTideData(loc.lat, loc.lng);
   renderTideChart(tideData, loc);
@@ -512,7 +522,10 @@ cell.addEventListener('click', async () => {
   if (selectedCell) selectedCell.classList.remove('selected-day');
   cell.classList.add('selected-day');
   selectedCell = cell;
+
+  hideSpinner(); // ✅ Hide rotella
 });
+
 
       row.appendChild(cell);
 
@@ -582,6 +595,8 @@ cell.addEventListener('click', async () => {
   }
 });
 function moveDay(offset) {
+  showSpinner(); // ✅ show the rotella
+
   const oldMonth = selectedDate.getMonth();
   const oldYear = selectedDate.getFullYear();
 
@@ -604,6 +619,8 @@ function moveDay(offset) {
     renderTideChart(tideData, loc);
 
     buildCalendar(currentYear, currentMonth);
+
+    hideSpinner(); // ✅ hide when done
   });
 }
 
