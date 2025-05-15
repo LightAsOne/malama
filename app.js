@@ -10,6 +10,11 @@ function hideSpinner() {
 
 document.addEventListener('DOMContentLoaded', () => {
 showSpinner();
+
+document.getElementById('calendar-toggle').addEventListener('click', () => {
+  const popup = document.getElementById('calendar-popup');
+  popup.classList.toggle('hidden');
+});
   // Setup
   const now = new Date();
   let selectedDate = new Date(); // 🔧 Move selectedDate up here
@@ -124,11 +129,14 @@ const greetingEl = document.getElementById('header-greeting');
 
   const engDateStr = `${engDay}, ${dayNum} ${engMonth} ${year}`;
   const hawDateStr = `${hawDay}, ${dayNum} ${hawMonth}`;
-
+  const label = document.getElementById('calendar-label');
+if (label) {
+  label.textContent = `${engDay}, ${dayNum} ${engMonth} ${year}`;
+}
  const currentDateEl = document.querySelector('.current-date');
 if (currentDateEl) {
   currentDateEl.innerHTML = `
-    <span class="english">${engDateStr}</span>
+    
     <span class="hawaiian">${hawDateStr}</span>
   `;
 }
@@ -513,7 +521,7 @@ cell.addEventListener('click', async () => {
 
   selectedDate = new Date(year, month, d);
   updateMoonTideDate(selectedDate);
-
+	document.getElementById('calendar-popup')?.classList.add('hidden');
   const loc = await getTideLocation();
   updateAstroTimes(selectedDate, loc.lat, loc.lng);
   const tideData = await fetchTideData(loc.lat, loc.lng);
@@ -624,11 +632,22 @@ function moveDay(offset) {
   });
 }
 
-document.getElementById('prev-day')?.addEventListener('click', () => moveDay(-1));
-document.getElementById('next-day')?.addEventListener('click', () => moveDay(1));
+document.getElementById('prev-day')?.addEventListener('click', () => {
+  moveDay(-1);
+  document.getElementById('calendar-popup')?.classList.add('hidden'); // ✅ hide popup
+});
+
+document.getElementById('next-day')?.addEventListener('click', () => {
+  moveDay(1);
+  document.getElementById('calendar-popup')?.classList.add('hidden'); // ✅ hide popup
+});
 
 // ✅ This goes here, just before the final closing bracket of DOMContentLoaded
 document.addEventListener('click', () => {
   document.body.offsetHeight;  // forces reflow on any tap or click
+  
 });
+
+
+
   });

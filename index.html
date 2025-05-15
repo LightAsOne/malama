@@ -43,30 +43,36 @@
     <!-- Top Row: Moon & Tide / Calendar Grid -->
     <div class="top-row">
      
-	  <div class="card calendar-grid">
-		  <div class="calendar-month">
-  <button id="prev-month" class="month-nav">&laquo;</button>
-  <button id="prev-day" class="day-nav">&lsaquo;</button>
-  <span id="calendar-month-label"></span>
-  <button id="next-day" class="day-nav">&rsaquo;</button>
-  <button id="next-month" class="month-nav">&raquo;</button>
+	
+	 
+	  
+
+
+ 
+	 <div class="card moon-tide">  
+<div id="calendar-toggle" class="calendar-display"> <span id="calendar-label">Loading...</span>  <span class="calendar-arrow">▼</span>
+    </div>     
+   <div class="calendar-wrapper">
+  <div id="calendar-popup" class="calendar-grid hidden">
+    <div class="calendar-month">
+      <button id="prev-month" class="month-nav">&laquo;</button>
+      <button id="prev-day" class="day-nav">&lsaquo;</button>
+      <span id="calendar-month-label"></span>
+      <button id="next-day" class="day-nav">&rsaquo;</button>
+      <button id="next-month" class="month-nav">&raquo;</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th></tr>
+      </thead>
+      <tbody id="calendar-body">
+        <!-- JS will fill this -->
+      </tbody>
+    </table>
+  </div>
   
 </div>
-	    <table>
-          <thead>
-            <tr><th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th></tr>
-          </thead>
-          <tbody id="calendar-body">
-            <!-- JS will fill this -->
-          </tbody>
-        </table> 
-		 
-	  
-	 
-	 
- </div>
-
-	 <div class="card moon-tide">       
   <!-- Wrap these in a flex row -->
   <div class="moon-row">
     <div class="info">
@@ -92,19 +98,14 @@
 	
   </div>
   
-   
-<!--
-  <div class="moon-row">
-    <div class="moon-col-75">The lunar phase description</div>
-    <div class="moon-col-25">KAPU</div>
-  </div>
-  <div class="moon-row2">
-    <div class="moon-col-50">Good For</div>
-    <div class="moon-col-50">Not Good for</div>
-  </div>
-  -->
- </div>
+   <div class="tide"> </div>
+
  
+ 
+</div>
+<div class="card"> TEST
+</div>
+
 </div>
  
 	 
@@ -119,7 +120,7 @@
 
     <!-- Core Pillars -->
     <div class="pillars">
-	 <div class="tide"> </div>
+	 
       <div class="pillar">
         <h2>ʻUhane</h2>
         <p>Spiritual alignment & sacred practice</p>
