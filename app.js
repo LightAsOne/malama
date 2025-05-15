@@ -649,5 +649,26 @@ document.addEventListener('click', () => {
 });
 
 
+const tabs = document.querySelectorAll(".tab-btn");
+  const panes = document.querySelectorAll(".tab-pane");
+
+  tabs.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const target = btn.getAttribute("data-tab");
+
+      // Activate tab
+      tabs.forEach(t => t.classList.remove("active"));
+      btn.classList.add("active");
+
+      // Show matching pane
+      panes.forEach(pane => {
+        pane.classList.toggle("active", pane.id === target);
+      });
+    });
+  });
+
+
+
+
 
   });

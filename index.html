@@ -41,72 +41,88 @@
   <!-- MAIN APP -->
   <div class="app hidden">
     <!-- Top Row: Moon & Tide / Calendar Grid -->
-    <div class="top-row">
-     
-	
-	 
-	  
-
-
- 
-	 <div class="card moon-tide">  
-<div id="calendar-toggle" class="calendar-display"> <span id="calendar-label">Loading...</span>  <span class="calendar-arrow">▼</span>
-    </div>     
-   <div class="calendar-wrapper">
-  <div id="calendar-popup" class="calendar-grid hidden">
-    <div class="calendar-month">
-      <button id="prev-month" class="month-nav">&laquo;</button>
-      <button id="prev-day" class="day-nav">&lsaquo;</button>
-      <span id="calendar-month-label"></span>
-      <button id="next-day" class="day-nav">&rsaquo;</button>
-      <button id="next-month" class="month-nav">&raquo;</button>
+    <div class="top-row equal-height row-wrapper">
+  <!-- Left card: Moon + Calendar + Tide -->
+  <div class="card moon-tide">
+    <div id="calendar-toggle" class="calendar-display">
+      <span id="calendar-label">Loading...</span>
+      <span class="calendar-arrow">▼</span>
     </div>
 
-    <table>
-      <thead>
-        <tr><th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th></tr>
-      </thead>
-      <tbody id="calendar-body">
-        <!-- JS will fill this -->
-      </tbody>
-    </table>
-  </div>
-  
-</div>
-  <!-- Wrap these in a flex row -->
-  <div class="moon-row">
-    <div class="info">
-      <div class="current-date"></div>
-      <div id="hawaiian-lunar-info"><em>Loading lunar information...</em></div>
-      <div class="moon-phase"></div>
-  <div class="astro-lines">
-   <div>
-    <span class="icon">🌙</span>Rise: <span id="moonrise-time">--:--</span> Set: <span id="moonset-time">--:--</span>
-  </div>
-    <div> <span class="icon">☀️</span>Rise: <span id="sunrise-time">--:--</span> Set: <span id="sunset-time">--:--</span></div>
-  
- 
-  </div>
-</div>
-
-    <div class="moon-image">
-      <div class="moon-photo">
-        <img id="moon-phase-image" src="" alt="Moon Phase" />
+    <div class="calendar-wrapper">
+      <div id="calendar-popup" class="calendar-grid hidden">
+        <div class="calendar-month">
+          <button id="prev-month" class="month-nav">&laquo;</button>
+          <button id="prev-day" class="day-nav">&lsaquo;</button>
+          <span id="calendar-month-label"></span>
+          <button id="next-day" class="day-nav">&rsaquo;</button>
+          <button id="next-month" class="month-nav">&raquo;</button>
+        </div>
+        <table>
+          <thead>
+            <tr><th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th></tr>
+          </thead>
+          <tbody id="calendar-body">
+            <!-- JS will fill this -->
+          </tbody>
+        </table>
       </div>
-      
     </div>
-	
+
+    <div class="moon-row">
+      <div class="info">
+        <div class="current-date"></div>
+        <div id="hawaiian-lunar-info"><em>Loading lunar information...</em></div>
+        <div class="moon-phase"></div>
+        <div class="astro-lines">
+          <div><span class="icon">🌙</span>Rise: <span id="moonrise-time">--:--</span> Set: <span id="moonset-time">--:--</span></div>
+          <div><span class="icon">☀️</span>Rise: <span id="sunrise-time">--:--</span> Set: <span id="sunset-time">--:--</span></div>
+        </div>
+      </div>
+
+      <div class="moon-image">
+        <div class="moon-photo">
+          <img id="moon-phase-image" src="" alt="Moon Phase" />
+        </div>
+      </div>
+    </div>
+
+    <div class="tide"></div>
   </div>
+
+  <!-- Right card: Dynamic content -->
   
-   <div class="tide"> </div>
-
  
- 
-</div>
-<div class="card"> TEST
+<div class="card sync-height" id="dynamic-card">
+  <div class="card-header" id="dynamic-title">Loading title...</div>
+  
+  <div class="card-content"> <!-- ✅ required wrapper -->
+    <div class="card-tabs">
+      <div class="tab-header">
+        <button class="tab-btn active" data-tab="tab1">Meaning ◐ </button>
+        <button class="tab-btn" data-tab="tab2">Do`s ✔</button>
+        <button class="tab-btn" data-tab="tab3">Dont`s ✘</button>
+        <button class="tab-btn" data-tab="tab4">Pule & Kapu ❖</button>
+      </div>
+      <div class="tab-content">
+        <div class="tab-pane active" id="tab1">Loading Intro...</div>
+        <div class="tab-pane" id="tab2">Loading Details...</div>
+        <div class="tab-pane" id="tab3">Loading Notes...</div>
+        <div class="tab-pane" id="tab4">
+          <!-- Long content test -->
+          <p>Line 1</p><p>Line 2</p><p>Line 3</p><p>Line 3</p><p>Line 3</p><p>Line 3</p><p>Line 3</p><p>Line 3</p><p>Line 3</p><p>Line 3</p>
+          ...
+          <p>Line 40</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
+
+
 </div>
+
  
 	 
 	  
