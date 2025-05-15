@@ -756,3 +756,26 @@ svg {
 .tab-pane.active {
   display: block;
 }
+.tab-header {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  gap: 0.5rem; /* spacing between buttons */
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.tab-btn {
+  white-space: normal; /* allow wrapping inside the button */
+  flex: 0 1 auto; /* allow width to grow based on content but don't force equal width */
+  max-width: 100%;
+  padding: 0.5rem 1rem;
+  word-break: break-word; /* allow breaking long words */
+  text-align: center;
+}
+@media (max-width: 480px) {
+  .tab-btn {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.6rem;
+  }
+}
