@@ -730,7 +730,7 @@ svg {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.4rem 0.6rem;
+  padding: 0.4rem 0.75rem;
   font-size: 0.85rem;
   background: #f0f0f0;
   border: none;
@@ -738,14 +738,21 @@ svg {
   cursor: pointer;
   font-weight: 600;
   color: #000;
-  white-space: normal;         /* ✅ allow wrapping */
-  word-break: break-word;      /* ✅ break long words */
+  white-space: nowrap;         /* ✅ default: no wrap on large screens */
   text-align: center;
-  max-width: 6.5rem;           /* ✅ allows wrapping without funny shape */
-  min-height: 2.4rem;          /* ✅ keeps button height consistent */
-  line-height: 1.2;
-  flex: 0 1 auto;              /* ✅ lets buttons shrink/grow as needed */
+  flex: 0 1 auto;
 }
+@media (max-width: 600px) {
+  .tab-btn {
+    white-space: normal;          /* ✅ allow wrapping */
+    word-break: break-word;
+    max-width: 6.5rem;
+    min-height: 2.4rem;
+    font-size: 0.8rem;
+  }
+}
+
+
 .tab-btn.active {
   background: white;
   border-bottom: 2px solid #007bff;
