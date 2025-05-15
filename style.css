@@ -719,12 +719,10 @@ svg {
 
 .tab-header {
   display: flex;
-  flex-wrap: nowrap;            /* ✅ force tabs on one row */
-  overflow-x: auto;             /* ✅ allow horizontal scroll */
-  -webkit-overflow-scrolling: touch;
+  flex-wrap: nowrap;            /* ✅ keep tabs in one row */
   gap: 0.5rem;
-  border-bottom: 1px solid #ccc;
   padding: 0.25rem 0;
+  min-width: max-content;       /* ✅ ensure content fits */
 }
 .tab-header::-webkit-scrollbar {
   display: none;
@@ -740,12 +738,17 @@ svg {
   cursor: pointer;
   font-weight: 600;
   color: #000;
-  white-space: normal;         /* ✅ allow wrapping */
-  word-break: break-word;      /* ✅ allow line break */
-  max-width: 120px;            /* ✅ limit width */
+  white-space: normal;
+  word-break: break-word;
+  max-width: 120px;
   min-width: 80px;
-  height: auto;
-  flex-shrink: 0;              /* ✅ prevent shrinking into oblivion */
+  flex-shrink: 0;
+}
+.tab-wrapper {
+  width: 100%;
+  overflow-x: auto;              /* ✅ only this scrolls */
+  -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
 }
 @media (max-width: 500px) {
   .tab-btn {
