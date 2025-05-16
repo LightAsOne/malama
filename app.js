@@ -139,6 +139,7 @@ if (currentDateEl) {
     
     <span class="hawaiian">${hawDateStr}</span>
   `;
+  document.dispatchEvent(new CustomEvent('lunarInfoUpdated'));
 }
 
 
@@ -634,12 +635,21 @@ function moveDay(offset) {
 
 document.getElementById('prev-day')?.addEventListener('click', () => {
   moveDay(-1);
-  document.getElementById('calendar-popup')?.classList.add('hidden'); // ✅ hide popup
+  document.getElementById('calendar-popup')?.classList.add('hidden');
 });
 
 document.getElementById('next-day')?.addEventListener('click', () => {
   moveDay(1);
-  document.getElementById('calendar-popup')?.classList.add('hidden'); // ✅ hide popup
+  document.getElementById('calendar-popup')?.classList.add('hidden');
+});
+
+// ✅ Direct arrows now reuse the same exact logic
+document.getElementById('prev-day-direct')?.addEventListener('click', () => {
+  document.getElementById('prev-day')?.click();
+});
+
+document.getElementById('next-day-direct')?.addEventListener('click', () => {
+  document.getElementById('next-day')?.click();
 });
 
 // ✅ This goes here, just before the final closing bracket of DOMContentLoaded
@@ -664,7 +674,9 @@ const tabs = document.querySelectorAll(".tab-btn");
       panes.forEach(pane => {
         pane.classList.toggle("active", pane.id === target);
       });
-    });
+    // ✅ Re-run description if switching to tab2 or tab3
+    if (["tab2", "tab3", "tab4","Olelo"].includes(target)) updateLunarDescription();
+	});
   });
 
 

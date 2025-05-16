@@ -91,7 +91,7 @@ body {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Old Standard TT', sans-serif;
   background: #F5F5F5;
   color: #333;
 }
@@ -335,12 +335,7 @@ td.current-day {
   line-height: 1;
 }
 
-.tide {
-  flex: 1 1 auto;
-  min-width: 0;
-  width: 100%;
-  box-sizing: border-box;
-}
+
 
 /* Today Snapshot */
 .today-box {
@@ -363,22 +358,31 @@ td.current-day {
   width: 100%;
 }
 
-/* Core Pillars */
+/* Core Pillars using Grid Layout */
 .pillars {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
   gap: 1rem;
-  flex-wrap: wrap;
-  justify-content: center;
   margin-bottom: 3rem;
 }
 
+/* Tide takes 2 columns */
+.tide {
+  grid-column: span 2;
+  background: #f5f5f5;
+  padding: 1rem;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+/* Pillars take 1 column each */
 .pillar {
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   padding: 1rem;
-  flex: 1;
-  min-width: 150px;
+  box-sizing: border-box;
+  grid-column: span 1;
 }
 
 .pillar h2 {
@@ -390,6 +394,45 @@ td.current-day {
   font-size: 0.8rem;
 }
 
+/* On small screens: 2 columns */
+@media (max-width: 768px) {
+  .pillars {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tide {
+    grid-column: span 2;
+  }
+
+  .pillar {
+    grid-column: span 1;
+  }
+}
+.tide {
+  grid-column: span 2;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  padding: 1rem;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%; /* allow grid to stretch height equally */
+}
+
+/* Force all items in .pillars to match height */
+.pillars {
+  align-items: stretch; /* ensures .tide and .pillar are same height */
+}
+
+
+.tide > * {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
 
 /* LOGIN & SETTINGS Modal */
 .login-page {
@@ -504,6 +547,27 @@ td.current-day {
   color: white;
 }
 
+.calendar-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.calendar-nav-arrow {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  color: #333;
+  transition: color 0.2s ease;
+}
+
+.calendar-nav-arrow:hover {
+  color: #666;
+}
 /* Settings form scroll on mobile */
 .card form {
   display: flex;
@@ -735,10 +799,13 @@ svg {
   cursor: pointer;
   font-weight: bold;
 }
+.tab-btn {
+  font-family: 'Old Standard TT', serif;
+}
 
 .tab-btn.active {
   background: white;
-  border-bottom: 2px solid #007bff;
+  border-bottom: 2px solid ##FFFFFF;
   color: #007bff;
 }
 
@@ -746,7 +813,7 @@ svg {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
-  padding: 1rem;
+  padding: 0.5rem;
 }
 
 .tab-pane {
@@ -759,23 +826,170 @@ svg {
 .tab-header {
   display: flex;
   flex-wrap: nowrap;
-  justify-content: space-between;
-  gap: 0.5rem; /* spacing between buttons */
+  justify-content: flex-start;
+  gap: 0; /* spacing between buttons */
   flex-wrap: nowrap;
   overflow: hidden;
+  width: 100%;         /* ✅ Make tab row full width */
+  box-sizing: border-box;
 }
 
 .tab-btn {
-  white-space: normal; /* allow wrapping inside the button */
-  flex: 0 1 auto; /* allow width to grow based on content but don't force equal width */
-  max-width: 100%;
-  padding: 0.5rem 1rem;
-  word-break: break-word; /* allow breaking long words */
+  flex: 1 1 auto;              /* ✅ Allow button width to grow naturally based on content */
+  min-width: 0;
+  white-space: normal;         /* ✅ Allow wrapping inside the button */
+  word-break: break-word;
   text-align: center;
+  padding: 0.6rem 0.75rem;
+  background: #f0f0f0;
+  border: none;
+  font-weight: bold;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  border-right: 1px solid #ccc;  /* ✅ Thin vertical divider */
+  
 }
+.tab-btn:last-child {
+  border-right: none;
+}
+
 @media (max-width: 480px) {
   .tab-btn {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     padding: 0.4rem 0.6rem;
   }
+}
+/* === Tab 1 === */
+#tab1 .paragraph-slide {
+  font-family: 'Old Standard TT', sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  padding: 0.8rem 0;
+  text-align: justify;
+  min-height: 150px;
+}
+
+#tab1 .nav-arrows {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+#tab1 .nav-arrows button {
+  padding: 0.5rem 1rem;
+  background-color: #eee;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#tab1 .nav-arrows button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* === Tab 2 === */
+#tab2 .paragraph-slide {
+  font-family: 'Old Standard TT', sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  padding: 0.8rem 0;
+  text-align: justify;
+  min-height: 150px;
+}
+
+#tab2 .nav-arrows {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+#tab2 .nav-arrows button {
+  padding: 0.5rem 1rem;
+  background-color: #eee;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#tab2 .nav-arrows button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* === Tab 3 === */
+#tab3 .paragraph-slide {
+  font-family: 'Old Standard TT', sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  padding: 0.8rem 0;
+  text-align: justify;
+  min-height: 150px;
+}
+
+#tab3 .nav-arrows {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+#tab3 .nav-arrows button {
+  padding: 0.5rem 1rem;
+  background-color: #eee;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#tab3 .nav-arrows button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* === Tab 4 === */
+#tab4 .paragraph-slide {
+  font-family: 'Old Standard TT', sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  padding: 0.8rem 0;
+  text-align: justify;
+  min-height: 150px;
+}
+
+#tab4 .nav-arrows {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+#tab4 .nav-arrows button {
+  padding: 0.5rem 1rem;
+  background-color: #eee;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#tab4 .nav-arrows button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.Olelo {
+  display: flex;
+  justify-content: center;   /* center horizontally */
+  align-items: center;       /* center vertically */
+  text-align: left;          /* paragraph text aligned left */
+  height: 100%;              /* make sure it can fill parent if needed */
+  min-height: 100px;         /* or whatever height you want */
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.Olelo .paragraph-slide {
+  max-width: 600px;
+  width: 100%;
 }

@@ -6,6 +6,8 @@
   <title>Mālama Mana</title>
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Open+Sans&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+
   <!-- PWA manifest -->
   <link rel="manifest" href="manifest.json" />
   <!-- Main stylesheet -->
@@ -45,10 +47,14 @@
     <div class="top-row equal-height row-wrapper">
   <!-- Left card: Moon + Calendar + Tide -->
   <div class="card moon-tide">
-    <div id="calendar-toggle" class="calendar-display">
-      <span id="calendar-label">Loading...</span>
-      <span class="calendar-arrow">▼</span>
-    </div>
+    <div class="calendar-navigation">
+  <button id="prev-day-direct" class="calendar-nav-arrow">◀</button>
+<div id="calendar-toggle" class="calendar-display">
+  <span id="calendar-label">Loading...</span>
+  <span class="calendar-arrow">▼</span>
+</div>
+<button id="next-day-direct" class="calendar-nav-arrow">▶</button>
+</div>
 
     <div class="calendar-wrapper">
       <div id="calendar-popup" class="calendar-grid hidden">
@@ -87,8 +93,8 @@
         </div>
       </div>
     </div>
-
-    <div class="tide"></div>
+	<div class="Olelo"></div>
+    
   </div>
 
   <!-- Right card: Dynamic content -->
@@ -100,20 +106,17 @@
   <div class="card-content"> <!-- ✅ required wrapper -->
     <div class="card-tabs">
       <div class="tab-header">
-        <button class="tab-btn active" data-tab="tab1">Meaning ◐ </button>
-        <button class="tab-btn" data-tab="tab2">Do`s ✔</button>
-        <button class="tab-btn" data-tab="tab3">Dont`s ✘</button>
-        <button class="tab-btn" data-tab="tab4">Pule & Kapu ❖</button>
+        <button class="tab-btn active" data-tab="tab1">Ike ◐ </button>
+        <button class="tab-btn" data-tab="tab2">Pono ✔</button>
+        <button class="tab-btn" data-tab="tab3">Kūʻē ✘</button>
+        <button class="tab-btn" data-tab="tab4">Hoʻāno ❖</button>
       </div>
       <div class="tab-content">
         <div class="tab-pane active" id="tab1">Loading Intro...</div>
         <div class="tab-pane" id="tab2">Loading Details...</div>
         <div class="tab-pane" id="tab3">Loading Notes...</div>
         <div class="tab-pane" id="tab4">
-          <!-- Long content test -->
-          <p>Line 1</p><p>Line 2</p><p>Line 3</p><p>Line 3</p><p>Line 3</p><p>Line 3</p><p>Line 3</p><p>Line 3</p><p>Line 3</p><p>Line 3</p>
-          ...
-          <p>Line 40</p>
+          
         </div>
       </div>
     </div>
@@ -137,57 +140,28 @@
 
     <!-- Core Pillars -->
     <div class="pillars">
-	 
-      <div class="pillar">
-        <h2>ʻUhane</h2>
-        <p>Spiritual alignment & sacred practice</p>
-      </div>
-      <div class="pillar">
-        <h2>Kino</h2>
+	 <div class="tide"></div>
+            <div class="pillar">
+        <h2>ke kino <br>(body)</h2>
         <p>Physical wellbeing & embodied care</p>
       </div>
       <div class="pillar">
-        <h2>ʻIke</h2>
+        <h2>ʻka mana‘o <br>(mind)</h2>
         <p>Teachings, insights & personal wisdom</p>
       </div>
+	  <div class="pillar">
+        <h2>ka ‘uhane <br>(spirit)</h2>
+        <p>Spiritual alignment & sacred practice</p>
+      </div>
       <div class="pillar">
-        <h2>Hana</h2>
+        <h2>Hana</h2><br>
         <p>Work, Ohana & commitments</p>
       </div>
     </div>
   </div>
 
   <!-- SETTINGS MODAL -->
-  <div id="settings-page" class="card hidden">
-    <h2>Settings</h2>
-    <form id="settings-form">
-      <label>
-        First Name:<br>
-        <input type="text" id="profile-first-name" placeholder="First Name" required>
-      </label><br><br>
-      <label>
-        Last Name:<br>
-        <input type="text" id="profile-last-name" placeholder="Last Name" required>
-      </label><br><br>
-      <label>
-        Email:<br>
-        <input type="email" id="profile-email" placeholder="you@example.com" required>
-      </label><br><br>
-      <label>
-        Phone:<br>
-        <input type="tel" id="profile-phone" placeholder="+1-555-123-4567">
-      </label><br><br>
-      <label>
-  Location:<br>
-  <input type="text" id="profile-location" placeholder="City, Country" autocomplete="off">
-</label>
-
-     
-  <button type="submit">Save Settings</button>
-      <button type="button" id="settings-logout">Logout</button>
-      <button type="button" id="settings-close">Close</button> 
-    </form>
-	</div>
+  
   <!-- BOTTOM NAVIGATION -->
   <nav class="bottom-nav hidden">
     <a href="#calendar">
@@ -212,7 +186,7 @@
         <line x1="12" y1="5" x2="12" y2="19"></line>
         <line x1="5" y1="12" x2="19" y2="12"></line>
       </svg>
-      <span>Add</span>
+      <span>IKE</span>
     </a>
     <a href="#more" id="more-button-settings">
       <svg viewBox="0 0 24 24" fill="currentColor">
@@ -242,6 +216,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.9.0/suncalc.min.js"></script>
   <!-- Main JS -->
   <script src="app.js"></script>
+  <script src="lunarData.js" defer></script>
   <div id="loading-screen">
   <div class="spinner"></div>
 </div>
