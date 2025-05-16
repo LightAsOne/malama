@@ -806,7 +806,7 @@ svg {
 .tab-btn.active {
   background: white;
   border-bottom: 2px solid ##FFFFFF;
-  color: #007bff;
+  color: #A67C52;
 }
 
 .tab-content {
@@ -840,7 +840,7 @@ svg {
   white-space: normal;         /* ✅ Allow wrapping inside the button */
   word-break: break-word;
   text-align: center;
-  padding: 0.6rem 0.75rem;
+  padding: 0.5rem 0.65rem;
   background: #f0f0f0;
   border: none;
   font-weight: bold;
@@ -992,4 +992,26 @@ svg {
 .Olelo .paragraph-slide {
   max-width: 600px;
   width: 100%;
+}
+.tide svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.tide canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.tide > * {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+.tab-btn i {
+  font-size: 1.2 rem;
+  color: #333; /* black icon */
 }
