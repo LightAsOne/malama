@@ -826,18 +826,38 @@ svg {
 
 @media (max-width: 480px) {
   .card-content {
-    padding-bottom: 80px; /* adds space to avoid scroll squeeze */
+    overflow: visible;
+    min-height: 450px; /* adds space for tabs + content */
+    padding-bottom: 4rem; /* space to avoid cut-off at bottom */
+  }
+
+  .card-tabs {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .tab-header {
+    flex-wrap: wrap;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .tab-btn {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.6rem;
+    white-space: nowrap;
   }
 
   .tab-content {
-    max-height: none;
-    overflow-y: auto; /* keep scroll only if truly needed */
+    overflow-y: auto;
+    max-height: 100%;
   }
 
   .tab-pane.active {
-    min-height: 300px; /* gives the content a soft base height */
+    min-height: 200px;
   }
 }
+
 .tab-header {
   display: flex;
   flex-wrap: nowrap;
