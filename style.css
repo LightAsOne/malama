@@ -818,17 +818,22 @@ svg {
 
 @media (max-width: 480px) {
   .card-content {
-    padding-top: 4rem;
-	 padding-bottom: 2rem;
+    padding-bottom: 60px;
   }
 }
 .tab-pane {
   display: none;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .tab-pane.active {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
 }
+
 .tab-header {
   display: flex;
   flex-wrap: nowrap;
