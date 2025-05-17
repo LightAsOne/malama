@@ -824,48 +824,7 @@ svg {
   display: block;
 }
 
-@media (max-width: 480px) {
-  .card-content {
-    flex: 1 1 auto;
-    overflow: hidden;
-  }
 
-  .card-tabs {
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-  }
-
-  .tab-header {
-    flex-shrink: 0;
-    margin-bottom: 0.5rem;
-    overflow-x: auto;
-  }
-
-  .tab-btn {
-    flex: 1 1 auto;
-    font-size: 0.75rem;
-    padding: 0.5rem;
-    min-width: 60px;
-    white-space: nowrap;
-  }
-
-  .tab-content {
-    flex: 1 1 auto;
-    min-height: 0;
-    overflow-y: auto;
-    max-height: 600px; /* You asked for this size */
-    padding-bottom: 2rem;
-  }
-
-  .tab-pane.active {
-    flex: 1 1 auto;
-    min-height: 300px;
-    display: flex;
-    flex-direction: column;
-  }
-}
 
 .tab-header {
   display: flex;
