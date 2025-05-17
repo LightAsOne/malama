@@ -185,18 +185,18 @@ titleEl.innerHTML = `
         const paragraphs = chunkText(fullText);
         let index = 0;
 
-        function renderTab5(i) {
-          tab5.innerHTML = `
-            <div class="paragraph-slide">${paragraphs[i]}</div>
-            <div class="nav-arrows">
-              <button id="prev-color" ${i === 0 ? 'disabled' : ''}>&larr; Prev</button>
-              <span>${i + 1} of ${paragraphs.length}</span>
-              <button id="next-color" ${i === paragraphs.length - 1 ? 'disabled' : ''}>Next &rarr;</button>
-            </div>
-          `;
-          document.getElementById('prev-color')?.addEventListener('click', () => renderTab5(i - 1));
-          document.getElementById('next-color')?.addEventListener('click', () => renderTab5(i + 1));
-        }
+        function renderTab5(index) {
+  tab5.innerHTML = `
+    <div class="paragraph-slide ${index === 0 ? 'first-slide' : ''}">
+      ${paragraphs[index]}
+    </div>
+    <div class="nav-arrows">
+      <button id="prev-color" ${index === 0 ? 'disabled' : ''}>&larr; Prev</button>
+      <span>${index + 1} of ${paragraphs.length}</span>
+      <button id="next-color" ${index === paragraphs.length - 1 ? 'disabled' : ''}>Next &rarr;</button>
+    </div>
+  `;
+}
 
         renderTab5(index);
       }

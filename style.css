@@ -974,6 +974,14 @@ svg {
   cursor: pointer;
   font-weight: bold;
 }
+#tab5 .nav-arrows button {
+  padding: 0.5rem 1rem;
+  background-color: #eee;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
 
 #tab4 .nav-arrows button:disabled {
   opacity: 0.4;
@@ -1105,4 +1113,16 @@ svg {
   float: left;
   margin-right: 0.3rem;
   line-height: 1;
+}
+.icon,
+.tab-btn i,
+#dynamic-title i {
+  color: #83633d; /* earthy tone to match first-letter */
+}
+.tab-pane .nav-arrows {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
 }
