@@ -816,24 +816,28 @@ svg {
   padding: 0.5rem;
 }
 
-@media (max-width: 480px) {
-  .card-content {
-    padding-bottom: 60px;
-  }
-}
 .tab-pane {
   display: none;
-  flex: 1 1 auto;
-  min-height: 0;
 }
 
 .tab-pane.active {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
-  min-height: 0;
+  display: block;
 }
 
+@media (max-width: 480px) {
+  .card-content {
+    padding-bottom: 80px; /* adds space to avoid scroll squeeze */
+  }
+
+  .tab-content {
+    max-height: none;
+    overflow-y: auto; /* keep scroll only if truly needed */
+  }
+
+  .tab-pane.active {
+    min-height: 300px; /* gives the content a soft base height */
+  }
+}
 .tab-header {
   display: flex;
   flex-wrap: nowrap;
