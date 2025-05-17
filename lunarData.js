@@ -53,10 +53,17 @@ function updateLunarDescription() {
       // ---------- Title ----------
       const titleEl = document.getElementById('dynamic-title');
       if (titleEl) {
-        titleEl.textContent = match.title || `Title for ${moonNight}`;
+        const rawTitle = match.title || 'Untitled';
+const formattedTitle = rawTitle.replace(/^The\b/, 'the');
+
+titleEl.innerHTML = `
+  <span class="phase-name">${moonNight}</span>
+  <span class="phase-title"> ${formattedTitle}</span>
+`;
+
       }
 
-      // ---------- Tab 1: Combined Description ----------
+      // ---------- Tab 1 ----------
       const tab1 = document.getElementById('tab1');
       if (tab1 && match["combined description"]) {
         const fullText = match["combined description"].replace(/\n+/g, ' ').trim();
@@ -64,14 +71,17 @@ function updateLunarDescription() {
         let currentIndex = 0;
 
         function renderTab1(index) {
-          tab1.innerHTML = `
-            <div class="paragraph-slide">${paragraphs[index]}</div>
-            <div class="nav-arrows">
-              <button id="prev-para" ${index === 0 ? 'disabled' : ''}>&larr; Prev</button>
-              <span>${index + 1} of ${paragraphs.length}</span>
-              <button id="next-para" ${index === paragraphs.length - 1 ? 'disabled' : ''}>Next &rarr;</button>
-            </div>
-          `;
+  tab1.innerHTML = `
+    <div class="paragraph-slide ${index === 0 ? 'first-slide' : ''}">
+      ${paragraphs[index]}
+    </div>
+    <div class="nav-arrows">
+      <button id="prev-para" ${index === 0 ? 'disabled' : ''}>&larr; Prev</button>
+      <span>${index + 1} of ${paragraphs.length}</span>
+      <button id="next-para" ${index === paragraphs.length - 1 ? 'disabled' : ''}>Next &rarr;</button>
+    </div>
+  `;
+
           document.getElementById('prev-para')?.addEventListener('click', () => renderTab1(index - 1));
           document.getElementById('next-para')?.addEventListener('click', () => renderTab1(index + 1));
         }
@@ -79,200 +89,149 @@ function updateLunarDescription() {
         renderTab1(currentIndex);
       }
 
- // ---------- Tab 2: Dos + Dos Description ----------
-const tab2 = document.getElementById('tab2');
-if (tab2 && match["dos description"]) {
-  const introItems = (match.dos || "")
-    .split(/\s*,\s*/)
-    .map(i => i.trim())
-    .filter(i => i.length > 0);
+      // ---------- Tab 2 ----------
+      const tab2 = document.getElementById('tab2');
+      if (tab2 && match["dos description"]) {
+        const introItems = (match.dos || "").split(/\s*,\s*/).filter(i => i.trim());
+        const introHTML = introItems.length
+          ? `<div class="paragraph-slide intro-labels">${introItems.map(item => `<span class="label label-do">${item}</span>`).join('')}</div>`
+          : `<div class="paragraph-slide"><strong>Recommended action</strong></div>`;
 
-  const introHTML = introItems.length
-    ? `<div class="paragraph-slide intro-labels">${introItems.map(item => `<span class="label label-do">${item}</span>`).join('')}</div>`
-    : `<div class="paragraph-slide"><strong>Recommended action</strong></div>`;
+        const chunks = chunkText(match["dos description"].replace(/\n+/g, ' ').trim());
+        const pages = [introHTML, ...chunks];
+        let doIndex = 0;
 
-  const chunks = chunkText(match["dos description"].replace(/\n+/g, ' ').trim());
-  const pages = [];
+        function renderTab2(index) {
+  const isIntro = index === 0;
+  const isFirstParagraph = index === 1;
+  const slideClass = isIntro ? '' : `paragraph-slide ${isFirstParagraph ? 'first-slide' : ''}`;
+  const content = pages[index];
 
-  const tempDivDo = document.createElement("div");
-  tempDivDo.innerHTML = introHTML;
-  pages.push(tempDivDo.innerHTML); // parsed HTML
-  pages.push(...chunks);
-
-  let doIndex = 0;
-
-  function renderTab2(index) {
-    let content = '';
-
-    if (index === 0) {
-      content = pages[0];
-    } else {
-      content = `<div class="paragraph-slide">${pages[index]}</div>`;
-    }
-
-    tab2.innerHTML = `
+  tab2.innerHTML = `
+    <div class="${slideClass}">
       ${content}
-      <div class="nav-arrows">
-        <button id="prev-do" ${index === 0 ? 'disabled' : ''}>&larr; Prev</button>
-        <span>${index + 1} of ${pages.length}</span>
-        <button id="next-do" ${index === pages.length - 1 ? 'disabled' : ''}>Next &rarr;</button>
-      </div>
-    `;
+    </div>
+    <div class="nav-arrows">
+      <button id="prev-do" ${index === 0 ? 'disabled' : ''}>&larr; Prev</button>
+      <span>${index + 1} of ${pages.length}</span>
+      <button id="next-do" ${index === pages.length - 1 ? 'disabled' : ''}>Next &rarr;</button>
+    </div>
+  `;
 
-    document.getElementById('prev-do')?.addEventListener('click', () => renderTab2(index - 1));
-    document.getElementById('next-do')?.addEventListener('click', () => renderTab2(index + 1));
-  }
-
-  renderTab2(doIndex);
+  document.getElementById('prev-do')?.addEventListener('click', () => renderTab2(index - 1));
+  document.getElementById('next-do')?.addEventListener('click', () => renderTab2(index + 1));
 }
 
-// ---------- Tab 3: Don’ts + Don’ts Description ----------
-const tab3 = document.getElementById('tab3');
-if (tab3 && match["donts description"]) {
-  const introItems = (match.donts || "")
-    .split(/\s*,\s*/)
-    .map(i => i.trim())
-    .filter(i => i.length > 0);
+        renderTab2(doIndex);
+      }
 
-  const introHTML = introItems.length
-    ? `<div class="paragraph-slide intro-labels">${introItems.map(item => `<span class="label label-dont">${item}</span>`).join('')}</div>`
-    : `<div class="paragraph-slide"><strong>What to avoid</strong></div>`;
+      // ---------- Tab 3 ----------
+      const tab3 = document.getElementById('tab3');
+      if (tab3 && match["donts description"]) {
+        const introItems = (match.donts || "").split(/\s*,\s*/).filter(i => i.trim());
+        const introHTML = introItems.length
+          ? `<div class="paragraph-slide intro-labels">${introItems.map(item => `<span class="label label-dont">${item}</span>`).join('')}</div>`
+          : `<div class="paragraph-slide"><strong>What to avoid</strong></div>`;
 
-  const chunks = chunkText(match["donts description"].replace(/\n+/g, ' ').trim());
-  const pages = [];
+        const chunks = chunkText(match["donts description"].replace(/\n+/g, ' ').trim());
+        const pages = [introHTML, ...chunks];
+        let dontIndex = 0;
 
-  const tempDivDont = document.createElement("div");
-  tempDivDont.innerHTML = introHTML;
-  pages.push(tempDivDont.innerHTML); // parsed HTML
-  pages.push(...chunks);
+        function renderTab3(index) {
+  const isIntro = index === 0;
+  const isFirstParagraph = index === 1;
+  const slideClass = isIntro ? '' : `paragraph-slide ${isFirstParagraph ? 'first-slide' : ''}`;
+  const content = pages[index];
 
-  let dontIndex = 0;
-
-  function renderTab3(index) {
-    let content = '';
-
-    if (index === 0) {
-      content = pages[0];
-    } else {
-      const items = pages[index]
-        .split(/\s*,\s*/)
-        .map(item => item.trim())
-        .filter(item => item.length > 0);
-
-      content = `
-        <div class="paragraph-slide">
-          ${items.map(item => `<span class="label label-dont">${item}</span>`).join('')}
-        </div>`;
-    }
-
-    tab3.innerHTML = `
+  tab3.innerHTML = `
+    <div class="${slideClass}">
       ${content}
-      <div class="nav-arrows">
-        <button id="prev-dont" ${index === 0 ? 'disabled' : ''}>&larr; Prev</button>
-        <span>${index + 1} of ${pages.length}</span>
-        <button id="next-dont" ${index === pages.length - 1 ? 'disabled' : ''}>Next &rarr;</button>
-      </div>
-    `;
+    </div>
+    <div class="nav-arrows">
+      <button id="prev-dont" ${index === 0 ? 'disabled' : ''}>&larr; Prev</button>
+      <span>${index + 1} of ${pages.length}</span>
+      <button id="next-dont" ${index === pages.length - 1 ? 'disabled' : ''}>Next &rarr;</button>
+    </div>
+  `;
 
-    document.getElementById('prev-dont')?.addEventListener('click', () => renderTab3(index - 1));
-    document.getElementById('next-dont')?.addEventListener('click', () => renderTab3(index + 1));
-  }
-
-  renderTab3(dontIndex);
+  document.getElementById('prev-dont')?.addEventListener('click', () => renderTab3(index - 1));
+  document.getElementById('next-dont')?.addEventListener('click', () => renderTab3(index + 1));
 }
 
 
+        renderTab3(dontIndex);
+      }
 
+      // ---------- Tab 4 ----------
+      const tab4 = document.getElementById('tab4');
+      if (tab4 && match["Kapu\nRituals & Gods\nobserved"]) {
+        const raw = match["Kapu\nRituals & Gods\nobserved"];
+        const lines = raw.split(/\n+/).map(line => {
+          const clean = line.trim();
+          if (/^kapu[:\-]?\s*/i.test(clean)) return `<p><strong>KAPU:</strong> ${clean.replace(/^kapu[:\-]?\s*/i, '')}</p>`;
+          if (/^gods?[:\-]?\s*/i.test(clean)) return `<p><strong>GODS:</strong> ${clean.replace(/^gods?[:\-]?\s*/i, '')}</p>`;
+          if (/^rituals?[:\-]?\s*/i.test(clean)) return `<p><strong>RITUALS:</strong> ${clean.replace(/^rituals?[:\-]?\s*/i, '')}</p>`;
+          return `<p>${clean}</p>`;
+        });
+        tab4.innerHTML = `<div class="paragraph-slide">${lines.join('')}</div>`;
+      } else if (tab4) {
+        tab4.innerHTML = `<p><em>No Kapu / Rituals / Gods recorded for this moon night.</em></p>`;
+      }
 
+      // ---------- Tab 5 ----------
+      const tab5 = document.getElementById('tab5');
+      if (tab5 && match.color) {
+        const fullText = match.color.replace(/\n+/g, ' ').trim();
+        const paragraphs = chunkText(fullText);
+        let index = 0;
 
-// ---------- Tab 4: Kapu, Rituals & Gods ----------
-const tab4 = document.getElementById('tab4');
-if (tab4 && match["Kapu\nRituals & Gods\nobserved"]) {
-  const raw = match["Kapu\nRituals & Gods\nobserved"];
+        function renderTab5(i) {
+          tab5.innerHTML = `
+            <div class="paragraph-slide">${paragraphs[i]}</div>
+            <div class="nav-arrows">
+              <button id="prev-color" ${i === 0 ? 'disabled' : ''}>&larr; Prev</button>
+              <span>${i + 1} of ${paragraphs.length}</span>
+              <button id="next-color" ${i === paragraphs.length - 1 ? 'disabled' : ''}>Next &rarr;</button>
+            </div>
+          `;
+          document.getElementById('prev-color')?.addEventListener('click', () => renderTab5(i - 1));
+          document.getElementById('next-color')?.addEventListener('click', () => renderTab5(i + 1));
+        }
 
-  const lines = raw.split(/\n+/).map(line => {
-    const cleanLine = line.trim();
+        renderTab5(index);
+      }
 
-    if (/^kapu[:\-]?\s*/i.test(cleanLine)) {
-      return `<p><strong>KAPU:</strong> ${cleanLine.replace(/^kapu[:\-]?\s*/i, '')}</p>`;
-    } else if (/^gods?[:\-]?\s*/i.test(cleanLine)) {
-      return `<p><strong>GODS:</strong> ${cleanLine.replace(/^gods?[:\-]?\s*/i, '')}</p>`;
-    } else if (/^rituals?[:\-]?\s*/i.test(cleanLine)) {
-      return `<p><strong>RITUALS:</strong> ${cleanLine.replace(/^rituals?[:\-]?\s*/i, '')}</p>`;
-    } else {
-      return `<p>${cleanLine}</p>`;
-    }
-  });
-
-  tab4.innerHTML = `<div class="paragraph-slide">${lines.join('')}</div>`;
-} else if (tab4) {
-  tab4.innerHTML = `<p><em>No Kapu / Rituals / Gods recorded for this moon night.</em></p>`;
-}
-
-const oleloDiv = document.querySelector('.Olelo');
-if (oleloDiv && match.Olelo) {
-  const lines = match.Olelo.split('\n').map(line => line.trim()).filter(Boolean);
-
-  const formatted = lines.map(line => {
-    // Check if there's a dash
-    let before = line;
-    let after = '';
-
-    if (line.includes('—')) {
-      [before, after] = line.split(/—(.+)/); // split only on first —
-    }
-
-    // Bold words in "before" section (no lowercase, no numbers)
-    const boldedBefore = before.replace(/\S+/g, word => {
-      const hasLower = /[a-z]/.test(word);
-      const hasNumber = /\d/.test(word);
-      return (!hasLower && !hasNumber) ? `<strong>${word}</strong>` : word;
-    });
-
-    // Format final line
-    const finalLine = after
-      ? `${boldedBefore} <em>—${after.trim()}</em>`
-      : boldedBefore;
-
-    return `<p>${finalLine}</p>`;
-  });
-
-  oleloDiv.innerHTML = `<div class="paragraph-slide">${formatted.join('')}</div>`;
-} else if (oleloDiv) {
-  oleloDiv.innerHTML = `<p><em>No ‘Ōlelo recorded for this moon night.</em></p>`;
-}
-
-
-
-
-
+      // ---------- Olelo ----------
+      const oleloDiv = document.querySelector('.Olelo');
+      if (oleloDiv && match.Olelo) {
+        const lines = match.Olelo.split('\n').map(line => line.trim()).filter(Boolean);
+        const formatted = lines.map(line => {
+          let [before, after] = line.includes('—') ? line.split(/—(.+)/) : [line, ''];
+          const boldedBefore = before.replace(/\S+/g, word => {
+            return (!/[a-z]/.test(word) && !/\d/.test(word)) ? `<strong>${word}</strong>` : word;
+          });
+          return `<p>${after ? `${boldedBefore} <em>—${after.trim()}</em>` : boldedBefore}</p>`;
+        });
+        oleloDiv.innerHTML = `<div class="paragraph-slide">${formatted.join('')}</div>`;
+      } else if (oleloDiv) {
+        oleloDiv.innerHTML = `<p><em>No ‘Ōlelo recorded for this moon night.</em></p>`;
+      }
     })
     .catch(err => {
       console.error("❌ Error loading lunar_sheet.json:", err);
     });
 }
 
-// Initial run on page load
+// Trigger update on initial load and calendar change
 document.addEventListener('DOMContentLoaded', () => {
-  const wait = setInterval(() => {
-    const info = document.getElementById('hawaiian-lunar-info');
-    if (info && info.textContent.includes('Pō:')) {
-      clearInterval(wait);
-      updateLunarDescription();
-    }
-  }, 200);
+  document.addEventListener('lunarInfoUpdated', updateLunarDescription);
 });
-
-// Re-run when calendar date is changed
 document.addEventListener('lunarInfoUpdated', () => {
   setTimeout(() => {
     updateLunarDescription();
-
-    // ✅ Reset to Tab 1
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     document.querySelector('[data-tab="tab1"]')?.classList.add('active');
-
-    document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
     document.getElementById('tab1')?.classList.add('active');
   }, 150);
 });

@@ -675,7 +675,7 @@ const tabs = document.querySelectorAll(".tab-btn");
         pane.classList.toggle("active", pane.id === target);
       });
     // ✅ Re-run description if switching to tab2 or tab3
-    if (["tab2", "tab3", "tab4","Olelo"].includes(target)) updateLunarDescription();
+    if (["tab2", "tab3", "tab4","tab5","Olelo"].includes(target)) updateLunarDescription();
 	});
   });
 
