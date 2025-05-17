@@ -1126,3 +1126,22 @@ svg {
   gap: 1rem;
   margin-top: 1rem;
 }
+body {
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+}
+.tab-header {
+  padding-right: 1rem; /* or more, as needed */
+  box-sizing: border-box;
+}
+.tab-header {
+  padding-bottom: 4px; /* add a bit of breathing room */
+}
+.tab-header {
+  position: relative;
+  z-index: 2;
+}
+.tab-container,
+.tab-header {
+  overflow: visible;
+}
