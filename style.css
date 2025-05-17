@@ -784,11 +784,7 @@ svg {
   flex: 1 1 auto;
   min-height: 0;
 }
-@media (max-width: 480px) {
-  .card-tabs {
-    padding-top: 25px;
-  }
-}
+
 .tab-header {
   display: flex;
   border-bottom: 1px solid #ccc;
@@ -821,7 +817,7 @@ svg {
 }
 @media (max-width: 480px) {
   .card-tabs {
-    padding-top: 25px;
+    padding-top: 60px;
   }
 }
 .tab-pane {
