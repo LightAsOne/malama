@@ -815,14 +815,11 @@ svg {
   overflow-y: auto;
   padding: 0.5rem;
 }
-@media (max-width: 480px) {
-  .card-tabs {
-    padding-top: 60px;
-  }
-}
+
 @media (max-width: 480px) {
   .card-content {
     padding-top: 60px;
+	 padding-bottom: 2rem;
   }
 }
 .tab-pane {
