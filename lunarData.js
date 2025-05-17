@@ -79,18 +79,36 @@ function updateLunarDescription() {
         renderTab1(currentIndex);
       }
 
-    // ---------- Tab 2: Dos + Dos Description ----------
+ // ---------- Tab 2: Dos + Dos Description ----------
 const tab2 = document.getElementById('tab2');
 if (tab2 && match["dos description"]) {
-  const intro = match.dos || "Recommended action";
+  const introItems = (match.dos || "")
+    .split(/\s*,\s*/)
+    .map(i => i.trim())
+    .filter(i => i.length > 0);
+
+  const introHTML = introItems.length
+    ? `<div class="paragraph-slide intro-labels">${introItems.map(item => `<span class="label label-do">${item}</span>`).join('')}</div>`
+    : `<div class="paragraph-slide"><strong>Recommended action</strong></div>`;
+
   const chunks = chunkText(match["dos description"].replace(/\n+/g, ' ').trim());
-  const pages = [intro, ...chunks];
+  const pages = [];
+
+  const tempDivDo = document.createElement("div");
+  tempDivDo.innerHTML = introHTML;
+  pages.push(tempDivDo.innerHTML); // parsed HTML
+  pages.push(...chunks);
+
   let doIndex = 0;
 
   function renderTab2(index) {
-    const content = index === 0
-      ? `<div class="paragraph-slide"><strong>${pages[0]}</strong></div>`
-      : `<div class="paragraph-slide">${pages[index]}</div>`;
+    let content = '';
+
+    if (index === 0) {
+      content = pages[0];
+    } else {
+      content = `<div class="paragraph-slide">${pages[index]}</div>`;
+    }
 
     tab2.innerHTML = `
       ${content}
@@ -100,6 +118,7 @@ if (tab2 && match["dos description"]) {
         <button id="next-do" ${index === pages.length - 1 ? 'disabled' : ''}>Next &rarr;</button>
       </div>
     `;
+
     document.getElementById('prev-do')?.addEventListener('click', () => renderTab2(index - 1));
     document.getElementById('next-do')?.addEventListener('click', () => renderTab2(index + 1));
   }
@@ -110,15 +129,41 @@ if (tab2 && match["dos description"]) {
 // ---------- Tab 3: Don’ts + Don’ts Description ----------
 const tab3 = document.getElementById('tab3');
 if (tab3 && match["donts description"]) {
-  const intro = match.donts || "What to avoid";
+  const introItems = (match.donts || "")
+    .split(/\s*,\s*/)
+    .map(i => i.trim())
+    .filter(i => i.length > 0);
+
+  const introHTML = introItems.length
+    ? `<div class="paragraph-slide intro-labels">${introItems.map(item => `<span class="label label-dont">${item}</span>`).join('')}</div>`
+    : `<div class="paragraph-slide"><strong>What to avoid</strong></div>`;
+
   const chunks = chunkText(match["donts description"].replace(/\n+/g, ' ').trim());
-  const pages = [intro, ...chunks];
+  const pages = [];
+
+  const tempDivDont = document.createElement("div");
+  tempDivDont.innerHTML = introHTML;
+  pages.push(tempDivDont.innerHTML); // parsed HTML
+  pages.push(...chunks);
+
   let dontIndex = 0;
 
   function renderTab3(index) {
-    const content = index === 0
-      ? `<div class="paragraph-slide"><strong>${pages[0]}</strong></div>`
-      : `<div class="paragraph-slide">${pages[index]}</div>`;
+    let content = '';
+
+    if (index === 0) {
+      content = pages[0];
+    } else {
+      const items = pages[index]
+        .split(/\s*,\s*/)
+        .map(item => item.trim())
+        .filter(item => item.length > 0);
+
+      content = `
+        <div class="paragraph-slide">
+          ${items.map(item => `<span class="label label-dont">${item}</span>`).join('')}
+        </div>`;
+    }
 
     tab3.innerHTML = `
       ${content}
@@ -128,12 +173,16 @@ if (tab3 && match["donts description"]) {
         <button id="next-dont" ${index === pages.length - 1 ? 'disabled' : ''}>Next &rarr;</button>
       </div>
     `;
+
     document.getElementById('prev-dont')?.addEventListener('click', () => renderTab3(index - 1));
     document.getElementById('next-dont')?.addEventListener('click', () => renderTab3(index + 1));
   }
 
   renderTab3(dontIndex);
 }
+
+
+
 
 
 // ---------- Tab 4: Kapu, Rituals & Gods ----------

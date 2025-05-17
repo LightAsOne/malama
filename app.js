@@ -9,7 +9,7 @@ function hideSpinner() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-showSpinner();
+// showSpinner(); // removed to avoid blocking login screen
 
 document.getElementById('calendar-toggle').addEventListener('click', () => {
   const popup = document.getElementById('calendar-popup');
