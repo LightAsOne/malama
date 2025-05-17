@@ -826,35 +826,44 @@ svg {
 
 @media (max-width: 480px) {
   .card-content {
-    overflow: visible;
-    min-height: 450px; /* adds space for tabs + content */
-    padding-bottom: 4rem; /* space to avoid cut-off at bottom */
+    flex: 1 1 auto;
+    overflow: hidden;
   }
 
   .card-tabs {
     flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
     min-height: 0;
   }
 
   .tab-header {
-    flex-wrap: wrap;
-    padding-bottom: 0.5rem;
+    flex-shrink: 0;
     margin-bottom: 0.5rem;
+    overflow-x: auto;
   }
 
   .tab-btn {
-    font-size: 0.85rem;
-    padding: 0.4rem 0.6rem;
+    flex: 1 1 auto;
+    font-size: 0.75rem;
+    padding: 0.5rem;
+    min-width: 60px;
     white-space: nowrap;
   }
 
   .tab-content {
+    flex: 1 1 auto;
+    min-height: 0;
     overflow-y: auto;
-    max-height: 100%;
+    max-height: 600px; /* You asked for this size */
+    padding-bottom: 2rem;
   }
 
   .tab-pane.active {
-    min-height: 200px;
+    flex: 1 1 auto;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
   }
 }
 
