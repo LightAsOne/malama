@@ -820,6 +820,11 @@ svg {
     padding-top: 60px;
   }
 }
+@media (max-width: 480px) {
+  .card-content {
+    padding-top: 60px;
+  }
+}
 .tab-pane {
   display: none;
 }
