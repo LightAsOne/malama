@@ -569,7 +569,7 @@ cell.addEventListener('click', async () => {
 
   // Today Snapshot (Time Slots)
   const snap = document.getElementById('today-snapshot');
-  for (let off = -2; off <= 2; off++) {
+  for (let off = -4; off <= 4; off++) {
     const t = new Date(now.getTime() + off * 3600e3);
     const span = document.createElement('span');
     span.textContent = t.toLocaleTimeString(undefined, { hour: 'numeric' });
@@ -675,7 +675,7 @@ const tabs = document.querySelectorAll(".tab-btn");
         pane.classList.toggle("active", pane.id === target);
       });
     // ✅ Re-run description if switching to tab2 or tab3
-    if (["tab2", "tab3", "tab4","tab5","Olelo"].includes(target)) updateLunarDescription();
+    if (["tab2", "tab3", "tab4","tab5","tab6","Olelo"].includes(target)) updateLunarDescription();
 	});
   });
 
