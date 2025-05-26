@@ -200,6 +200,26 @@ titleEl.innerHTML = `
 
         renderTab5(index);
       }
+	  
+	  // ---------- Tab 6: ‘Ōlelo ----------
+const tab6 = document.getElementById('tab6');
+if (tab6 && match.Olelo) {
+  const lines = match.Olelo.split('\n').map(line => line.trim()).filter(Boolean);
+
+  const formatted = lines.map(line => {
+    let [before, after] = line.includes('—') ? line.split(/—(.+)/) : [line, ''];
+    const boldedBefore = before.replace(/\S+/g, word => {
+      return (!/[a-z]/.test(word) && !/\d/.test(word)) ? `<strong>${word}</strong>` : word;
+    });
+    return `<p>${after ? `${boldedBefore} <em>—${after.trim()}</em>` : boldedBefore}</p>`;
+  });
+
+  tab6.innerHTML = `
+    <div class="paragraph-slide first-slide">
+      ${formatted.join('')}
+    </div>
+  `;
+}
 
       // ---------- Olelo ----------
       const oleloDiv = document.querySelector('.Olelo');

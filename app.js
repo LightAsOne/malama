@@ -296,7 +296,8 @@ function getSavedLocation() {
   // fallback to Port Douglas
   return { lat: -16.5, lng: 145.5 };
 }
-
+ // TIDE chart
+ 
 async function fetchTideData(lat, lng) {
   if (!document.querySelector('.tide')) return []; // skip if not on index.html
   const apiKey = '6f8295fe-29ae-11f0-8567-0242ac130003-6f829662-29ae-11f0-8567-0242ac130003'; // ← replace with your Stormglass API key
@@ -483,10 +484,10 @@ if (document.querySelector('.tide')) {
     }
     updateAstroTimes(now, loc.lat, loc.lng);
   })();
+
+ 
 }
-
-
-
+// TIDE CHART EBND
 
   // Calendar
   let currentYear = now.getFullYear();

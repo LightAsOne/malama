@@ -1,129 +1,118 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Settings — Mālama Mana</title>
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Open+Sans&display=swap" rel="stylesheet">
-  <!-- Main stylesheet -->
-  <link rel="stylesheet" href="style.css" />
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Settings — Mālama Mana</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display&amp;family=Open+Sans&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+<!-- Main stylesheet -->
+<link href="style.css" rel="stylesheet"/>
 </head>
-<body>
-
-  <!-- APP HEADER -->
-  
-  <header class="app-header">
-  <div class="header-content">
-    <div id="header-greeting">Aloha,</div>
-    <h1>Mālama Mana</h1>
-  </div>
+<body class="settings-mode">
+<!-- APP HEADER -->
+<header class="app-header">
+<div class="header-content">
+<div id="header-greeting">Aloha,</div>
+<h1>Mālama Mana</h1>
+</div>
 </header>
+<!-- SETTINGS CONTENT -->
+<div class="app-settings">
+<div class="card settings-card" id="settings-page"><div class="settings-container">
+<h2>Settings</h2>
+<form id="settings-form"><div class="settings-columns"><div class="left-column"><label>
+          First Name:
+          <input id="profile-first-name" required="" type="text"/>
+</label><label>
+          Last Name:
+          <input id="profile-last-name" required="" type="text"/>
+</label><label>
+          Email:
+          <input id="profile-email" required="" type="email"/>
+</label><label>
+  Password:
+  <input id="profile-password" placeholder="New password (leave blank to keep current)" type="password"/>
+</label><label>
+          Phone:
+          <input id="profile-phone" type="tel"/>
+</label>
 
-  <!-- SETTINGS CONTENT -->
-  <div class="app">
-    <div class="card">
-      <h2>Settings</h2>
-      <form id="settings-form">
-        <label>
-          First Name:<br>
-          <input type="text" id="profile-first-name" required>
-        </label><br><br>
-        <label>
-          Last Name:<br>
-          <input type="text" id="profile-last-name" required>
-        </label><br><br>
-        <label>
-          Email:<br>
-          <input type="email" id="profile-email" required>
-        </label><br><br>
-		<label>
-  Password:<br>
-  <input type="password" id="profile-password" placeholder="New password (leave blank to keep current)">
-</label><br><br>
-        <label>
-          Phone:<br>
-          <input type="tel" id="profile-phone">
-        </label><br><br>
-        
-<label>
-  Location:<br>
-  <input type="text" id="profile-location" placeholder="City, Country" autocomplete="off">
-  <div id="location-suggestions" style="font-size: 0.85rem; color: #555;"></div>
-</label><br><br>
-<label>
-  Latitude:<br>
-  <input type="text" id="profile-lat" placeholder="Latitude" readonly>
-</label><br><br>
-<label>
-  Longitude:<br>
-  <input type="text" id="profile-lng" placeholder="Longitude" readonly>
-</label><br><br>
-	      <label>
-  <input type="checkbox" id="use-gps-checkbox">
-  Use GPS for tide location
-</label><br><br>
-	      <div>
-        <button type="submit">Save</button>
-        <button type="button" id="settings-logout">Logout</button>
-      </form>
-    </div>
- </div> 
-  </div>
 
-  <!-- BOTTOM NAVIGATION -->
-  <nav class="bottom-nav">
-    <a href="index.html">
-      <!-- calendar icon -->
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-           stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-        <line x1="16" y1="2" x2="16" y2="6"></line>
-        <line x1="8" y1="2" x2="8" y2="6"></line>
-        <line x1="3" y1="10" x2="21" y2="10"></line>
-      </svg>
-      <span>Dashboard</span>
-    </a>
-    <a href="#today">
-      <!-- today icon -->
-      <svg viewBox="0 0 24 24" fill="currentColor">
-        <circle cx="12" cy="12" r="10"></circle>
-      </svg>
-      <span>Today</span>
-    </a>
-    <a href="#add">
-      <!-- add icon -->
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-           stroke-linecap="round" stroke-linejoin="round">
-        <line x1="12" y1="5" x2="12" y2="19"></line>
-        <line x1="5" y1="12" x2="19" y2="12"></line>
-      </svg>
-      <span>Add</span>
-    </a>
-    <a href="#" id="more-button-settings">
-      <!-- more icon -->
-      <svg viewBox="0 0 24 24" fill="currentColor">
-        <circle cx="5" cy="12" r="2"></circle>
-        <circle cx="12" cy="12" r="2"></circle>
-        <circle cx="19" cy="12" r="2"></circle>
-      </svg>
-      <span>More</span>
-    </a>
-  </nav>
 
-  <!-- MORE POPUP MENU -->
-  <div id="more-menu-settings" class="more-menu hidden">
-    <button onclick="window.location.href='index.html'">Home</button>
-    <button onclick="window.location.href='settings.html'">Settings</button>
-  </div>
+</div><div class="right-column"><label>
+<label>
+  Location:
+  <input autocomplete="off" id="profile-location" placeholder="City, Country" type="text"/>
+<div id="location-suggestions" style="font-size: 0.85rem; color: #555;"></div>
+</label><label>
+  Latitude:
+  <input id="profile-lat" placeholder="Latitude" readonly="" type="text"/>
+</label><label>
+  Longitude:
+  <input id="profile-lng" placeholder="Longitude" readonly="" type="text"/>
+</label><label for="use-gps-checkbox">
+  <input id="use-gps-checkbox" type="checkbox" />
+  Use GPS location
+</label>
+  
+</label></div> 
+</div><div><button type="submit">Save</button>
+<button id="settings-logout" type="button">Logout</button></div>
+</div> 
+</div></div> 
+
+<!-- BOTTOM NAVIGATION -->
+<nav class="bottom-nav">
+<a href="index.html">
+<!-- calendar icon -->
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect>
+<line x1="16" x2="16" y1="2" y2="6"></line>
+<line x1="8" x2="8" y1="2" y2="6"></line>
+<line x1="3" x2="21" y1="10" y2="10"></line>
+</svg>
+<span>Dashboard</span>
+</a>
+<a href="#today">
+<!-- today icon -->
+<svg fill="currentColor" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+</svg>
+<span>Today</span>
+</a>
+<a href="#add">
+<!-- add icon -->
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<line x1="12" x2="12" y1="5" y2="19"></line>
+<line x1="5" x2="19" y1="12" y2="12"></line>
+</svg>
+<span>Add</span>
+</a>
+<a href="#" id="more-button-settings">
+<!-- more icon -->
+<svg fill="currentColor" viewbox="0 0 24 24">
+<circle cx="5" cy="12" r="2"></circle>
+<circle cx="12" cy="12" r="2"></circle>
+<circle cx="19" cy="12" r="2"></circle>
+</svg>
+<span>More</span>
+</a>
+</nav>
+<!-- MORE POPUP MENU -->
+<div class="more-menu hidden" id="more-menu-settings">
+<button onclick="window.location.href='index.html'">Home</button>
+<button onclick="window.location.href='settings.html'">Settings</button>
+</div>
 <!-- Firebase CDN Scripts -->
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
-
 <!-- Firebase Init (single shared script) -->
 <script src="firebase-init.js"></script>
-
 <!-- Main JS -->
 <script src="app.js"></script>
 <script>
@@ -197,6 +186,10 @@ locationInput.value =
     if (doc.exists) {
       const data = doc.data();
       document.getElementById('profile-first-name').value = data.firstName || '';
+	  const greetingEl = document.getElementById('header-greeting');
+if (greetingEl && data.firstName) {
+  greetingEl.textContent = `Aloha, ${data.firstName}`;
+}
       document.getElementById('profile-last-name').value = data.lastName || '';
       document.getElementById('profile-email').value = data.email || '';
       document.getElementById('profile-phone').value = data.phone || '';
@@ -207,7 +200,9 @@ locationInput.value =
       updateLocationFieldState(gpsCheckbox.checked);
       localStorage.setItem('useGPS', gpsCheckbox.checked ? 'true' : 'false');
     }
+	
   });
+  
 
   document.getElementById('settings-form').addEventListener('submit', async e => {
     e.preventDefault();
@@ -241,7 +236,7 @@ locationInput.value =
   });
 });
 </script>
-	<script>
+<script>
 const locationInput = document.getElementById('profile-location');
 const suggestionBox = document.getElementById('location-suggestions');
 const latInput = document.getElementById('profile-lat');
@@ -276,7 +271,7 @@ locationInput.addEventListener('input', () => {
   }, 400);
 });
 </script>
-	<script>
+<script>
     const moreBtn = document.getElementById('more-button-settings');
     const moreMenu = document.getElementById('more-menu-settings');
 
@@ -289,7 +284,11 @@ locationInput.addEventListener('input', () => {
       if (!moreMenu.contains(e.target) && !moreBtn.contains(e.target)) {
         moreMenu.classList.add('hidden');
       }
-    }); </script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.9.0/suncalc.min.js"></script>
+    })
+	
+	
+	
+	; </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.9.0/suncalc.min.js"></script>
 </body>
 </html>
