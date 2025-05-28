@@ -238,39 +238,6 @@ document.body.style.setProperty("background-image", "none", "important");
 
   }
 
-  // Apply semi-transparent pastel scrollbar styling
-const pastelThumb = hexToRGBA(primary, 0.5);    // Inner fill
-const pastelHover = hexToRGBA(primary, 0.7);    // Hover fill
-const grayBorder = "#444444";                  // Dark outer line
-
-const styleTag = document.getElementById('dynamic-scroll-style') || document.createElement('style');
-styleTag.id = 'dynamic-scroll-style';
-styleTag.innerHTML = `
-  ::-webkit-scrollbar {
-    width: 14px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background-color: ${pastelThumb};
-    border-radius: 8px;
-    border: 2px solid ${grayBorder}; /* Visible outer border */
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background-color: ${pastelHover};
-    border: 2px solid ${grayBorder};
-  }
-
-  * {
-    scrollbar-width: auto;
-    scrollbar-color: ${pastelThumb} transparent;
-  }
-`;
-document.head.appendChild(styleTag);
 
 
 }
