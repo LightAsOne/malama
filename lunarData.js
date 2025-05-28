@@ -179,27 +179,112 @@ titleEl.innerHTML = `
       }
 
       // ---------- Tab 5 ----------
-      const tab5 = document.getElementById('tab5');
-      if (tab5 && match.color) {
-        const fullText = match.color.replace(/\n+/g, ' ').trim();
-        const paragraphs = chunkText(fullText);
-        let index = 0;
+const tab5 = document.getElementById('tab5');
+if (tab5 && match.color2) {
+  // Bold everything before the first closing parenthesis
+  const color2Text = match.color2.trim();
+  const boldSplit = color2Text.split(')');
+  const boldPart = boldSplit[0] + ')';
+  const rest = boldSplit.slice(1).join(')').trim();
 
-        function renderTab5(index) {
-  tab5.innerHTML = `
-    <div class="paragraph-slide ${index === 0 ? 'first-slide' : ''}">
-      ${paragraphs[index]}
-    </div>
-    <div class="nav-arrows">
-      <button id="prev-color" ${index === 0 ? 'disabled' : ''}>&larr; Prev</button>
-      <span>${index + 1} of ${paragraphs.length}</span>
-      <button id="next-color" ${index === paragraphs.length - 1 ? 'disabled' : ''}>Next &rarr;</button>
-    </div>
-  `;
+  const firstPage = `<p><strong>${boldPart}</strong> ${rest}</p>`;
+  const restChunks = chunkText(rest);
+  const pages = [firstPage, ...restChunks]; // Keep bold part as full first page
+
+  let index = 0;
+
+  function renderTab5(i) {
+    const slideClass = `paragraph-slide ${i === 0 ? 'first-slide' : ''}`;
+
+    tab5.innerHTML = `
+      <div class="${slideClass}">
+        ${pages[i]}
+      </div>
+      <div class="nav-arrows">
+        <button id="prev-color" ${i === 0 ? 'disabled' : ''}>&larr; Prev</button>
+        <span>${i + 1} of ${pages.length}</span>
+        <button id="next-color" ${i === pages.length - 1 ? 'disabled' : ''}>Next &rarr;</button>
+      </div>
+    `;
+
+    document.getElementById('prev-color')?.addEventListener('click', () => renderTab5(i - 1));
+    document.getElementById('next-color')?.addEventListener('click', () => renderTab5(i + 1));
+  }
+
+  renderTab5(index);
 }
 
-        renderTab5(index);
-      }
+
+// ---------- Apply Dynamic Colors ----------
+if (match["color pri"] && match["color sec"]) {
+  const primary = match["color pri"].trim();
+  const secondary = match["color sec"].trim();
+
+  // Set background color of body (override CSS)
+  const bgLayer = document.querySelector(".lunar-bg");
+if (bgLayer) {
+  bgLayer.style.setProperty("background-color", secondary, "important");
+}
+document.body.style.setProperty("background-image", "none", "important");
+
+
+  // Update radial gradient color inside .lunar-bg using primary
+  const circle = document.querySelector('.lunar-bg');
+  if (circle) {
+    circle.style.setProperty(
+  "background-image",
+  `radial-gradient(circle at center, ${primary} 45%, transparent 46%)`
+);
+
+  }
+
+  // Apply semi-transparent pastel scrollbar styling
+const pastelThumb = hexToRGBA(primary, 0.5);    // Inner fill
+const pastelHover = hexToRGBA(primary, 0.7);    // Hover fill
+const grayBorder = "#444444";                  // Dark outer line
+
+const styleTag = document.getElementById('dynamic-scroll-style') || document.createElement('style');
+styleTag.id = 'dynamic-scroll-style';
+styleTag.innerHTML = `
+  ::-webkit-scrollbar {
+    width: 14px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: ${pastelThumb};
+    border-radius: 8px;
+    border: 2px solid ${grayBorder}; /* Visible outer border */
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: ${pastelHover};
+    border: 2px solid ${grayBorder};
+  }
+
+  * {
+    scrollbar-width: auto;
+    scrollbar-color: ${pastelThumb} transparent;
+  }
+`;
+document.head.appendChild(styleTag);
+
+
+}
+
+// ---------- Utility: Convert hex to rgba ----------
+function hexToRGBA(hex, alpha) {
+  const sanitized = hex.replace('#', '');
+  const bigint = parseInt(sanitized, 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+	  
 	  
 	  // ---------- Tab 6: ‘Ōlelo ----------
 const tab6 = document.getElementById('tab6');
@@ -221,6 +306,7 @@ if (tab6 && match.Olelo) {
   `;
 }
 
+
       // ---------- Olelo ----------
       const oleloDiv = document.querySelector('.Olelo');
       if (oleloDiv && match.Olelo) {
@@ -241,6 +327,8 @@ if (tab6 && match.Olelo) {
       console.error("❌ Error loading lunar_sheet.json:", err);
     });
 }
+
+
 
 // Trigger update on initial load and calendar change
 document.addEventListener('DOMContentLoaded', () => {

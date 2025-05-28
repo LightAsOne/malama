@@ -69,7 +69,8 @@ document.getElementById('calendar-toggle').addEventListener('click', () => {
             const loc = await getTideLocation();
             updateMoonTideDate(today);
             updateAstroTimes(today, loc.lat, loc.lng);
-            const tideData = await fetchTideData(loc.lat, loc.lng);
+            const dateStr = selectedDate.toISOString().split('T')[0];
+        const tideData = await fetchTideData(loc.lat, loc.lng, dateStr);
             renderTideChart(tideData, loc);
 			hideSpinner(); // ✅ hide spinner only after all is loaded
           })();
@@ -297,17 +298,46 @@ function getSavedLocation() {
   return { lat: -16.5, lng: 145.5 };
 }
  // TIDE chart
- 
-async function fetchTideData(lat, lng) {
-  if (!document.querySelector('.tide')) return []; // skip if not on index.html
-  const apiKey = '6f8295fe-29ae-11f0-8567-0242ac130003-6f829662-29ae-11f0-8567-0242ac130003'; // ← replace with your Stormglass API key
-  const start = new Date().toISOString();
-  const end = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
-  const url = `https://api.stormglass.io/v2/tide/extremes/point?lat=${lat}&lng=${lng}&start=${start}&end=${end}`;
-  const res = await fetch(url, { headers: { Authorization: apiKey } });
-  const data = await res.json();
-  return data.data;
+ //STORMTIDE
+//async function fetchTideData(lat, lng) {
+//  if (!document.querySelector('.tide')) return []; // skip if not on index.html
+//  const apiKey = '6f8295fe-29ae-11f0-8567-0242ac130003-6f829662-29ae-11f0-8567-0242ac130003'; // ← replace with your Stormglass API key
+//  const start = new Date().toISOString();
+//  const end = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+//  const url = `https://api.stormglass.io/v2/tide/extremes/point?lat=${lat}&lng=${lng}&start=${start}&end=${end}`;
+//  const res = await fetch(url, { headers: { Authorization: apiKey } });
+//  const data = await res.json();
+//  return data.data;
+//}
+
+//worldtides.api
+async function fetchTideData(lat, lon, dateOverride = null) {
+  if (!document.querySelector('.tide')) return [];
+
+  const apiKey = 'd251d071-ec49-4fdf-bc37-4c763cd52cd5'; // Replace with your key
+  const date = dateOverride || new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  const url = `https://www.worldtides.info/api/v3?extremes&date=${date}&lat=${lat}&lon=${lon}&key=${apiKey}`;
+
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (!data?.extremes || !Array.isArray(data.extremes)) return [];
+
+    return data.extremes.map(entry => ({
+      time: new Date(entry.date),
+      height: entry.height,
+      type: entry.type.toLowerCase().includes('high') ? 'high' : 'low'
+    }));
+  } catch (err) {
+    console.error("WorldTides fetch failed:", err);
+    return [];
+  }
 }
+
+//end worldtides.api
+
+
 async function reverseGeocode(lat, lng) {
   const apiKey = 'e4ba9531fa864ceaa8fdeab1d3da42c3'; // OpenCage API key
   const res = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=${apiKey}&limit=1`);
@@ -477,7 +507,8 @@ if (document.querySelector('.tide')) {
     const loc = await getTideLocation();
     renderTideChart([], loc);
     try {
-      const tideData = await fetchTideData(loc.lat, loc.lng);
+      const dateStr = selectedDate.toISOString().split('T')[0];
+        const tideData = await fetchTideData(loc.lat, loc.lng, dateStr);
       renderTideChart(tideData, loc);
     } catch (err) {
       console.warn("Tide fetch failed:", err);
@@ -526,7 +557,8 @@ cell.addEventListener('click', async () => {
 	document.getElementById('calendar-popup')?.classList.add('hidden');
   const loc = await getTideLocation();
   updateAstroTimes(selectedDate, loc.lat, loc.lng);
-  const tideData = await fetchTideData(loc.lat, loc.lng);
+  const dateStr = selectedDate.toISOString().split('T')[0];
+        const tideData = await fetchTideData(loc.lat, loc.lng, dateStr);
   renderTideChart(tideData, loc);
 
   if (selectedCell) selectedCell.classList.remove('selected-day');
@@ -596,7 +628,8 @@ cell.addEventListener('click', async () => {
   if (e.target.id === 'gpsToggle') {
     const loc = await getTideLocation();
     try {
-      const tideData = await fetchTideData(loc.lat, loc.lng);
+      const dateStr = selectedDate.toISOString().split('T')[0];
+        const tideData = await fetchTideData(loc.lat, loc.lng, dateStr);
       renderTideChart(tideData, loc);
       updateAstroTimes(new Date(), loc.lat, loc.lng); // ← Add this line
     } catch (err) {
@@ -625,7 +658,8 @@ function moveDay(offset) {
 
   getTideLocation().then(async loc => {
     updateAstroTimes(selectedDate, loc.lat, loc.lng);
-    const tideData = await fetchTideData(loc.lat, loc.lng);
+    const dateStr = selectedDate.toISOString().split('T')[0];
+        const tideData = await fetchTideData(loc.lat, loc.lng, dateStr);
     renderTideChart(tideData, loc);
 
     buildCalendar(currentYear, currentMonth);
