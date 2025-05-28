@@ -1445,6 +1445,7 @@ app-settings {
   background-image: radial-gradient(circle at center, #e5f4fd 45%, transparent 46%);
   background-size: 180px 180px;  /* smaller tiles, tighter pattern */
   background-repeat: repeat;
+  background-position: -90px 0; /* shift pattern left so we start with half-circle */
   z-index: 0;
   pointer-events: none;
 }
@@ -1492,3 +1493,27 @@ app-settings {
   scrollbar-color: rgba(229, 244, 253, 0.6) transparent;
 }
 
+
+/* Update pillars to 3 columns in grid layout */
+.right-column .pillars {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* Ensure each pillar takes up one column */
+.right-column .pillar {
+  grid-column: span 1;
+}
+
+/* Adjust for small screens: fallback to 2 columns */
+@media (max-width: 768px) {
+  .right-column .pillars {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .right-column .pillar {
+    grid-column: span 1;
+  }
+}
