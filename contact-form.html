@@ -1,0 +1,322 @@
+<!-- contacts.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacts Category</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- Match index.html fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Open+Sans&display=swap" rel="stylesheet">
+<style>
+  /* Override moon circle */
+  .lunar-bg::before {
+    background-color: #e0e0e0 !important;
+  }
+
+  /* Override background color */
+  .lunar-bg {
+    background-color: #e0e0e0 !important; /* light gray */
+  }
+</style>
+</head>
+<body class="contact-mode">
+  <div class="lunar-bg"></div>
+
+  <!-- APP HEADER -->
+  <header class="app-header">
+    <div class="header-content">
+      <div id="header-greeting">Aloha,</div>
+      <h1>Mālama Mana</h1>
+      <div id="header-tide-info"></div>
+    </div>
+  </header>
+
+  <!-- MAIN APP -->
+  <div class="app contact layout">
+   <div class="card">
+      <h2>Kanaka</h2>
+	  
+  <div class="pillar-row">
+  <div class="pillar" onclick="filterContacts('family')">
+    <i class="fa-solid fa-house"></i><h2>
+       ʻOhana
+      
+    </h2>
+    <p>(Family)</p>
+	<i class="fa-solid fa-plus add-icon" onclick="openForm('family', event)"></i>
+  </div>
+
+  <div class="pillar" onclick="filterContacts('friends')">
+    <i class="fa-solid fa-user-group"></i><h2>
+       Hoaaloha
+      
+    </h2>
+    <p>(Friends)</p>
+	<i class="fa-solid fa-plus add-icon" onclick="openForm('friends', event)"></i>
+  </div>
+
+  <div class="pillar" onclick="filterContacts('work')">
+     <i class="fa-solid fa-briefcase"></i><h2>
+      Hana
+      
+    </h2>
+    <p>(Work)</p>
+	<i class="fa-solid fa-plus add-icon" onclick="openForm('work', event)"></i>
+  </div>
+
+  <div class="pillar" onclick="filterContacts('clients')">
+    <i class="fa-solid fa-handshake"></i><h2>
+       Lawelawe
+      
+    </h2>
+    <p>(Clients)</p>
+	<i class="fa-solid fa-plus add-icon" onclick="openForm('clients', event)"></i>
+  </div>
+
+  <div class="pillar" onclick="filterContacts('community')">
+     <i class="fa-solid fa-people-arrows"></i><h2>
+      Kaiaulu
+      
+    </h2>
+    <p>(Community)</p>
+	<i class="fa-solid fa-plus add-icon" onclick="openForm('community', event)"></i>
+  </div>
+
+  <div class="pillar" onclick="filterContacts('healers')">
+    <i class="fa-solid fa-leaf"></i><h2>
+       Hoʻōla
+      
+    </h2>
+    <p>(Healers)</p>
+	<i class="fa-solid fa-plus add-icon" onclick="openForm('healers', event)"></i>
+  </div>
+
+  <div class="pillar" onclick="filterContacts('teachers')">
+   <i class="fa-solid fa-chalkboard-user"></i> <h2>
+       Kumu
+      
+    </h2>
+    <p>(Teachers)</p>
+	<i class="fa-solid fa-plus add-icon" onclick="openForm('teachers', event)"></i>
+  </div>
+
+  <div class="pillar" onclick="filterContacts('other')">
+    <i class="fa-solid fa-circle-question"></i>
+	<h2>
+       ʻĒ Aʻe
+      
+    </h2>
+    <p>(Other)</p>
+	<i class="fa-solid fa-plus add-icon" onclick="openForm('other', event)"></i>
+  </div>
+</div>
+</div> 
+ <div class="main-columns">
+  <!-- LEFT COLUMN -->
+  <div class="left-column">
+    
+    <div class="card contact-list">
+     <div class="filter-bar">
+  <div class="category-filter selected" onclick="filterContacts('all')">
+    <div class="icon-wrapper">
+      <i class="fa-solid fa-people-group"></i>
+    </div>
+       <p>Show All</p>
+  </div>
+
+  <div class="contact-search">
+    <input type="text" id="search-input" placeholder="Search contacts..." oninput="searchContacts()">
+    <button onclick="searchContacts()">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+  </div>
+</div>
+      <div id="contact-results" class="scrollable-results">
+        <!-- Filtered contact cards appear here -->
+		<!-- temproary result -->
+		<div class="alpha-section">
+  <div class="alpha-divider">A</div>
+  <div class="contact-card category-ke-kino">
+    <div class="contact-initials">AL</div>
+    <div class="contact-info">
+      <div class="contact-name">Aloha Lani</div>
+         </div>
+  </div>
+
+  <div class="contact-card category-naʻau">
+    <div class="contact-initials">AM</div>
+    <div class="contact-info">
+      <div class="contact-name">Anela Moana</div>
+        </div>
+  </div>
+</div>
+
+<div class="alpha-section">
+  <div class="alpha-divider">B</div>
+  <div class="contact-card category-wailua">
+    <div class="contact-initials">BK</div>
+    <div class="contact-info">
+      <div class="contact-name">Benny Kai</div>
+        </div>
+  </div>
+  <div class="contact-card category-wailua">
+    <div class="contact-initials">BK</div>
+    <div class="contact-info">
+      <div class="contact-name">Benny Kai2</div>
+         </div>
+  </div>
+  <div class="contact-card category-wailua">
+    <div class="contact-initials">BK</div>
+    <div class="contact-info">
+      <div class="contact-name">Benny Kai3</div>
+          </div>
+  </div>
+</div>
+     <!-- temp result end -->
+      </div>
+    </div>   
+
+    </div>
+  
+
+  <!-- RIGHT COLUMN -->
+  <div class="right-column">
+     <div class="card contact-result-card">
+  
+
+  <div class="contact-card-scrollable">
+    <!-- Contact content will go here, e.g. name, avatar, details -->
+    <div class="contact-card-content">
+      <div class="contact-initials">JD</div>
+      <div class="contact-details">
+        <strong>John Doe</strong><br />
+        johndoe@example.com
+      </div>
+    </div>
+  </div>
+
+  <div class="contact-card-actions">
+    <i class="fa-solid fa-floppy-disk" title="Save"></i>
+    <i class="fa-solid fa-pen" title="Edit"></i>
+    <i class="fa-solid fa-share-nodes" title="Share"></i>
+	<i class="fa-solid fa-trash" title="Delete"></i>
+  </div>
+</div>
+  </div>
+</div>
+</div>
+
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <a href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="16" y1="2" x2="16" y2="6"></line>
+        <line x1="8" y1="2" x2="8" y2="6"></line>
+        <line x1="3" y1="10" x2="21" y2="10"></line>
+      </svg>
+      <span>Dashboard</span>
+    </a>
+    <a href="#today">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <circle cx="12" cy="12" r="10"></circle>
+      </svg>
+      <span>Today</span>
+    </a>
+    <a href="#add">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+      <span>IKE</span>
+    </a>
+    <a href="#more" id="more-button-settings">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <circle cx="5" cy="12" r="2"></circle>
+        <circle cx="12" cy="12" r="2"></circle>
+        <circle cx="19" cy="12" r="2"></circle>
+      </svg>
+      <span>More</span>
+    </a>
+  </nav>
+
+    <!-- MORE POPUP MENU -->
+  <div id="more-menu-settings" class="more-menu hidden">
+    <button onclick="window.location.href='index2.html'">Home</button>
+    <button onclick="window.location.href='settings.html'">Settings</button>
+  </div>
+
+  <!-- Firebase SDKs - Only include once -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-init.js"></script>
+
+  <!-- Custom Scripts -->
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const moreBtn = document.getElementById('more-button-settings');
+      const moreMenu = document.getElementById('more-menu-settings');
+
+      if (moreBtn && moreMenu) {
+        moreBtn.addEventListener('click', () => {
+          moreMenu.classList.toggle('hidden');
+        });
+      }
+
+      firebase.auth().onAuthStateChanged(async user => {
+        if (!user) {
+          alert("You're not logged in.");
+          window.location.href = "index.html";
+          return;
+        }
+
+        const db = firebase.firestore();
+        const doc = await db.collection('users').doc(user.uid).get();
+        if (doc.exists) {
+          const data = doc.data();
+          const name = data.firstName || user.displayName || user.email || "Friend";
+          document.getElementById('header-greeting').textContent = `Aloha, ${name}`;
+        }
+      });
+    });
+  </script>
+    <script>
+
+  function filterContacts(category) {
+    // Remove 'selected' from all pillars
+    document.querySelectorAll('.pillar').forEach(p => p.classList.remove('selected'));
+
+    // Remove 'selected' from category-filter
+    document.querySelectorAll('.category-filter').forEach(el => el.classList.remove('selected'));
+
+    // Add 'selected' to the matching pillar if found
+    const selectedPillar = document.querySelector(`.pillar[onclick*="${category}"]`);
+    if (selectedPillar) {
+      selectedPillar.classList.add('selected');
+    } else {
+      // If no pillar matched, assume it's the "All" filter
+      const allFilter = document.querySelector(`.category-filter[onclick*="${category}"]`);
+      if (allFilter) allFilter.classList.add('selected');
+    }
+	
+
+    // TODO: filter logic for right column goes here
+  }
+  
+
+  function openForm(category, event) {
+    event.stopPropagation(); // Prevent triggering filterContacts
+    console.log("Open form for:", category);
+    // TODO: implement popup form
+  }
+</script>
+  
+</body>
+</html>

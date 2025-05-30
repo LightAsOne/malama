@@ -1517,3 +1517,440 @@ app-settings {
     grid-column: span 1;
   }
 }
+a.pillar {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+
+a.pillar:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+
+/* CONTACT PAGE STYLES */
+.contact-mode .main-columns {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 1rem;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.contact-mode .left-column,
+.contact-mode .right-column {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .contact-mode .main-columns {
+    flex-direction: column;
+  }
+
+  .contact-mode .left-column,
+  .contact-mode .right-column {
+    width: 100%;
+  }
+}
+
+/* Pillars Full Row Layout */
+.contact-mode .pillar-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.contact-mode .pillar-row .pillar {
+  flex: 1 1 calc(12.5% - 0.75rem); /* 8 across desktop */
+  min-width: 80px;
+  max-width: 140px;
+  box-sizing: border-box;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  transition: background-color 0.3s, border-color 0.3s;
+  
+}
+
+.contact-mode .pillar:hover {
+  background-color: #f9f9f9;
+  border-color: #bbb;
+}
+
+.contact-mode .pillar.selected {
+  background-color: #f4f4f4;
+  border: 2px solid #83633d;
+  box-shadow: 0 0 8px rgba(131, 99, 61, 0.5);
+}
+
+body.contact-mode .pillar.selected {
+  background-color: #f4f0e6;
+  border: 2px solid #bfa77a;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.contact-mode .pillar h2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  font-size: 0.95rem;
+  margin: 0.1rem 0 0.25rem 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.contact-mode .pillar p {
+  font-size: 0.8rem;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.contact-mode .pillar .add-icon {
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+  color: #555;
+  cursor: pointer;
+}
+
+.contact-mode .pillar .add-icon:hover {
+  color: #000;
+}
+
+/* Responsive: 4 per row on small screens */
+@media (max-width: 768px) {
+  .contact-mode .pillar-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Centers partial final row */
+    gap: 0.75rem;
+    padding: 0 1rem;
+    box-sizing: border-box;
+  }
+   .contact-mode .pillar-row .pillar {
+    flex: 0 0 22%;  /* Fits 4 per row cleanly with spacing */
+    max-width: 90px;
+    padding: 0.5rem;
+    box-sizing: border-box;
+    text-align: center;
+  }
+}
+
+/* Optional actions below pillars (if used later) */
+.pillar-actions {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 1.5rem;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #333;
+  transition: transform 0.2s ease;
+}
+
+.action-item i {
+  font-size: 1.3rem;
+  margin-bottom: 0.2rem;
+}
+
+.action-item:hover {
+  transform: scale(1.1);
+  color: #000;
+}
+
+.pillar i {
+  font-size: 1.25rem;
+}
+
+.contact-mode .main-columns {
+  margin-top: 2rem; /* Or any spacing you want */
+}
+/* Make .category-filter match .pillar visually */
+.contact-mode .category-filter {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem 0.5rem;
+  width: 25%;
+  box-sizing: border-box;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.contact-mode .category-filter:hover {
+  background-color: #f9f9f9;
+  border-color: #bbb;
+}
+
+.contact-mode .category-filter.selected {
+  background-color: #f4f4f4;
+  border: 2px solid #83633d;
+  box-shadow: 0 0 8px rgba(131, 99, 61, 0.5);
+}
+
+.contact-mode .category-filter i {
+  font-size: 1.5rem;
+  margin-bottom: 0.2rem;
+}
+
+.contact-mode .category-filter h2 {
+  font-size: 1rem;
+  margin: 0.2rem 0 0;
+}
+
+.contact-mode .category-filter p {
+  font-size: 0.65rem;
+  margin: 0;
+}
+/* Row container for filter + search */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: nowrap;
+}
+
+
+
+.contact-search {
+  flex: 0 0 75%;
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.contact-search input {
+  flex: 1;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  outline: none;
+}
+
+.contact-search button {
+  background: #eee;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #555;
+  transition: background-color 0.2s ease;
+}
+
+.contact-search button:hover {
+  background-color: #ddd;
+}
+
+@media (max-width: 768px) {
+  .filter-bar {
+    flex-wrap: nowrap;
+  }
+
+  .category-filter {
+    flex: 1 1 25%;
+    min-width: 100px;
+  }
+
+  .contact-search {
+    flex: 1 1 75%;
+    min-width: 180px;
+  }
+
+  .contact-search input[type="text"] {
+    width: 100%;
+  }
+}
+/* Scrollable results area */
+/* Force scrollable region to use remaining space */
+.scrollable-results {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  max-height: 500px;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+}
+
+/* Alphabet section */
+.alpha-section {
+  margin-bottom: 1.5rem;
+}
+
+.alpha-divider {
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #555;
+}
+
+/* Contact card layout */
+.contact-card {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  background-color: #fafafa;
+  transition: background 0.2s ease;
+}
+
+.contact-card:hover {
+  background-color: #f0f0f0;
+}
+
+.contact-initials {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 0.9rem;
+  background-color: #e0e0e0;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.75rem;
+  border: 2px solid transparent; /* category color goes here */
+}
+
+/* Contact info text */
+.contact-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-name {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.contact-category {
+  font-size: 0.75rem;
+  color: #777;
+}
+
+/* Example category-based border color */
+.category-ke-kino .contact-initials {
+  border-color: #8b5e3c;
+}
+.category-naʻau .contact-initials {
+  border-color: #5e7583;
+}
+.category-wailua .contact-initials {
+  border-color: #7a3e72;
+}
+/* Set fixed height for the contact list area */
+.contact-list {
+  display: flex;
+  flex-direction: column;
+  height: 500px; /* Total height, room for filters + scroll */
+  max-height: 500px;
+  overflow: hidden;
+}
+.contact-result-card {
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.contact-result-card h2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Scrollable contact area */
+.contact-card-scrollable {
+  height: 400px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  margin-bottom: 1rem;
+  flex: 1;
+  border: 1px solid #eee;
+  border-radius: 6px;
+}
+
+/* Sample contact inside */
+.contact-card-content {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  border-bottom: 1px solid #eee;
+}
+
+.contact-initials {
+  width: 40px;
+  height: 40px;
+  background: #83633d;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.75rem;
+}
+
+.contact-details {
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+/* Action buttons */
+.contact-card-actions {
+  display: flex;
+  justify-content: space-around;
+  padding-top: 0.5rem;
+  border-top: 1px solid #eee;
+  font-size: 1.25rem;
+  color: #666;
+}
+
+.contact-card-actions i {
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.contact-card-actions i:hover {
+  color: #333;
+}
+
