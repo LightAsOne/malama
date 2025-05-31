@@ -23,6 +23,7 @@
 </head>
 <body class="contact-mode">
   <div class="lunar-bg"></div>
+  <div class="moon-overlay"></div>
 
   <!-- APP HEADER -->
   <header class="app-header">
@@ -34,12 +35,12 @@
   </header>
 
   <!-- MAIN APP -->
+
   <div class="app contact layout">
-   <div class="card">
-      <h2>Kanaka</h2>
+
 	  
   <div class="pillar-row">
-  <div class="pillar" onclick="filterContacts('family')">
+  <div class="pillar family" onclick="filterContacts('family')">
     <i class="fa-solid fa-house"></i><h2>
        ʻOhana
       
@@ -48,7 +49,7 @@
 	<i class="fa-solid fa-plus add-icon" onclick="openForm('family', event)"></i>
   </div>
 
-  <div class="pillar" onclick="filterContacts('friends')">
+  <div class="pillar friends" onclick="filterContacts('friends')">
     <i class="fa-solid fa-user-group"></i><h2>
        Hoaaloha
       
@@ -57,7 +58,7 @@
 	<i class="fa-solid fa-plus add-icon" onclick="openForm('friends', event)"></i>
   </div>
 
-  <div class="pillar" onclick="filterContacts('work')">
+  <div class="pillar work" onclick="filterContacts('work')">
      <i class="fa-solid fa-briefcase"></i><h2>
       Hana
       
@@ -66,7 +67,7 @@
 	<i class="fa-solid fa-plus add-icon" onclick="openForm('work', event)"></i>
   </div>
 
-  <div class="pillar" onclick="filterContacts('clients')">
+  <div class="pillar clients" onclick="filterContacts('clients')">
     <i class="fa-solid fa-handshake"></i><h2>
        Lawelawe
       
@@ -75,7 +76,7 @@
 	<i class="fa-solid fa-plus add-icon" onclick="openForm('clients', event)"></i>
   </div>
 
-  <div class="pillar" onclick="filterContacts('community')">
+  <div class="pillar community" onclick="filterContacts('community')">
      <i class="fa-solid fa-people-arrows"></i><h2>
       Kaiaulu
       
@@ -84,7 +85,7 @@
 	<i class="fa-solid fa-plus add-icon" onclick="openForm('community', event)"></i>
   </div>
 
-  <div class="pillar" onclick="filterContacts('healers')">
+  <div class="pillar healers" onclick="filterContacts('healers')">
     <i class="fa-solid fa-leaf"></i><h2>
        Hoʻōla
       
@@ -93,7 +94,7 @@
 	<i class="fa-solid fa-plus add-icon" onclick="openForm('healers', event)"></i>
   </div>
 
-  <div class="pillar" onclick="filterContacts('teachers')">
+  <div class="pillar teachers" onclick="filterContacts('teachers')">
    <i class="fa-solid fa-chalkboard-user"></i> <h2>
        Kumu
       
@@ -102,7 +103,7 @@
 	<i class="fa-solid fa-plus add-icon" onclick="openForm('teachers', event)"></i>
   </div>
 
-  <div class="pillar" onclick="filterContacts('other')">
+  <div class="pillar other" onclick="filterContacts('other')">
     <i class="fa-solid fa-circle-question"></i>
 	<h2>
        ʻĒ Aʻe
@@ -111,8 +112,8 @@
     <p>(Other)</p>
 	<i class="fa-solid fa-plus add-icon" onclick="openForm('other', event)"></i>
   </div>
+
 </div>
-</div> 
  <div class="main-columns">
   <!-- LEFT COLUMN -->
   <div class="left-column">
@@ -126,12 +127,17 @@
        <p>Show All</p>
   </div>
 
+  <div class="search-wrapper">
   <div class="contact-search">
     <input type="text" id="search-input" placeholder="Search contacts..." oninput="searchContacts()">
     <button onclick="searchContacts()">
       <i class="fa-solid fa-magnifying-glass"></i>
     </button>
   </div>
+  <p id="contact-filter-label" class="filter-label">Showing all contacts</p>
+</div>
+
+  
 </div>
       <div id="contact-results" class="scrollable-results">
         <!-- Filtered contact cards appear here -->
@@ -155,6 +161,27 @@
 
 <div class="alpha-section">
   <div class="alpha-divider">B</div>
+  <div class="contact-card category-wailua">
+    <div class="contact-initials">BK</div>
+    <div class="contact-info">
+      <div class="contact-name">Benny Kai</div>
+        </div>
+  </div>
+  <div class="contact-card category-wailua">
+    <div class="contact-initials">BK</div>
+    <div class="contact-info">
+      <div class="contact-name">Benny Kai2</div>
+         </div>
+  </div>
+  <div class="contact-card category-wailua">
+    <div class="contact-initials">BK</div>
+    <div class="contact-info">
+      <div class="contact-name">Benny Kai3</div>
+          </div>
+  </div>
+</div>
+<div class="alpha-section">
+  <div class="alpha-divider">C</div>
   <div class="contact-card category-wailua">
     <div class="contact-initials">BK</div>
     <div class="contact-info">
@@ -211,45 +238,71 @@
 
   <!-- BOTTOM NAVIGATION -->
   <nav class="bottom-nav">
-    <a href="index.html">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-           stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-        <line x1="16" y1="2" x2="16" y2="6"></line>
-        <line x1="8" y1="2" x2="8" y2="6"></line>
-        <line x1="3" y1="10" x2="21" y2="10"></line>
-      </svg>
-      <span>Dashboard</span>
-    </a>
-    <a href="#today">
-      <svg viewBox="0 0 24 24" fill="currentColor">
-        <circle cx="12" cy="12" r="10"></circle>
-      </svg>
-      <span>Today</span>
-    </a>
-    <a href="#add">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-           stroke-linecap="round" stroke-linejoin="round">
-        <line x1="12" y1="5" x2="12" y2="19"></line>
-        <line x1="5" y1="12" x2="19" y2="12"></line>
-      </svg>
-      <span>IKE</span>
-    </a>
-    <a href="#more" id="more-button-settings">
-      <svg viewBox="0 0 24 24" fill="currentColor">
-        <circle cx="5" cy="12" r="2"></circle>
-        <circle cx="12" cy="12" r="2"></circle>
-        <circle cx="19" cy="12" r="2"></circle>
-      </svg>
-      <span>More</span>
-    </a>
+   <div class="nav-inner">
+     <!-- Dashboard -->
+  <a href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+    </svg>
+    <span>Dashboard</span>
+  </a>
+
+  <!-- Today -->
+  <a href="#today">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="6" x2="12" y2="12"></line>
+      <line x1="12" y1="12" x2="16" y2="14"></line>
+    </svg>
+    <span>Today</span>
+  </a>
+
+  <!-- Week -->
+  <a href="#week">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="16" rx="2" ry="2"></rect>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+      <line x1="7" y1="14" x2="7" y2="14"></line>
+      <line x1="12" y1="14" x2="12" y2="14"></line>
+      <line x1="17" y1="14" x2="17" y2="14"></line>
+    </svg>
+    <span>Week</span>
+  </a>
+
+  <!-- Month -->
+  <a href="#month">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+      <line x1="7" y1="14" x2="7" y2="14"></line>
+      <line x1="12" y1="14" x2="12" y2="14"></line>
+      <line x1="17" y1="14" x2="17" y2="14"></line>
+      <line x1="7" y1="18" x2="7" y2="18"></line>
+      <line x1="12" y1="18" x2="12" y2="18"></line>
+      <line x1="17" y1="18" x2="17" y2="18"></line>
+    </svg>
+    <span>Month</span>
+  </a>
+
+   <!-- Settings -->
+  <a href="settings.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"></circle>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.09a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.09a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+    </svg>
+    <span>Settings</span>
+  </a> </div>
   </nav>
 
-    <!-- MORE POPUP MENU -->
-  <div id="more-menu-settings" class="more-menu hidden">
-    <button onclick="window.location.href='index2.html'">Home</button>
-    <button onclick="window.location.href='settings.html'">Settings</button>
-  </div>
+ 
 
   <!-- Firebase SDKs - Only include once -->
   <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
@@ -305,7 +358,15 @@
       const allFilter = document.querySelector(`.category-filter[onclick*="${category}"]`);
       if (allFilter) allFilter.classList.add('selected');
     }
-	
+	 // Update label text
+  const label = document.getElementById('contact-filter-label');
+  if (category === 'all') {
+    label.textContent = 'Showing all contacts';
+  } else {
+    label.textContent = `Showing only ${category}`;
+    const clicked = document.querySelector(`.pillar.${category}`);
+    if (clicked) clicked.classList.add('selected');
+  }
 
     // TODO: filter logic for right column goes here
   }

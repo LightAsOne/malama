@@ -441,11 +441,15 @@ td.current-day {
 /* Pillars take 1 column each */
 .pillar {
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 0.5rem;
   box-sizing: border-box;
   grid-column: span 1;
+  border-width: 3px!important;
+  border-style: solid;
+  border-color: transparent;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .pillar h2 {
@@ -511,11 +515,16 @@ td.current-day {
   background: white;
   border-top: 1px solid #ddd;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   padding: 0.5rem 0;
   z-index: 1000; /* must be above .app */
 }
-
+.nav-inner {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  max-width: 1024px;
+}
 .bottom-nav a {
   display: flex;
   flex-direction: column;
@@ -1318,6 +1327,7 @@ body.settings-mode .app {
 }
 
 
+
 #settings-page {
   width: 100%;
   max-width: none;
@@ -1564,7 +1574,7 @@ a.pillar:hover {
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 0.75rem;
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
 }
 
 .contact-mode .pillar-row .pillar {
@@ -1606,7 +1616,7 @@ body.contact-mode .pillar.selected {
   align-items: center;
   justify-content: center;
   gap: 0.2rem;
-  font-size: 0.95rem;
+  font-size: 0.75rem;
   margin: 0.1rem 0 0.25rem 0;
   white-space: nowrap;
   overflow: hidden;
@@ -1614,22 +1624,25 @@ body.contact-mode .pillar.selected {
 }
 
 .contact-mode .pillar p {
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.contact-mode .pillar .add-icon {
-  font-size: 0.9rem;
-  margin-top: 0.25rem;
-  color: #555;
-  cursor: pointer;
+.pillar .add-icon {
+  font-size: 1 rem; /* Increase size */
+  font-weight: bold; /* Make it bolder */
+  color: #222;       /* Dark for contrast */
+  margin-top: 0.3rem;
+  transition: transform 0.2s ease;
 }
 
-.contact-mode .pillar .add-icon:hover {
-  color: #000;
+/* Optional: Hover effect */
+.pillar .add-icon:hover {
+  transform: scale(1.2);
+  cursor: pointer;
 }
 
 /* Responsive: 4 per row on small screens */
@@ -1637,17 +1650,19 @@ body.contact-mode .pillar.selected {
   .contact-mode .pillar-row {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center; /* Centers partial final row */
-    gap: 0.75rem;
-    padding: 0 1rem;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0 0.5rem;
     box-sizing: border-box;
   }
-   .contact-mode .pillar-row .pillar {
-    flex: 0 0 22%;  /* Fits 4 per row cleanly with spacing */
-    max-width: 90px;
+
+  .contact-mode .pillar-row .pillar {
+    flex: 0 0 23%; /* Adjusted from 22% to allow 4 per row with small gaps */
+    max-width: none; /* Let flex determine width */
+    min-width: 70px;
+    text-align: center;
     padding: 0.5rem;
     box-sizing: border-box;
-    text-align: center;
   }
 }
 
@@ -1682,6 +1697,23 @@ body.contact-mode .pillar.selected {
 
 .pillar i {
   font-size: 1.25rem;
+}
+.pillar.family    { border-color: #f4c542 !important; }
+.pillar.friends   { border-color: #51b3a2 !important; }
+.pillar.work      { border-color: #3b82f6 !important; }
+.pillar.clients   { border-color: #9b59b6 !important; }
+.pillar.community { border-color: #e67e22 !important; }
+.pillar.healers   { border-color: #44b78b !important; }
+.pillar.teachers  { border-color: #d35400 !important; }
+.pillar.other     { border-color: #7f8c8d !important; }
+
+.pillar.selected {
+  outline: 3px solid rgba(0, 0, 0, 0.5); /* Soft dark outline */
+  outline-offset: -3px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.25); /* Subtle glow */
+  transform: scale(1.04);
+  transition: all 0.2s ease;
+  box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.4);
 }
 
 .contact-mode .main-columns {
@@ -1737,8 +1769,18 @@ body.contact-mode .pillar.selected {
   flex-wrap: nowrap;
 }
 
-
-
+.filter-label {
+  font-size: 0.85rem;
+  color: #555;
+  margin-top: 1 rem;
+  margin-left: 0.5rem;
+}
+.search-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+}
 .contact-search {
   flex: 0 0 75%;
   display: flex;
@@ -1795,7 +1837,7 @@ body.contact-mode .pillar.selected {
   flex: 1;
   overflow-y: auto;
   min-height: 0;
-  max-height: 500px;
+  max-height: 600px;
   padding: 1rem;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -1856,31 +1898,17 @@ body.contact-mode .pillar.selected {
   font-weight: 500;
 }
 
-.contact-category {
-  font-size: 0.75rem;
-  color: #777;
-}
 
-/* Example category-based border color */
-.category-ke-kino .contact-initials {
-  border-color: #8b5e3c;
-}
-.category-naʻau .contact-initials {
-  border-color: #5e7583;
-}
-.category-wailua .contact-initials {
-  border-color: #7a3e72;
-}
 /* Set fixed height for the contact list area */
 .contact-list {
   display: flex;
   flex-direction: column;
-  height: 500px; /* Total height, room for filters + scroll */
-  max-height: 500px;
+  height: 600px; /* Total height, room for filters + scroll */
+  max-height: 600px;
   overflow: hidden;
 }
 .contact-result-card {
-  height: 500px;
+  height: 600px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -1899,7 +1927,7 @@ body.contact-mode .pillar.selected {
 
 /* Scrollable contact area */
 .contact-card-scrollable {
-  height: 400px;
+  height: 600px;
   overflow-y: auto;
   padding-right: 0.5rem;
   margin-bottom: 1rem;
@@ -1924,6 +1952,7 @@ body.contact-mode .pillar.selected {
   font-weight: bold;
   font-size: 1rem;
   border-radius: 50%;
+   border-color: #5e7583;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1954,3 +1983,33 @@ body.contact-mode .pillar.selected {
   color: #333;
 }
 
+.contact-category {
+  font-size: 0.75rem;
+  color: #777;
+}
+.moon-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1; /* must be above .lunar-bg */
+
+  background-image: url('img/moon_sketch_crater_overlay.png');
+  background-size: 180px 180px; /* match .lunar-bg circle size */
+  background-repeat: repeat;
+  background-position: -90px 0; /* align with lunar-bg offset */
+  opacity: 0.4; /* adjust crater visibility */
+}
+.app.contact.layout {
+  width: 100%;
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 1rem;
+  padding-top: 80px; /* ✅ clears the fixed header (60px) + spacing */
+  box-sizing: border-box;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}

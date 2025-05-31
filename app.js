@@ -610,20 +610,7 @@ cell.addEventListener('click', async () => {
     snap.appendChild(span);
   }
 
-  // Settings More Menu
-  const moreBtnSettings = document.getElementById('more-button-settings');
-  const moreMenuSettings = document.getElementById('more-menu-settings');
 
-  moreBtnSettings.addEventListener('click', e => {
-    e.preventDefault();
-    moreMenuSettings.classList.toggle('hidden');
-  });
-
-  document.addEventListener('click', e => {
-    if (!moreMenuSettings.contains(e.target) && !moreBtnSettings.contains(e.target)) {
-      moreMenuSettings.classList.add('hidden');
-    }
-  });
   document.addEventListener('change', async (e) => {
   if (e.target.id === 'gpsToggle') {
     const loc = await getTideLocation();
