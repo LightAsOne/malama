@@ -1996,7 +1996,7 @@ body.contact-mode .pillar.selected {
   pointer-events: none;
   z-index: 1; /* must be above .lunar-bg */
 
-  background-image: url('img/moon_sketch_crater_overlay.png');
+  background-image: url('IMG/moon_sketch_crater_overlay.png');
   background-size: 180px 180px; /* match .lunar-bg circle size */
   background-repeat: repeat;
   background-position: -90px 0; /* align with lunar-bg offset */
