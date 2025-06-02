@@ -20,6 +20,17 @@
     background-color: #e0e0e0 !important; /* light gray */
   }
 </style>
+
+<style>
+input[type="date"] {
+  padding: 0.4rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  appearance: auto;
+}
+</style>
+
 </head>
 <body class="contact-mode">
   <div class="lunar-bg"></div>
@@ -46,7 +57,7 @@
       
     </h2>
     <p>(Family)</p>
-	<i class="fa-solid fa-plus add-icon" onclick="openForm('family', event)"></i>
+	<i class="fa-solid fa-plus add-icon" onclick="openContactForm('ohana', event)"></i>
   </div>
 
   <div class="pillar friends" onclick="filterContacts('friends')">
@@ -55,7 +66,7 @@
       
     </h2>
     <p>(Friends)</p>
-	<i class="fa-solid fa-plus add-icon" onclick="openForm('friends', event)"></i>
+	<i class="fa-solid fa-plus add-icon" onclick="openContactForm('hoaaloha', event)"></i>
   </div>
 
   <div class="pillar work" onclick="filterContacts('work')">
@@ -64,7 +75,7 @@
       
     </h2>
     <p>(Work)</p>
-	<i class="fa-solid fa-plus add-icon" onclick="openForm('work', event)"></i>
+	<i class="fa-solid fa-plus add-icon" onclick="openContactForm('hana', event)"></i>
   </div>
 
   <div class="pillar clients" onclick="filterContacts('clients')">
@@ -73,7 +84,7 @@
       
     </h2>
     <p>(Clients)</p>
-	<i class="fa-solid fa-plus add-icon" onclick="openForm('clients', event)"></i>
+	<i class="fa-solid fa-plus add-icon" onclick="openContactForm('lawelawe', event)"></i>
   </div>
 
   <div class="pillar community" onclick="filterContacts('community')">
@@ -82,7 +93,7 @@
       
     </h2>
     <p>(Community)</p>
-	<i class="fa-solid fa-plus add-icon" onclick="openForm('community', event)"></i>
+	<i class="fa-solid fa-plus add-icon" onclick="openContactForm('kaiaulu', event)"></i>
   </div>
 
   <div class="pillar healers" onclick="filterContacts('healers')">
@@ -91,7 +102,7 @@
       
     </h2>
     <p>(Healers)</p>
-	<i class="fa-solid fa-plus add-icon" onclick="openForm('healers', event)"></i>
+	<i class="fa-solid fa-plus add-icon" onclick="openContactForm('hoola', event)"></i>
   </div>
 
   <div class="pillar teachers" onclick="filterContacts('teachers')">
@@ -100,7 +111,7 @@
       
     </h2>
     <p>(Teachers)</p>
-	<i class="fa-solid fa-plus add-icon" onclick="openForm('teachers', event)"></i>
+	<i class="fa-solid fa-plus add-icon" onclick="openContactForm('kumu', event)"></i>
   </div>
 
   <div class="pillar other" onclick="filterContacts('other')">
@@ -110,10 +121,151 @@
       
     </h2>
     <p>(Other)</p>
-	<i class="fa-solid fa-plus add-icon" onclick="openForm('other', event)"></i>
+	<i class="fa-solid fa-plus add-icon" onclick="openContactForm('eae', event)"></i>
   </div>
-
 </div>
+
+<!-- Contact Form Popup -->
+<div id="contact-form-popup" class="popup hidden">
+  <div class="popup-content">
+  <form id="contact-form">
+   <div class="form-header"> 
+	<h2>Add or Edit Contact</h2>
+	<button type="button"
+  class="close-button"
+  onclick="
+  document.getElementById('contact-form-popup').classList.add('hidden');
+  document.getElementById('contact-form').reset();
+  document.getElementById('category-fields-container').innerHTML = '';
+">
+  ×
+</button>
+ </div>
+
+    <div class="form-row">
+  <div class="form-group">
+    <label for="firstName">Name</label>
+    <input type="text" id="firstName" name="firstName" required />
+  </div>
+  <div class="form-group">
+    <label for="lastName">Surname</label>
+    <input type="text" id="lastName" name="lastName" required />
+  </div>
+</div>
+ <div class="form-row">
+  <div class="form-group">
+   <label>Birthday </label>
+   <input type="date" name="birthday">
+   </div>
+   <div class="form-group">
+    <label for="phone">Phone</label>
+    <input type="tel" id="phone" name="phone"  />
+  </div>
+   </div>
+   
+<div class="form-row">
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" />
+  </div>
+  
+</div>
+
+
+  <div class="form-group">
+  <label for="address">Address</label>
+  <input id="address" name="address" type="text" placeholder="Start typing address..." autocomplete="off" />
+</div>
+
+<!-- These will be auto-filled -->
+<input type="hidden" id="city" name="city" />
+<input type="hidden" id="postcode" name="postcode" />
+<input type="hidden" id="state" name="state" />
+<input type="hidden" id="country" name="country" />
+ 
+
+    <!-- Category Selection -->
+<div class="form-group">
+  <label>Category</label>
+  <div class="category-tags">
+    <label class="tag">
+      <input type="checkbox" name="category" value="ohana" />
+      <div class="category-label">
+        <span class="hawaiian">ʻOhana</span>
+        <span class="english">Family</span>
+      </div>
+    </label>
+    <label class="tag">
+      <input type="checkbox" name="category" value="hoaaloha" />
+      <div class="category-label">
+        <span class="hawaiian">Hoaaloha</span>
+        <span class="english">Friends</span>
+      </div>
+    </label>
+    <label class="tag">
+      <input type="checkbox" name="category" value="hana" />
+      <div class="category-label">
+        <span class="hawaiian">Hana</span>
+        <span class="english">Work</span>
+      </div>
+    </label>
+    <label class="tag">
+      <input type="checkbox" name="category" value="lawelawe" />
+      <div class="category-label">
+        <span class="hawaiian">Lawelawe</span>
+        <span class="english">Clients</span>
+      </div>
+    </label>
+    <label class="tag">
+      <input type="checkbox" name="category" value="kaiaulu" />
+      <div class="category-label">
+        <span class="hawaiian">Kaiaulu</span>
+        <span class="english">Community</span>
+      </div>
+    </label>
+    <label class="tag">
+      <input type="checkbox" name="category" value="hoola" />
+      <div class="category-label">
+        <span class="hawaiian">Hoʻōla</span>
+        <span class="english">Healers</span>
+      </div>
+    </label>
+    <label class="tag">
+      <input type="checkbox" name="category" value="kumu" />
+      <div class="category-label">
+        <span class="hawaiian">Kumu</span>
+        <span class="english">Teachers</span>
+      </div>
+    </label>
+    <label class="tag">
+      <input type="checkbox" name="category" value="eae" />
+      <div class="category-label">
+        <span class="hawaiian">ʻĒ Aʻe</span>
+        <span class="english">Other</span>
+      </div>
+    </label>
+  </div>
+</div>
+
+    <!-- Dynamic Category Fields -->
+    <div id="category-fields-container"></div>
+<div id="important-dates-section">
+  <div class="date-entry">
+    <div class="important-date-row">
+      <input type="text" name="dateLabel[]" placeholder="Label (e.g., Anniversary)">
+      <input type="date" name="dateValue[]">
+    </div>
+  </div>
+</div>
+<button type="button" onclick="addImportantDate()">+ Add Important Date</button>
+
+    <button type="submit">Save Contact</button>
+  </form>
+</div>
+</div>
+<!-- END POPUP -->
+
+
  <div class="main-columns">
   <!-- LEFT COLUMN -->
   <div class="left-column">
@@ -314,14 +466,7 @@
 
   <script>
     window.addEventListener('DOMContentLoaded', () => {
-      const moreBtn = document.getElementById('more-button-settings');
-      const moreMenu = document.getElementById('more-menu-settings');
-
-      if (moreBtn && moreMenu) {
-        moreBtn.addEventListener('click', () => {
-          moreMenu.classList.toggle('hidden');
-        });
-      }
+      
 
       firebase.auth().onAuthStateChanged(async user => {
         if (!user) {
@@ -370,14 +515,161 @@
 
     // TODO: filter logic for right column goes here
   }
-  
+  const categoryMap = {
+  family: "ohana",
+  friends: "hoaaloha",
+  work: "hana",
+  clients: "lawelawe",
+  community: "kaiaulu",
+  healers: "hoola",
+  teachers: "kumu",
+  other: "eae"
+};
 
-  function openForm(category, event) {
-    event.stopPropagation(); // Prevent triggering filterContacts
-    console.log("Open form for:", category);
-    // TODO: implement popup form
-  }
+ const categoryFields = {
+    ohana: ['Family Role', 'Shared Memories'],
+    hoaaloha: ['How You Met', 'Favorite Moments'],
+    hana: ['Work Role', 'Business/Organisaztion', 'Workplace Location'],
+    lawelawe: ['Client Notes', 'Service Provided', 'Last Session Date'],
+    kaiaulu: ['Community Role', 'Events Participated', 'Organization'],
+    hoola: ['Healing Modalities', 'Session Notes', 'Healing Type'],
+    kumu: ['Study Taken', 'School/Lineage', 'Lessons Learned'],
+    eae: ['Other Notes', 'Context/Where Met', 'Shared Activities']
+  };
+
+  function createCategoryBlock(cat) {
+  const block = document.createElement("div");
+  block.className = "category-block";
+  block.dataset.category = cat;
+
+  const labels = categoryFields[cat] || [];
+  labels.forEach(label => {
+    const group = document.createElement("div");
+    group.className = "form-group";
+
+    // Use unique input names based on cat and label
+    const inputName = `${cat}-${label.toLowerCase().replace(/\s+/g, '-')}`;
+
+    group.innerHTML = `
+      <label>${label}</label>
+      <input type="text" name="${inputName}">
+    `;
+
+    block.appendChild(group);
+  });
+
+  return block;
+}
+
+
+  // Restore values when blocks already exist
+
+window.updateCategoryFields = function () {
+  const container = document.getElementById("category-fields-container");
+  const checkboxes = document.querySelectorAll('input[name="category"]');
+
+  checkboxes.forEach(cb => {
+    const cat = cb.value;
+    const exists = container.querySelector(`[data-category="${cat}"]`);
+
+    if (cb.checked && !exists) {
+      const block = createCategoryBlock(cat);
+      container.appendChild(block);
+    } else if (!cb.checked && exists) {
+      container.removeChild(exists);
+    }
+  });
+};
+  window.openContactForm = function (category, event) {
+    if (event) event.stopPropagation();
+
+    const checkbox = document.querySelector(`input[name="category"][value="${category}"]`);
+    if (checkbox) checkbox.checked = true;
+
+    updateCategoryFields();
+
+    document.getElementById("contact-form-popup").classList.remove("hidden");
+  };
+
+
 </script>
-  
+<script>
+  document.querySelectorAll('input[name="category"]').forEach(cb => {
+    cb.addEventListener('change', window.updateCategoryFields);
+  });
+</script>
+<!-- Custom Scripts -->
+<!-- Custom Scripts -->
+<!-- Custom Scripts -->
+<script>
+ 
+
+
+ function addImportantDate() {
+  const container = document.getElementById("important-dates-section");
+
+  const entry = document.createElement("div");
+  entry.className = "date-entry";
+
+  entry.innerHTML = `
+    <div class="important-date-row">
+      <input type="text" name="dateLabel[]" placeholder="Label (e.g., Anniversary)">
+      <input type="date" name="dateValue[]">
+      <button type="button" class="remove-date" title="Remove" onclick="this.closest('.date-entry').remove()">
+        <i class="fa-solid fa-trash"></i>
+      </button>
+    </div>
+  `;
+
+  container.appendChild(entry);
+}
+
+  document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('delete-date')) {
+      e.target.parentElement.remove();
+    }
+  });
+
+  // Pre-check category when opened from pillar
+  window.openContactForm = function (category) {
+    const checkbox = document.querySelector(`.category-tags input[value="${category}"]`);
+    if (checkbox && !checkbox.checked) {
+      checkbox.checked = true;
+      checkbox.dispatchEvent(new Event('change'));
+    }
+    document.getElementById('contact-form-popup').classList.remove('hidden');
+  };
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBM98wzY41xWkUYP4v93sS6T_PCL-zmt2E&libraries=places"></script>
+<script>
+  function initAutocomplete() {
+    const input = document.getElementById("address");
+    const autocomplete = new google.maps.places.Autocomplete(input, {
+      types: ["geocode"],
+      
+    });
+
+    autocomplete.addListener("place_changed", () => {
+      const place = autocomplete.getPlace();
+      const components = place.address_components || [];
+
+      const get = (type) => {
+        const comp = components.find(c => c.types.includes(type));
+        return comp ? comp.long_name : "";
+      };
+
+      document.getElementById("city").value = get("locality") || get("postal_town");
+      document.getElementById("postcode").value = get("postal_code");
+      document.getElementById("state").value = get("administrative_area_level_1");
+      document.getElementById("country").value = get("country");
+    });
+  }
+
+  window.addEventListener("load", initAutocomplete);
+</script>
+
+
 </body>
 </html>
+
+
