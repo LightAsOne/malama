@@ -259,7 +259,7 @@ input[type="date"] {
 </div>
 <button type="button" onclick="addImportantDate()">+ Add Important Date</button>
 
-    <button type="submit">Save Contact</button>
+    <button type="button" onclick="saveContact()">Save Contact</button>
   </form>
 </div>
 </div>
@@ -293,67 +293,12 @@ input[type="date"] {
 </div>
       <div id="contact-results" class="scrollable-results">
         <!-- Filtered contact cards appear here -->
-		<!-- temproary result -->
-		<div class="alpha-section">
-  <div class="alpha-divider">A</div>
-  <div class="contact-card category-ke-kino">
-    <div class="contact-initials">AL</div>
-    <div class="contact-info">
-      <div class="contact-name">Aloha Lani</div>
-         </div>
-  </div>
-
-  <div class="contact-card category-naʻau">
-    <div class="contact-initials">AM</div>
-    <div class="contact-info">
-      <div class="contact-name">Anela Moana</div>
-        </div>
+		<div class="contact-card">
+  <div class="contact-initials"></div>
+  <div class="contact-info">
+    <div class="contact-name"></div>
   </div>
 </div>
-
-<div class="alpha-section">
-  <div class="alpha-divider">B</div>
-  <div class="contact-card category-wailua">
-    <div class="contact-initials">BK</div>
-    <div class="contact-info">
-      <div class="contact-name">Benny Kai</div>
-        </div>
-  </div>
-  <div class="contact-card category-wailua">
-    <div class="contact-initials">BK</div>
-    <div class="contact-info">
-      <div class="contact-name">Benny Kai2</div>
-         </div>
-  </div>
-  <div class="contact-card category-wailua">
-    <div class="contact-initials">BK</div>
-    <div class="contact-info">
-      <div class="contact-name">Benny Kai3</div>
-          </div>
-  </div>
-</div>
-<div class="alpha-section">
-  <div class="alpha-divider">C</div>
-  <div class="contact-card category-wailua">
-    <div class="contact-initials">BK</div>
-    <div class="contact-info">
-      <div class="contact-name">Benny Kai</div>
-        </div>
-  </div>
-  <div class="contact-card category-wailua">
-    <div class="contact-initials">BK</div>
-    <div class="contact-info">
-      <div class="contact-name">Benny Kai2</div>
-         </div>
-  </div>
-  <div class="contact-card category-wailua">
-    <div class="contact-initials">BK</div>
-    <div class="contact-info">
-      <div class="contact-name">Benny Kai3</div>
-          </div>
-  </div>
-</div>
-     <!-- temp result end -->
       </div>
     </div>   
 
@@ -365,15 +310,21 @@ input[type="date"] {
      <div class="card contact-result-card">
   
 
-  <div class="contact-card-scrollable">
+  <div class="contact-card-scrollable" id="contact-details">
     <!-- Contact content will go here, e.g. name, avatar, details -->
     <div class="contact-card-content">
-      <div class="contact-initials">JD</div>
+      <div class="contact-initials"></div>
       <div class="contact-details">
-        <strong>John Doe</strong><br />
-        johndoe@example.com
+        <strong></strong><br />
+        
       </div>
+	  
+	  
     </div>
+	
+	
+	
+	
   </div>
 
   <div class="contact-card-actions">
@@ -465,26 +416,188 @@ input[type="date"] {
   <!-- Custom Scripts -->
 
   <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      
+  window.addEventListener('DOMContentLoaded', () => {
+    firebase.auth().onAuthStateChanged(async user => {
+      if (!user) {
+        alert("You're not logged in.");
+        window.location.href = "index.html";
+        return;
+      }
 
-      firebase.auth().onAuthStateChanged(async user => {
-        if (!user) {
-          alert("You're not logged in.");
-          window.location.href = "index.html";
-          return;
-        }
-
-        const db = firebase.firestore();
-        const doc = await db.collection('users').doc(user.uid).get();
-        if (doc.exists) {
-          const data = doc.data();
-          const name = data.firstName || user.displayName || user.email || "Friend";
-          document.getElementById('header-greeting').textContent = `Aloha, ${name}`;
-        }
-      });
+      const db = firebase.firestore();
+      const doc = await db.collection('users').doc(user.uid).get();
+      if (doc.exists) {
+  const data = doc.data();
+  const name = data.firstName || user.displayName || user.email || "Friend";
+  document.getElementById('header-greeting').textContent = `Aloha, ${name}`;
+  
+  // 👇 Load saved contacts
+  loadContacts();
+}
     });
-  </script>
+  });
+
+  function saveContact() {
+    const user = firebase.auth().currentUser;
+    if (!user) {
+      alert("Not logged in.");
+      return;
+    }
+
+    const uid = user.uid;
+    const db = firebase.firestore();
+
+    const form = document.getElementById('contact-form');
+    const formData = new FormData(form);
+const contactData = {};
+formData.forEach((value, key) => {
+  if (!value.trim()) return;
+  if (contactData[key]) {
+    if (!Array.isArray(contactData[key])) contactData[key] = [contactData[key]];
+    contactData[key].push(value.trim());
+  } else {
+    contactData[key] = value.trim();
+  }
+});
+
+    contactData.createdAt = new Date();
+
+    db.collection("users").doc(uid).collection("contacts").add(contactData)
+      .then(() => {
+        alert("Contact saved.");
+        form.reset();
+        document.getElementById("contact-form-popup").classList.add("hidden");
+      })
+      .catch((error) => {
+        console.error("Error saving contact:", error);
+        alert("Failed to save contact.");
+      });
+  }
+</script>
+<script>
+const categoryColorMap = {
+  ohana: "#f4c542",       // family
+  hoaaloha: "#51b3a2",    // friends
+  hana: "#3b82f6",        // work
+  lawelawe: "#9b59b6",    // clients
+  kaiaulu: "#e67e22",     // community
+  hoola: "#44b78b",       // healers
+  kumu: "#d35400",        // teachers
+  eae: "#7f8c8d"          // other
+};
+
+function getPieGradient(colors) {
+  if (!Array.isArray(colors) || colors.length === 0) return "#ccc";
+
+  const uniqueColors = [...new Set(colors)].filter(Boolean); // avoid duplicates and empty values
+  if (uniqueColors.length === 1) return uniqueColors[0];
+
+  const angleStep = 360 / uniqueColors.length;
+  let gradient = "conic-gradient(";
+  uniqueColors.forEach((color, i) => {
+    const start = i * angleStep;
+    const end = (i + 1) * angleStep;
+    gradient += `${color} ${start}deg ${end}deg${i < uniqueColors.length - 1 ? "," : ""}`;
+  });
+  gradient += ")";
+  return gradient;
+  
+}
+
+function showContactDetails(contact) {
+  const detailBox = document.querySelector(".contact-card-scrollable .contact-card-content");
+  if (!detailBox) return;
+
+  const initials = `${(contact.firstName || "")[0] || ""}${(contact.lastName || "")[0] || ""}`.toUpperCase();
+  const name = `${contact.firstName || ""} ${contact.lastName || ""}`.trim();
+  const email = contact.email || "";
+
+  let categories = contact.category || contact.categories || []; // Fallback support
+  if (typeof categories === "string") {
+    categories = [categories];
+  }
+
+  const colors = categories.map(cat => categoryColorMap[cat.trim?.()] || "").filter(Boolean);
+  
+
+  const background = getPieGradient(colors);
+
+  detailBox.innerHTML = `
+    <div class="contact-initials" style="background: ${background}; border: 2px solid #333;">
+      ${initials}
+    </div>
+    <div class="contact-details">
+      <strong>${name}</strong><br />
+      ${email}
+    </div>
+  `;
+}
+
+
+
+async function loadContacts() {
+  const user = firebase.auth().currentUser;
+  if (!user) return;
+
+  const db = firebase.firestore();
+  const contactsRef = db.collection("users").doc(user.uid).collection("contacts");
+
+  try {
+    const snapshot = await contactsRef.orderBy("firstName").get();
+    const container = document.getElementById("contact-results");
+    container.innerHTML = "";
+
+    const grouped = {};
+    snapshot.forEach(doc => {
+      const contact = doc.data();
+      const name = contact.firstName || "Unknown";
+      const letter = name.charAt(0).toUpperCase();
+      if (!grouped[letter]) grouped[letter] = [];
+      grouped[letter].push({ id: doc.id, ...contact });
+    });
+
+    for (const letter of Object.keys(grouped).sort()) {
+      const section = document.createElement("div");
+      section.className = "alpha-section";
+      section.innerHTML = `<div class="alpha-divider">${letter}</div>`;
+
+      grouped[letter].forEach(contact => {
+        const initials = `${(contact.firstName || "")[0] || ""}${(contact.lastName || "")[0] || ""}`.toUpperCase();
+        const name = `${contact.firstName || ""} ${contact.lastName || ""}`.trim();
+
+        const categories = Array.isArray(contact.category)
+  ? contact.category
+  : contact.category
+    ? [contact.category]
+    : [];
+
+        const colors = categories.map(cat => categoryColorMap[cat]).filter(Boolean);
+        const background = getPieGradient(colors);
+
+        const card = document.createElement("div");
+        card.className = "contact-card";
+        card.innerHTML = `
+          <div class="contact-initials" style="background: ${background}; border: 2px solid #333;">
+            ${initials}
+          </div>
+          <div class="contact-info">
+            <div class="contact-name">${name}</div>
+          </div>
+        `;
+        card.addEventListener("click", () => showContactDetails(contact));
+        section.appendChild(card);
+      });
+
+      container.appendChild(section);
+    }
+  } catch (err) {
+    console.error("Failed to load contacts:", err);
+  }
+}
+</script>
+
+
+
     <script>
 
   function filterContacts(category) {

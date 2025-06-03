@@ -1866,27 +1866,24 @@ body.contact-mode .pillar.selected {
   margin-bottom: 0.5rem;
   background-color: #fafafa;
   transition: background 0.2s ease;
-}
+  gap: 1rem; }
 
 .contact-card:hover {
   background-color: #f0f0f0;
 }
 
 .contact-initials {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
+  border: 2px solid #333;
   font-weight: bold;
-  font-size: 0.9rem;
-  background-color: #e0e0e0;
-  color: #333;
+  font-size: 1.1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 0.75rem;
-  border: 2px solid transparent; /* category color goes here */
+  background: #ccc; /* fallback */
 }
-
 /* Contact info text */
 .contact-info {
   display: flex;
@@ -1940,24 +1937,11 @@ body.contact-mode .pillar.selected {
 .contact-card-content {
   display: flex;
   align-items: center;
-  padding: 0.75rem;
+  padding: 1rem;
   border-bottom: 1px solid #eee;
+  gap: 1rem; 
 }
 
-.contact-initials {
-  width: 40px;
-  height: 40px;
-  background: #83633d;
-  color: white;
-  font-weight: bold;
-  font-size: 1rem;
-  border-radius: 50%;
-   border-color: #5e7583;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 0.75rem;
-}
 
 .contact-details {
   font-size: 0.95rem;
