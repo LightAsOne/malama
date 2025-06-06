@@ -2772,3 +2772,27 @@ input[type="checkbox"]:checked + .category-label::before {
   color: #333;
   margin: 0;
 }
+.popup.hidden {
+  display: none;
+}
+.popup {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -30%);
+  background: white;
+  border: 2px solid #333;
+  padding: 1rem;
+  z-index: 2000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.popup-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.popup-buttons button {
+  padding: 0.4rem 0.8rem;
+  font-weight: bold;
+}
