@@ -310,25 +310,27 @@ input[type="date"] {
      <div class="card contact-result-card">
   
 
-  <div class="contact-card-scrollable" id="contact-details">
-    <!-- Contact content will go here, e.g. name, avatar, details -->
-    <div class="contact-card-content">
-      <div class="contact-initials"></div>
-      <div class="contact-details">
-        <strong></strong><br />
-        
-      </div>
-	  
-	  
+<div class="contact-card-scrollable" id="contact-details">
+  <!-- Top header block -->
+  <div class="contact-header">
+    <div class="contact-initials"></div>
+    <div class="contact-details">
+      <strong></strong><br />
+      <small class="category-list" style="font-style: italic; color: #555;"></small>
     </div>
-	
-	
-	
-	
   </div>
 
+  <!-- Scrollable detail block -->
+  <div class="contact-extra-scrollable"></div>
+</div>
+
+
+	
+	
+ 
+
   <div class="contact-card-actions">
-    <i class="fa-solid fa-floppy-disk" title="Save"></i>
+    
     <i class="fa-solid fa-pen" title="Edit"></i>
     <i class="fa-solid fa-share-nodes" title="Share"></i>
 	<i class="fa-solid fa-trash" title="Delete"></i>
@@ -416,82 +418,80 @@ input[type="date"] {
   <!-- Custom Scripts -->
 
   <script>
-  window.addEventListener('DOMContentLoaded', () => {
-    firebase.auth().onAuthStateChanged(async user => {
-      if (!user) {
-        alert("You're not logged in.");
-        window.location.href = "index.html";
-        return;
-      }
+let allContacts = []; // store contacts globally
 
-      const db = firebase.firestore();
-      const doc = await db.collection('users').doc(user.uid).get();
-      if (doc.exists) {
-  const data = doc.data();
-  const name = data.firstName || user.displayName || user.email || "Friend";
-  document.getElementById('header-greeting').textContent = `Aloha, ${name}`;
-  
-  // 👇 Load saved contacts
-  loadContacts();
-}
-    });
-  });
-
-  function saveContact() {
-    const user = firebase.auth().currentUser;
+window.addEventListener('DOMContentLoaded', () => {
+  firebase.auth().onAuthStateChanged(async user => {
     if (!user) {
-      alert("Not logged in.");
+      alert("You're not logged in.");
+      window.location.href = "index.html";
       return;
     }
 
-    const uid = user.uid;
     const db = firebase.firestore();
+    const doc = await db.collection('users').doc(user.uid).get();
+    if (doc.exists) {
+      const data = doc.data();
+      const name = data.firstName || user.displayName || user.email || "Friend";
+      document.getElementById('header-greeting').textContent = `Aloha, ${name}`;
 
-    const form = document.getElementById('contact-form');
-    const formData = new FormData(form);
-const contactData = {};
-formData.forEach((value, key) => {
-  if (!value.trim()) return;
-  if (contactData[key]) {
-    if (!Array.isArray(contactData[key])) contactData[key] = [contactData[key]];
-    contactData[key].push(value.trim());
-  } else {
-    contactData[key] = value.trim();
-  }
+      loadContacts();
+    }
+  });
 });
 
-    contactData.createdAt = new Date();
-
-    db.collection("users").doc(uid).collection("contacts").add(contactData)
-      .then(() => {
-        alert("Contact saved.");
-        form.reset();
-        document.getElementById("contact-form-popup").classList.add("hidden");
-      })
-      .catch((error) => {
-        console.error("Error saving contact:", error);
-        alert("Failed to save contact.");
-      });
+function saveContact() {
+  const user = firebase.auth().currentUser;
+  if (!user) {
+    alert("Not logged in.");
+    return;
   }
-</script>
-<script>
+
+  const uid = user.uid;
+  const db = firebase.firestore();
+  const form = document.getElementById('contact-form');
+  const formData = new FormData(form);
+  const contactData = {};
+  formData.forEach((value, key) => {
+    if (!value.trim()) return;
+    if (contactData[key]) {
+      if (!Array.isArray(contactData[key])) contactData[key] = [contactData[key]];
+      contactData[key].push(value.trim());
+    } else {
+      contactData[key] = value.trim();
+    }
+  });
+
+  contactData.createdAt = new Date();
+
+  db.collection("users").doc(uid).collection("contacts").add(contactData)
+    .then(() => {
+      alert("Contact saved.");
+      form.reset();
+      document.getElementById("contact-form-popup").classList.add("hidden");
+      loadContacts();
+    })
+    .catch((error) => {
+      console.error("Error saving contact:", error);
+      alert("Failed to save contact.");
+    });
+}
+
 const categoryColorMap = {
-  ohana: "#f4c542",       // family
-  hoaaloha: "#51b3a2",    // friends
-  hana: "#3b82f6",        // work
-  lawelawe: "#9b59b6",    // clients
-  kaiaulu: "#e67e22",     // community
-  hoola: "#44b78b",       // healers
-  kumu: "#d35400",        // teachers
-  eae: "#7f8c8d"          // other
+  ohana: "#f4c542",
+  hoaaloha: "#51b3a2",
+  hana: "#3b82f6",
+  lawelawe: "#9b59b6",
+  kaiaulu: "#e67e22",
+  hoola: "#44b78b",
+  kumu: "#d35400",
+  eae: "#7f8c8d"
 };
 
 function getPieGradient(colors) {
   if (!Array.isArray(colors) || colors.length === 0) return "#ccc";
-
-  const uniqueColors = [...new Set(colors)].filter(Boolean); // avoid duplicates and empty values
+  const uniqueColors = [...new Set(colors)].filter(Boolean);
   if (uniqueColors.length === 1) return uniqueColors[0];
-
   const angleStep = 360 / uniqueColors.length;
   let gradient = "conic-gradient(";
   uniqueColors.forEach((color, i) => {
@@ -501,97 +501,187 @@ function getPieGradient(colors) {
   });
   gradient += ")";
   return gradient;
-  
 }
 
 function showContactDetails(contact) {
-  const detailBox = document.querySelector(".contact-card-scrollable .contact-card-content");
-  if (!detailBox) return;
+  const box = document.getElementById("contact-details");
+  const initialsEl = box.querySelector(".contact-initials");
+  const nameEl = box.querySelector(".contact-details strong");
+  const categoryEl = box.querySelector(".contact-details .category-list");
+  const extraBox = box.querySelector(".contact-extra-scrollable");
 
   const initials = `${(contact.firstName || "")[0] || ""}${(contact.lastName || "")[0] || ""}`.toUpperCase();
   const name = `${contact.firstName || ""} ${contact.lastName || ""}`.trim();
-  const email = contact.email || "";
 
-  let categories = contact.category || contact.categories || []; // Fallback support
-  if (typeof categories === "string") {
-    categories = [categories];
-  }
+  let categories = contact.category || contact.categories || [];
+  if (typeof categories === "string") categories = [categories];
 
   const colors = categories.map(cat => categoryColorMap[cat.trim?.()] || "").filter(Boolean);
-  
-
   const background = getPieGradient(colors);
 
-  detailBox.innerHTML = `
-    <div class="contact-initials" style="background: ${background}; border: 2px solid #333;">
-      ${initials}
-    </div>
-    <div class="contact-details">
-      <strong>${name}</strong><br />
-      ${email}
-    </div>
-  `;
+  // Create address without duplicate
+// Explicitly fix address duplication issue
+let uniqueAddress = contact.address || "";
+if (contact.state) uniqueAddress += `, ${contact.state}`;
+if (contact.postcode) uniqueAddress += `, ${contact.postcode}`;
+
+// Clean up extra commas or spaces explicitly
+uniqueAddress = uniqueAddress.replace(/^,|,$/g, '').trim();
+
+  const categoryLabels = categories.map(cat =>
+    Object.entries(categoryMap).find(([label, val]) => val === cat)?.[0] || cat
+  );
+
+  initialsEl.textContent = initials;
+  initialsEl.style.background = background;
+  initialsEl.style.border = "2px solid #333";
+  nameEl.textContent = name;
+  categoryEl.textContent = categoryLabels.join(", ");
+
+  let html = `<div class="info-block">`;
+
+  const info = [
+  { label: "Email", icon: "fa-envelope", value: contact.email, href: `mailto:${contact.email}` },
+  { label: "Phone", icon: "fa-phone", value: contact.phone, href: `tel:${contact.phone}` },
+  { label: "Address", icon: "fa-location-dot", value: uniqueAddress, href: `https://maps.google.com/?q=${encodeURIComponent(uniqueAddress)}` }
+];
+
+info.forEach(({ label, icon, value, href }) => {
+  if (value) {
+    const isLarge = ["Email", "Phone"].includes(label);
+    html += `
+      <div class="detail-row">
+        <div class="detail-text ${isLarge ? "large-text" : ""}">
+          <a href="${href}" target="_blank">${value}</a>
+        </div>
+        <div class="icon-right">
+          ${label === "Phone" ? `
+            <a href="tel:${value}" title="Call"><i class="fa-solid fa-phone"></i></a>
+            <a href="sms:${value}" title="SMS"><i class="fa-solid fa-comment-dots"></i></a>
+          ` : label === "Email" ? `
+            <a href="mailto:${value}" title="Email"><i class="fa-solid fa-envelope"></i></a>
+          ` : `
+            <a href="${href}" target="_blank"><i class="fa-solid ${icon}"></i></a>
+          `}
+        </div>
+      </div>`;
+  }
+});
+
+html += `</div>`;
+
+  // Birthday display
+  if (contact.birthday) {
+    const birthday = new Date(contact.birthday).toLocaleDateString('en-GB');
+    html += `<div class="info-block"><strong>Birthday:</strong> ${birthday}</div>`;
+  }
+
+  // Important dates display
+  if (contact["dateLabel[]"] && contact["dateValue[]"]) {
+    const labels = Array.isArray(contact["dateLabel[]"]) ? contact["dateLabel[]"] : [contact["dateLabel[]"]];
+    const values = Array.isArray(contact["dateValue[]"]) ? contact["dateValue[]"] : [contact["dateValue[]"]];
+
+    labels.forEach((lbl, i) => {
+      if (lbl && values[i]) {
+        const formattedDate = new Date(values[i]).toLocaleDateString('en-GB');
+        html += `<div class="info-block"><strong>${lbl}:</strong> ${formattedDate}</div>`;
+      }
+    });
+  }
+
+  // Category-specific fields
+  categories.forEach(cat => {
+    const labels = categoryFields[cat] || [];
+    if (!labels.length) return;
+    const prettyCat = Object.entries(categoryMap).find(([k, v]) => v === cat)?.[0] || cat;
+    html += `<div class="info-block"><h4>${prettyCat.charAt(0).toUpperCase() + prettyCat.slice(1)}</h4>`;
+    labels.forEach(label => {
+      const fieldName = `${cat}-${label.toLowerCase().replace(/\s+/g, '-')}`;
+      const value = contact[fieldName];
+      if (value) html += `<div><strong>${label}:</strong> ${value}</div>`;
+    });
+    html += `</div>`;
+  });
+
+  extraBox.innerHTML = html;
 }
+
+ 
+ 
+
 
 
 
 async function loadContacts() {
   const user = firebase.auth().currentUser;
   if (!user) return;
-
   const db = firebase.firestore();
   const contactsRef = db.collection("users").doc(user.uid).collection("contacts");
 
   try {
     const snapshot = await contactsRef.orderBy("firstName").get();
-    const container = document.getElementById("contact-results");
-    container.innerHTML = "";
-
-    const grouped = {};
-    snapshot.forEach(doc => {
-      const contact = doc.data();
-      const name = contact.firstName || "Unknown";
-      const letter = name.charAt(0).toUpperCase();
-      if (!grouped[letter]) grouped[letter] = [];
-      grouped[letter].push({ id: doc.id, ...contact });
-    });
-
-    for (const letter of Object.keys(grouped).sort()) {
-      const section = document.createElement("div");
-      section.className = "alpha-section";
-      section.innerHTML = `<div class="alpha-divider">${letter}</div>`;
-
-      grouped[letter].forEach(contact => {
-        const initials = `${(contact.firstName || "")[0] || ""}${(contact.lastName || "")[0] || ""}`.toUpperCase();
-        const name = `${contact.firstName || ""} ${contact.lastName || ""}`.trim();
-
-        const categories = Array.isArray(contact.category)
-  ? contact.category
-  : contact.category
-    ? [contact.category]
-    : [];
-
-        const colors = categories.map(cat => categoryColorMap[cat]).filter(Boolean);
-        const background = getPieGradient(colors);
-
-        const card = document.createElement("div");
-        card.className = "contact-card";
-        card.innerHTML = `
-          <div class="contact-initials" style="background: ${background}; border: 2px solid #333;">
-            ${initials}
-          </div>
-          <div class="contact-info">
-            <div class="contact-name">${name}</div>
-          </div>
-        `;
-        card.addEventListener("click", () => showContactDetails(contact));
-        section.appendChild(card);
-      });
-
-      container.appendChild(section);
-    }
+    allContacts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    renderFilteredContacts('all');
   } catch (err) {
     console.error("Failed to load contacts:", err);
+  }
+}
+
+function renderFilteredContacts(category) {
+  const container = document.getElementById("contact-results");
+  container.innerHTML = "";
+ const categoryMap = {
+  family: "ohana",
+  friends: "hoaaloha",
+  work: "hana",
+  clients: "lawelawe",
+  community: "kaiaulu",
+  healers: "hoola",
+  teachers: "kumu",
+  other: "eae"
+};
+  const filtered = category === 'all'
+    ? allContacts
+    : allContacts.filter(c => {
+        const stored = Array.isArray(c.category) ? c.category : [c.category];
+        return stored.includes(category);
+      });
+
+  const grouped = {};
+  filtered.forEach(contact => {
+    const name = contact.firstName || "Unknown";
+    const letter = name.charAt(0).toUpperCase();
+    if (!grouped[letter]) grouped[letter] = [];
+    grouped[letter].push(contact);
+  });
+
+  for (const letter of Object.keys(grouped).sort()) {
+    const section = document.createElement("div");
+    section.className = "alpha-section";
+    section.innerHTML = `<div class="alpha-divider">${letter}</div>`;
+
+    grouped[letter].forEach(contact => {
+      const initials = `${(contact.firstName || "")[0] || ""}${(contact.lastName || "")[0] || ""}`.toUpperCase();
+      const name = `${contact.firstName || ""} ${contact.lastName || ""}`.trim();
+      const cats = Array.isArray(contact.category) ? contact.category : [contact.category];
+      const colors = cats.map(cat => categoryColorMap[cat]).filter(Boolean);
+      const background = getPieGradient(colors);
+
+      const card = document.createElement("div");
+      card.className = "contact-card";
+      card.innerHTML = `
+        <div class="contact-initials" style="background: ${background}; border: 2px solid #333;">
+          ${initials}
+        </div>
+        <div class="contact-info">
+          <div class="contact-name">${name}</div>
+        </div>
+      `;
+      card.addEventListener("click", () => showContactDetails(contact));
+      section.appendChild(card);
+    });
+
+    container.appendChild(section);
   }
 }
 </script>
@@ -600,34 +690,28 @@ async function loadContacts() {
 
     <script>
 
-  function filterContacts(category) {
-    // Remove 'selected' from all pillars
-    document.querySelectorAll('.pillar').forEach(p => p.classList.remove('selected'));
+ function filterContacts(category) {
+  document.querySelectorAll('.pillar').forEach(p => p.classList.remove('selected'));
+  document.querySelectorAll('.category-filter').forEach(el => el.classList.remove('selected'));
 
-    // Remove 'selected' from category-filter
-    document.querySelectorAll('.category-filter').forEach(el => el.classList.remove('selected'));
-
-    // Add 'selected' to the matching pillar if found
-    const selectedPillar = document.querySelector(`.pillar[onclick*="${category}"]`);
-    if (selectedPillar) {
-      selectedPillar.classList.add('selected');
-    } else {
-      // If no pillar matched, assume it's the "All" filter
-      const allFilter = document.querySelector(`.category-filter[onclick*="${category}"]`);
-      if (allFilter) allFilter.classList.add('selected');
-    }
-	 // Update label text
   const label = document.getElementById('contact-filter-label');
+
   if (category === 'all') {
+    const allFilter = document.querySelector(`.category-filter[onclick*="all"]`);
+    if (allFilter) allFilter.classList.add('selected');
     label.textContent = 'Showing all contacts';
-  } else {
-    label.textContent = `Showing only ${category}`;
-    const clicked = document.querySelector(`.pillar.${category}`);
-    if (clicked) clicked.classList.add('selected');
+    renderFilteredContacts('all');
+    return;
   }
 
-    // TODO: filter logic for right column goes here
-  }
+  const selectedPillar = document.querySelector(`.pillar[onclick*="${category}"]`);
+  if (selectedPillar) selectedPillar.classList.add('selected');
+
+  label.textContent = `Showing only ${category}`;
+
+  const realCategory = categoryMap[category] || category;
+  renderFilteredContacts(realCategory);
+}
   const categoryMap = {
   family: "ohana",
   friends: "hoaaloha",

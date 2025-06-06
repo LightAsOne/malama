@@ -2461,3 +2461,314 @@ input[type="checkbox"]:checked + .category-label .english {
 input[type="checkbox"]:checked + .category-label::before {
   content: '';
 }
+.contact-card-scrollable {
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-extra-scrollable {
+  max-height: 600px !important;
+  padding-top: 0.5rem;
+  overflow-y: auto;
+  max-height: 300px;
+}
+.contact-extra-scrollable .info-block {
+  margin-bottom: 1rem;
+  padding-left: 0.5rem;
+}
+
+.contact-extra-scrollable h4 {
+  margin: 0.5rem 0 0.3rem;
+  font-size: 1.5rem;
+  color: #444;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 2px;
+}
+.contact-card-content .top-header {
+  display: flex;
+  flex-direction: column !important; /* Force vertical stacking */
+  align-items: center;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.contact-initials {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  line-height: 60px;
+  text-align: center;
+  margin-bottom: 0.3rem;
+}
+
+.name-and-category strong {
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: 2px;
+}
+
+.category-list {
+  font-style: italic;
+  color: #777;
+}
+#contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.contact-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+}
+
+.contact-initials {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+}
+
+.contact-extra-scrollable {
+  max-height: 600px !important;
+  overflow-y: auto;
+  max-height: 300px;
+  padding-right: 0.5rem;
+}
+.contact-card-scrollable {
+  width: 100%;
+}
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.25rem;
+  font-size: 1.2 em;
+  flex-wrap: wrap;
+}
+.detail-row a,
+.detail-row span {
+  color: #333;
+  text-decoration: none;
+  flex: 1;
+}
+.icon-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.detail-row i {
+  color: #333;
+  font-size: 1.75rem;
+  margin-left: auto;
+}
+.icon-group i {
+  font-size: 1.5rem;
+  color: #444;
+}
+
+.detail-row .sms-btn i {
+  font-size: 1.5rem;
+  margin-left: 0.5rem;
+  color: #666;
+}
+.detail-text {
+  flex: 1;
+  margin-left: 0.5rem;
+}
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.25rem;
+  font-size: 1.2rem;
+  flex-wrap: nowrap;
+}
+
+.detail-text {
+  flex: 1;
+  margin-left: 0.5rem;
+  color: #444;
+}
+
+.detail-text {
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.icon-right {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  align-items: center;
+  min-width: 80px; /* forces right side grouping */
+}
+
+.icon-right i {
+  font-size: 1.5rem;
+  color: #444;
+}
+.email-inline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.email-inline a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.email-inline i {
+  font-size: 1.5rem;
+  color: #444;
+}
+
+.detail-text a[href^="tel:"],
+.detail-text a[href^="mailto:"] {
+  font-size: 1.5rem;
+  color: #333;
+  text-decoration: none;
+}
+
+.detail-text {
+  font-size: 0.95rem;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.icon-right a {
+  margin-left: 0.6rem; /* space between icons */
+  font-size: 1.1rem;
+}
+.contact-extra-scrollable {
+  max-height: 600px; /* was 400px, now taller */
+  overflow-y: auto;
+  padding-right: 1rem;
+}
+
+.detail-row.large-font .detail-text a {
+  font-size: 1.5rem;
+  color: inherit;
+  text-decoration: none;
+}
+.detail-row .icon-right {
+  display: flex;
+  align-items: right;
+  gap: 0.5rem;
+}
+/* Ensure large font for name/surname and Email/Phone details */
+.contact-details strong {
+  font-size: 1.5rem !important;
+}
+
+.detail-text.large-text {
+  font-size: 1.5rem !important;
+}
+
+/* Correct alignment and spacing for icon-right */
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.icon-right {
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: center;
+  gap: 10px !important;
+  flex-shrink: 0;
+  min-width: 80px;
+  white-space: nowrap;
+}
+.contact-initials {
+  margin-top: 12px;
+  margin-left: 12px;
+}
+
+.contact-details strong {
+  margin-top: 12px;
+  display: inline-block;
+  font-size: 1.5rem !important; /* Ensuring font size stays consistent */
+}
+/* Icon consistency and alignment fix */
+.icon-right i.fa-envelope,
+.icon-right i.fa-location-dot,
+.icon-right i.fa-phone,
+.icon-right i.fa-comment-dots {
+  font-size: 1.2rem;
+}
+
+/* Address and other details smaller font */
+.contact-extra-scrollable .info-block,
+.contact-extra-scrollable .info-block strong {
+  font-size: 1rem !important;
+}
+
+/* Scrollable div increased height */
+.contact-extra-scrollable {
+  max-height: 700px;
+  overflow-y: auto;
+  padding: 1rem 0;
+}
+.detail-row .detail-text.large-text a {
+  font-weight: 600; /* slightly bold */
+  color: #333;
+  text-decoration: none;
+}
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.detail-text.large-text a {
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+  color: #333;
+  text-decoration: none;
+}
+
+.icon-right {
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: right;
+  gap: 10px !important;
+  min-width: 90px; 
+  margin-right: 10px;
+}
+
+.icon-right a {
+  display: inline-flex !important;
+  justify-content: right;
+  align-items: right;
+  text-decoration: none !important;
+}
+
+.icon-right i {
+  font-size: 1.2rem !important;
+  color: #333;
+  margin: 0;
+}
