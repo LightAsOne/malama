@@ -259,7 +259,7 @@ input[type="date"] {
 </div>
 <button type="button" onclick="addImportantDate()">+ Add Important Date</button>
 
-    <button type="button" onclick="saveContact()">Save Contact</button>
+    <button type="button" onclick="saveContact()"id="save-contact-btn">Save Contact</button>
   </form>
 </div>
 </div>
@@ -293,7 +293,7 @@ input[type="date"] {
 </div>
       <div id="contact-results" class="scrollable-results">
         <!-- Filtered contact cards appear here -->
-		<div class="contact-card"data-id="${contact.id}">
+		<div class="contact-card">
   <div class="contact-initials"></div>
   <div class="contact-info">
     <div class="contact-name"></div>
@@ -307,7 +307,7 @@ input[type="date"] {
 
   <!-- RIGHT COLUMN -->
   <div class="right-column">
-     <div class="card contact-result-card">
+     <div class="card contact-result-card" data-id="abc123">
   
 
 <div class="contact-card-scrollable" id="contact-details">
@@ -332,7 +332,7 @@ input[type="date"] {
   <div class="contact-card-actions">
     
     <i class="fa-solid fa-pen" title="Edit"></i>
-    <i class="fa-solid fa-share-nodes" title="Share"></i>
+    <i class="fa-solid fa-share-nodes" title="Share"onclick="shareContact(window.currentContact)"></i>
 	<i class="fa-solid fa-trash" title="Delete"></i>
   </div>
 </div>
@@ -421,23 +421,35 @@ input[type="date"] {
 let allContacts = []; // store contacts globally
 
 window.addEventListener('DOMContentLoaded', () => {
-  firebase.auth().onAuthStateChanged(async user => {
-    if (!user) {
-      alert("You're not logged in.");
-      window.location.href = "index.html";
-      return;
-    }
+  // Enable offline persistence FIRST
+  firebase.firestore().enablePersistence()
+    .catch((err) => {
+      if (err.code === 'failed-precondition') {
+        console.warn("Multiple tabs open, persistence can only be enabled in one tab at a time.");
+      } else if (err.code === 'unimplemented') {
+        console.warn("Offline persistence is not available in this browser.");
+      }
+    })
+    .finally(() => {
+      // Continue with app setup
+      firebase.auth().onAuthStateChanged(async user => {
+        if (!user) {
+          alert("You're not logged in.");
+          window.location.href = "index.html";
+          return;
+        }
 
-    const db = firebase.firestore();
-    const doc = await db.collection('users').doc(user.uid).get();
-    if (doc.exists) {
-      const data = doc.data();
-      const name = data.firstName || user.displayName || user.email || "Friend";
-      document.getElementById('header-greeting').textContent = `Aloha, ${name}`;
+        const db = firebase.firestore();
+        const doc = await db.collection('users').doc(user.uid).get();
+        if (doc.exists) {
+          const data = doc.data();
+          const name = data.firstName || user.displayName || user.email || "Friend";
+          document.getElementById('header-greeting').textContent = `Aloha, ${name}`;
+        }
 
-      loadContacts();
-    }
-  });
+        loadContacts(); // ✅ Only call this after persistence is enabled
+      });
+    });
 });
 
 function saveContact() {
@@ -449,33 +461,71 @@ function saveContact() {
 
   const uid = user.uid;
   const db = firebase.firestore();
-  const form = document.getElementById('contact-form');
-  const formData = new FormData(form);
+  const form = document.getElementById("contact-form");
   const contactData = {};
-  formData.forEach((value, key) => {
-    if (!value.trim()) return;
-    if (contactData[key]) {
-      if (!Array.isArray(contactData[key])) contactData[key] = [contactData[key]];
-      contactData[key].push(value.trim());
+
+  const formElements = form.querySelectorAll("input, textarea, select");
+  formElements.forEach(el => {
+    const rawKey = el.name;
+    if (!rawKey || rawKey.startsWith("label") || rawKey === "date") return;
+
+    const key = rawKey.replace(/[./[\]#]/g, "-"); // sanitize key
+    const value = el.type === "checkbox" ? el.checked ? el.value.trim() : "" : el.value.trim();
+
+    if (key === "category") {
+      if (!contactData[key]) contactData[key] = [];
+      if (value) contactData[key].push(value);
     } else {
-      contactData[key] = value.trim();
+      contactData[key] = value; // Include even blank to allow clearing
     }
   });
 
-  contactData.createdAt = new Date();
+  // Important Dates with labels
+  contactData.importantDates = [];
+  const dateGroups = form.querySelectorAll(".important-date");
+  dateGroups.forEach(group => {
+    const label = group.querySelector('input[name="label"]')?.value.trim() || "";
+    const date = group.querySelector('input[type="date"]')?.value.trim() || "";
+    contactData.importantDates.push({ label, date });
+  });
 
-  db.collection("users").doc(uid).collection("contacts").add(contactData)
-    .then(() => {
-      alert("Contact saved.");
-      form.reset();
-      document.getElementById("contact-form-popup").classList.add("hidden");
-      loadContacts();
-    })
-    .catch((error) => {
-      console.error("Error saving contact:", error);
-      alert("Failed to save contact.");
-    });
+  const contactRef = db.collection("users").doc(uid).collection("contacts");
+
+  if (window.isEditMode && window.editContactId) {
+    contactRef.doc(window.editContactId).update(contactData)
+      .then(() => {
+        alert("Contact updated.");
+        resetContactForm();location.reload();
+      })
+      .catch((error) => {
+        console.error("Error updating contact:", error);
+        alert("Failed to update contact.");
+      });
+  } else {
+    contactData.createdAt = new Date();
+    contactRef.add(contactData)
+      .then(() => {
+        alert("Contact saved.");
+        resetContactForm();
+      })
+      .catch((error) => {
+        console.error("Error saving contact:", error);
+        alert("Failed to save contact.");
+      });
+  }
 }
+
+
+// Helper to reset and close the popup
+function resetContactForm() {
+  document.getElementById("contact-form").reset();
+  document.getElementById("important-dates-section").innerHTML = "";
+  document.getElementById("contact-form-popup").classList.add("hidden");
+  window.isEditMode = false;
+  window.editContactId = null;
+  loadContacts(); // refresh list
+}
+
 
 const categoryColorMap = {
   ohana: "#f4c542",
@@ -525,6 +575,84 @@ if (deleteBtn) {
     document.getElementById("confirm-delete-popup").classList.remove("hidden");
   };
 }
+
+const shareBtn = document.querySelector(".contact-card-actions .fa-share-nodes");
+if (shareBtn) {
+  shareBtn.onclick = () => shareContact(contact);
+}
+
+
+
+
+
+
+
+// ✅ EDIT button
+  const editBtn = document.querySelector(".contact-card-actions .fa-pen");
+  if (editBtn) {
+    editBtn.onclick = () => {
+  const form = document.getElementById("contact-form");
+  form.reset();
+
+  // Pre-fill simple fields
+  Object.entries(contact).forEach(([key, value]) => {
+    if (["dateLabel[]", "dateValue[]", "category"].includes(key)) return;
+    const input = form.querySelector(`[name="${key}"]`);
+    if (input) input.value = value;
+  });
+
+  // ✅ Categories
+  const checkboxes = form.querySelectorAll('input[name="category"]');
+  checkboxes.forEach(cb => {
+    cb.checked = Array.isArray(contact.category)
+      ? contact.category.includes(cb.value)
+      : contact.category === cb.value;
+  });
+
+  // ✅ Trigger dynamic fields
+  window.updateCategoryFields();
+
+  // ✅ Fill dynamic category fields
+  const categories = Array.isArray(contact.category)
+    ? contact.category
+    : [contact.category];
+  categories.forEach(cat => {
+    const fields = categoryFields[cat] || [];
+    fields.forEach(label => {
+      const name = `${cat}-${label.toLowerCase().replace(/\s+/g, '-')}`;
+      const field = form.querySelector(`[name="${name}"]`);
+      if (field) field.value = contact[name] || '';
+    });
+  });
+
+  // ✅ Important Dates
+  const dateSection = document.getElementById("important-dates-section");
+  dateSection.innerHTML = "";
+  const labels = Array.isArray(contact["dateLabel[]"]) ? contact["dateLabel[]"] : [contact["dateLabel[]"]];
+  const values = Array.isArray(contact["dateValue[]"]) ? contact["dateValue[]"] : [contact["dateValue[]"]];
+
+  labels.forEach((label, i) => {
+    const value = values[i] || "";
+    const entry = document.createElement("div");
+    entry.className = "date-entry";
+    entry.innerHTML = `
+      <div class="important-date-row">
+        <input type="text" name="dateLabel[]" placeholder="Label (e.g., Anniversary)" value="${label || ''}">
+        <input type="date" name="dateValue[]" value="${value || ''}">
+        <button type="button" class="remove-date" title="Remove" onclick="this.closest('.date-entry').remove()">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </div>
+    `;
+    dateSection.appendChild(entry);
+  });
+
+  window.isEditMode = true;
+  window.editContactId = contact.id;
+  document.getElementById("contact-form-popup").classList.remove("hidden");
+};
+  }
+
 
   // Create address without duplicate
 // Explicitly fix address duplication issue
@@ -933,6 +1061,95 @@ document.getElementById("cancel-delete-btn").onclick = () => {
       });
   };
 </script>
+<script>
+  
+  async function shareContact(contact) {
+  if (!contact) return alert("No contact to share.");
+
+  const fullName = `${contact.firstName || ""} ${contact.lastName || ""}`.trim();
+  const nameParts = fullName.split(" ");
+  const nField = [nameParts[1] || "", nameParts[0] || "", "", "", ""].join(";");
+
+  const formatDatePretty = (str) => {
+    try {
+      const d = new Date(str);
+      return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    } catch {
+      return str;
+    }
+  };
+
+  const vCardLines = [
+    "BEGIN:VCARD",
+    "VERSION:3.0",
+    `FN:${fullName}`,
+    `N:${nField}`,
+    contact.email ? `EMAIL;TYPE=INTERNET:${contact.email}` : "",
+    contact.phone ? `TEL;TYPE=CELL:${contact.phone}` : "",
+    contact.address ? `ADR:;;${contact.address.replace(/\n/g, ";")}` : "",
+    Array.isArray(contact.category) ? `CATEGORIES:${contact.category.join(",")}` : ""
+  ];
+
+  // Combine all dates into NOTE
+  const notes = [];
+
+  if (contact.birthday) {
+    notes.push(`Birthday: ${formatDatePretty(contact.birthday)}`);
+  }
+
+  if (Array.isArray(contact.importantDates)) {
+    contact.importantDates.forEach(({ label, date }) => {
+      if (label && date) {
+        notes.push(`${label}: ${formatDatePretty(date)}`);
+      }
+    });
+  }
+
+  // Extra fields
+  const exclude = ["firstName", "lastName", "email", "phone", "address", "birthday", "category", "importantDates", "createdAt", "id"];
+  for (const [key, val] of Object.entries(contact)) {
+    if (!exclude.includes(key) && typeof val === "string" && val.trim()) {
+      notes.push(`${key.replace(/-/g, " ")}: ${val.trim()}`);
+    }
+  }
+
+  if (notes.length) {
+    vCardLines.push(`NOTE:${notes.join("\\n")}`);
+  }
+
+  vCardLines.push("END:VCARD");
+
+  const vCard = vCardLines.join("\n");
+  const blob = new Blob([vCard], { type: "text/vcard" });
+  const fileName = `${contact.firstName || "contact"}_${contact.lastName || ""}.vcf`;
+
+ // Fallback: download and optionally open
+const a = document.createElement("a");
+a.href = URL.createObjectURL(blob);
+a.download = fileName;
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
+
+// NEW: Auto open if setting is enabled
+const autoAdd = localStorage.getItem("autoAddVCard") === "true";
+if (autoAdd) {
+  const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
+  if (isMobile) {
+    alert("Contact saved. Tap the downloaded file to add it to your contacts.");
+  } else {
+    // On desktop, try to open the .vcf file (will prompt default app)
+    const fileURL = URL.createObjectURL(blob);
+    window.open(fileURL, "_blank");
+    setTimeout(() => URL.revokeObjectURL(fileURL), 5000); // cleanup
+  }
+}
+}
+
+
+</script>
+
+
 
 
 </body>
