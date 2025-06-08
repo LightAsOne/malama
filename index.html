@@ -138,31 +138,39 @@
         <div class="today-box">
           <div id="today-snapshot" class="today-snapshot"></div>
         </div>
+		<a href="kekino.html">
         <div class="pillars">
           <div class="pillar">
             <h2> ke kino <i class="fa-solid fa-child-reaching"></i></h2>
             <p>Physical wellbeing & embodied care</p>
-          </div>
+          </div></a>
+		  
+		  <a href="manao.html">
           <div class="pillar">
             <h2>ʻka mana‘o <i class="fa-solid fa-brain"></i> </i></h2>
             <p>Inner clarity & conscious thought</p>
-          </div>
+          </div></a>
+		  
+		  <a href="uhane.html">
           <div class="pillar">
             <h2>ka ‘uhane <i class="fa-solid fa-hands-praying"></i></h2>
             <p>Spiritual alignment & sacred practice</p>
-          </div>
+          </div></a>
+		  
+		  <a href="hana.html">
 		  <div class="pillar">
 			<h2>Hana <i class="fa-solid fa-briefcase"></i></h2>
 			<p>Work & life commitments</p>
-			</div>
-          <a href="contact-form.html" class="pillar">
+			</div></a>
+			
+          <a href="contact-form.html"> <div class="pillar">
   <h2>kānaka <i class="fa-solid fa-people-group"></i></h2>
-  <p>ʻOhana, Friends & Contacts</p>
+  <p>ʻOhana, Friends & Contacts</p></div>
 </a>
-						<div class="pillar">
+			<a href="ike.html">			<div class="pillar">
 			<h2>Ike <i class="fa-solid fa-book-open"></i></h2>
 			<p>Wisdom & knowledge</p>
-			</div>
+			</div></a>
 			
         </div>
       </div>
@@ -226,18 +234,44 @@
     <span>Month</span>
   </a>
 
-   <!-- Settings -->
-  <a href="settings.html">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-         stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="3"></circle>
-      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.09a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.09a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-    </svg>
-    <span>Settings</span>
-  </a> </div>
+  <a href="#" id="more-button-settings">
+<!-- more icon -->
+<svg fill="currentColor" viewbox="0 0 24 24">
+<circle cx="5" cy="12" r="2"></circle>
+<circle cx="12" cy="12" r="2"></circle>
+<circle cx="19" cy="12" r="2"></circle>
+</svg>
+<span>More</span>
+</a>
   </nav>
   <!-- MORE POPUP MENU -->
- 
+ <!-- MORE POPUP MENU -->
+<div class="more-menu hidden" id="more-menu-settings">
+<button onclick="window.location.href='contact-form.html'">Kanaka</button>
+<button onclick="window.location.href='uhane.html'">Uhane</button>
+<button onclick="window.location.href='kekino.html'">Kino</button>
+<button onclick="window.location.href='manao.html'">Manao</button>
+<button onclick="window.location.href='Hana.html'">Hana</button>
+<button onclick="window.location.href='settings.html'">Settings</button>
+</div>
+<script>
+    const moreBtn = document.getElementById('more-button-settings');
+    const moreMenu = document.getElementById('more-menu-settings');
+
+    moreBtn.addEventListener('click', e => {
+      e.preventDefault();
+      moreMenu.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', e => {
+      if (!moreMenu.contains(e.target) && !moreBtn.contains(e.target)) {
+        moreMenu.classList.add('hidden');
+      }
+    })
+	
+	
+	
+	; </script>
 
   <!-- Firebase CDN Scripts -->
   <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>

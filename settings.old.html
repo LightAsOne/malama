@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Settings — Mālama Mana</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display&amp;family=Open+Sans&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+<!-- Main stylesheet -->
+<link href="style.css" rel="stylesheet">
+</link></head>
+<body class="settings-mode">
+<!-- APP HEADER -->
+<header class="app-header">
+<div class="header-content">
+<div id="header-greeting">Aloha,</div>
+<h1>Mālama Mana</h1>
+</div>
+</header>
+<!-- SETTINGS CONTENT -->
+<div class="app">
+<div class="card settings-card" id="settings-page"><div class="settings-container">
+<h2>Settings</h2>
+<form id="settings-form">
+<h3>Personal Information</h3>
+<label>
+          First Name:
+          <input id="profile-first-name" required="" type="text"/>
+</label>
+<label>
+          Last Name:
+          <input id="profile-last-name" required="" type="text"/>
+</label>
+<label>
+          Email:
+          <input id="profile-email" required="" type="email"/>
+</label>
+<label>
+  Password:
+  <input id="profile-password" placeholder="New password (leave blank to keep current)" type="password"/>
+</label>
+<label>
+          Phone:
+          <input id="profile-phone" type="tel"/>
+</label>
+<h3>Location Preferences</h3>
+<label>
+  Location:
+  <input autocomplete="off" id="profile-location" placeholder="City, Country" type="text"/>
+<div id="location-suggestions" style="font-size: 0.85rem; color: #555;"></div>
+</label>
+<label>
+  Latitude:
+  <input id="profile-lat" placeholder="Latitude" readonly="" type="text"/>
+</label><br/>
+<label>
+  Longitude:
+  <input id="profile-lng" placeholder="Longitude" readonly="" type="text"/>
+</label>
+<label>
+<input id="use-gps-checkbox" type="checkbox"/>
+  Use GPS location
+</label>
+<div class="savecont">
+<button type="submit">Save</button>
+<button id="settings-logout" type="button">Logout</button>
+</div></form>
+</div></div>
+</div>
+
+<!-- BOTTOM NAVIGATION -->
+<nav class="bottom-nav">
+<a href="index.html">
+<!-- calendar icon -->
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect>
+<line x1="16" x2="16" y1="2" y2="6"></line>
+<line x1="8" x2="8" y1="2" y2="6"></line>
+<line x1="3" x2="21" y1="10" y2="10"></line>
+</svg>
+<span>Dashboard</span>
+</a>
+<a href="#today">
+<!-- today icon -->
+<svg fill="currentColor" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+</svg>
+<span>Today</span>
+</a>
+<a href="#add">
+<!-- add icon -->
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<line x1="12" x2="12" y1="5" y2="19"></line>
+<line x1="5" x2="19" y1="12" y2="12"></line>
+</svg>
+<span>Add</span>
+</a>
+<a href="#" id="more-button-settings">
+<!-- more icon -->
+<svg fill="currentColor" viewbox="0 0 24 24">
+<circle cx="5" cy="12" r="2"></circle>
+<circle cx="12" cy="12" r="2"></circle>
+<circle cx="19" cy="12" r="2"></circle>
+</svg>
+<span>More</span>
+</a>
+</nav>
+<!-- MORE POPUP MENU -->
+<div class="more-menu hidden" id="more-menu-settings">
+<button onclick="window.location.href='contact-form.html'">Kanaka</button>
+<button onclick="window.location.href='uhane.html'">Uhane</button>
+<button onclick="window.location.href='kekino.html'">Kino</button>
+<button onclick="window.location.href='manao.html'">Manao</button>
+<button onclick="window.location.href='Hana.html'">Hana</button>
+<button onclick="window.location.href='settings.html'">Settings</button>
+</div>
+<!-- Firebase CDN Scripts -->
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+<!-- Firebase Init (single shared script) -->
+<script src="firebase-init.js"></script>
+<!-- Main JS -->
+<script src="app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const gpsCheckbox = document.getElementById('use-gps-checkbox');
+  const locationInput = document.getElementById('profile-location');
+  const latInput = document.getElementById('profile-lat');
+  const lngInput = document.getElementById('profile-lng');
+
+  function updateLocationFieldState(useGPS) {
+    locationInput.disabled = useGPS;
+    latInput.disabled = useGPS;
+    lngInput.disabled = useGPS;
+  }
+
+gpsCheckbox.addEventListener('change', () => {
+  updateLocationFieldState(gpsCheckbox.checked);
+  if (gpsCheckbox.checked && navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        console.log('📍 GPS success:', pos.coords.latitude, pos.coords.longitude);
+        latInput.removeAttribute('readonly');
+        lngInput.removeAttribute('readonly');
+        latInput.value = pos.coords.latitude.toFixed(5);
+        lngInput.value = pos.coords.longitude.toFixed(5);
+        latInput.setAttribute('readonly', true);
+        lngInput.setAttribute('readonly', true);
+        document.getElementById('location-suggestions').textContent = 'Using GPS coordinates.';
+
+        // Reverse geocode for location name
+        fetch(`https://api.opencagedata.com/geocode/v1/json?q=${pos.coords.latitude}+${pos.coords.longitude}&key=e4ba9531fa864ceaa8fdeab1d3da42c3&limit=1`)
+          .then(res => res.json())
+          .then(data => {
+            const result = data.results?.[0];
+            if (result) {
+              const components = result.components || {};
+locationInput.value =
+  components.town ||
+  components.city ||
+  components.village ||
+  components.county ||
+  components.state ||
+  result.formatted;
+              document.getElementById('location-suggestions').textContent = result.formatted;
+            } else {
+              locationInput.value = '';
+              document.getElementById('location-suggestions').textContent = 'No location name found.';
+            }
+          })
+          .catch(() => {
+            document.getElementById('location-suggestions').textContent = 'Error getting location name.';
+          });
+      },
+      err => {
+        alert("Failed to get GPS location.");
+        gpsCheckbox.checked = false;
+        updateLocationFieldState(false);
+      }
+    );
+  }
+});
+
+  auth.onAuthStateChanged(async user => {
+    if (!user) {
+      alert("You're not logged in.");
+      window.location.href = "index.html";
+      return;
+    }
+
+    const doc = await db.collection('users').doc(user.uid).get();
+    if (doc.exists) {
+      const data = doc.data();
+      document.getElementById('profile-first-name').value = data.firstName || '';
+      document.getElementById('profile-last-name').value = data.lastName || '';
+      document.getElementById('profile-email').value = data.email || '';
+      document.getElementById('profile-phone').value = data.phone || '';
+      locationInput.value = data.location || '';
+      latInput.value = data.lat || '';
+      lngInput.value = data.lng || '';
+      gpsCheckbox.checked = data.useGPS || false;
+      updateLocationFieldState(gpsCheckbox.checked);
+      localStorage.setItem('useGPS', gpsCheckbox.checked ? 'true' : 'false');
+    }
+  });
+
+  document.getElementById('settings-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const user = auth.currentUser;
+    if (!user) return alert("Not logged in.");
+
+    const useGPS = gpsCheckbox.checked;
+    localStorage.setItem('useGPS', useGPS ? 'true' : 'false');
+
+    const profileData = {
+      firstName: document.getElementById('profile-first-name').value.trim(),
+      lastName: document.getElementById('profile-last-name').value.trim(),
+      email: document.getElementById('profile-email').value.trim(),
+      phone: document.getElementById('profile-phone').value.trim(),
+      location: locationInput.value.trim(),
+      lat: latInput.value.trim(),
+      lng: lngInput.value.trim(),
+      useGPS: useGPS
+    };
+
+    try {
+      await db.collection('users').doc(user.uid).set(profileData, { merge: true });
+      alert("✅ Settings saved.");
+    } catch (err) {
+      alert("Failed to save settings.");
+    }
+  });
+
+  document.getElementById('settings-logout').addEventListener('click', () => {
+    auth.signOut().then(() => window.location.href = "index.html");
+  });
+});
+</script>
+<script>
+const locationInput = document.getElementById('profile-location');
+const suggestionBox = document.getElementById('location-suggestions');
+const latInput = document.getElementById('profile-lat');
+const lngInput = document.getElementById('profile-lng');
+const API_KEY = 'e4ba9531fa864ceaa8fdeab1d3da42c3'; // Replace this
+
+let debounceTimer;
+locationInput.addEventListener('input', () => {
+  clearTimeout(debounceTimer);
+  const query = locationInput.value.trim();
+  if (query.length < 3) return;
+
+  debounceTimer = setTimeout(() => {
+    fetch(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(query)}&key=${API_KEY}&limit=1`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.results.length > 0) {
+          const result = data.results[0];
+          latInput.value = result.geometry.lat.toFixed(5);
+          lngInput.value = result.geometry.lng.toFixed(5);
+          suggestionBox.textContent = result.formatted;
+        } else {
+          latInput.value = '';
+          lngInput.value = '';
+          suggestionBox.textContent = 'No result found.';
+        }
+      })
+      .catch(err => {
+        console.error('Geocoding error:', err);
+        suggestionBox.textContent = 'Error retrieving location.';
+      });
+  }, 400);
+});
+</script>
+<script>
+    const moreBtn = document.getElementById('more-button-settings');
+    const moreMenu = document.getElementById('more-menu-settings');
+
+    moreBtn.addEventListener('click', e => {
+      e.preventDefault();
+      moreMenu.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', e => {
+      if (!moreMenu.contains(e.target) && !moreBtn.contains(e.target)) {
+        moreMenu.classList.add('hidden');
+      }
+    }); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.9.0/suncalc.min.js"></script>
+</body>
+</html>

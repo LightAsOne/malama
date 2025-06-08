@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Calendar Form</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 1rem;
+      background: #f9f9f9;
+    }
+    label {
+      display: block;
+      margin: 1rem 0 0.3rem;
+    }
+    select, input, textarea {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .form-section {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+    h2 {
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Create Calendar Event</h1>
+
+  <div class="form-section">
+    <label for="pillar">Pillar</label>
+    <select id="pillar">
+      <option value="">Select pillar</option>
+      <option value="ke_kino">Ke Kino</option>
+      <option value="ka_manao">Ka Manaʻo</option>
+      <option value="ka_uhane">Ka ʻUhane</option>
+      <option value="hana">Hana</option>
+    </select>
+
+    <label for="activity-detail">Activity Type</label>
+    <select id="activity-detail">
+      <option value="">Select activity</option>
+    </select>
+  </div>
+
+  <div id="dynamic-fields" class="form-section">
+    <h2>Details</h2>
+    <!-- Injected form fields will appear here -->
+  </div>
+
+  <div class="form-section">
+    <h2>Generic Fields</h2>
+    <label for="notes">Notes</label>
+    <textarea id="notes"></textarea>
+
+    <label for="tags">Tags (comma-separated)</label>
+    <input type="text" id="tags" />
+  </div>
+
+  <div class="form-section">
+    <h2>ICS-Compatible Fields</h2>
+    <label for="summary">SUMMARY</label>
+    <input type="text" id="summary" />
+
+    <label for="description">DESCRIPTION</label>
+    <textarea id="description"></textarea>
+
+    <label for="dtstart">Start Date & Time</label>
+    <input type="datetime-local" id="dtstart" />
+
+    <label for="dtend">End Date & Time</label>
+    <input type="datetime-local" id="dtend" />
+
+    <label for="rrule">Recurrence Rule (RRULE)</label>
+    <input type="text" id="rrule" placeholder="e.g., FREQ=DAILY;INTERVAL=1" />
+
+    <label for="location">LOCATION</label>
+    <input type="text" id="location" />
+  </div>
+
+  <script>
+    const pillarActivityMap = {
+      ke_kino: {
+        'Daily movement (walking, yoga, dancing, swimming)': ['activityType', 'duration', 'location'],
+        'Physical nourishment (meal planning, hydration)': ['nourishmentType', 'details'],
+        'Sleep/rest routines and recovery': ['restType', 'hours', 'restQuality'],
+        'Wellness sessions (massage, doctor, physio, etc.)': ['sessionType', 'provider', 'notes'],
+        'Personal care (bathing, sauna, hygiene rituals)': ['careType', 'duration', 'ritualNotes']
+      },
+      ka_manao: {
+        'Journaling sessions (morning/evening)': ['journalType', 'pagesWritten', 'reflection'],
+        'Writing intentions during key cycles': ['cycle', 'intention', 'category'],
+        'Affirmations and visualizations': ['affirmation', 'visualizationLength', 'focus'],
+        'Therapy or coaching conversations': ['sessionType', 'facilitator', 'topic', 'insight'],
+        'Quiet reflection or mindset tracking': ['moodBefore', 'moodAfter', 'reflectionNotes']
+      },
+      ka_uhane: {
+        'Breath practice and sacred ha': ['breathStyle', 'duration', 'effect'],
+        'Meditation or stillness sessions': ['method', 'duration', 'focus'],
+        'Prayer and devotional time': ['devotionType', 'intention', 'recipient'],
+        'Moon phase rituals and observances': ['moonPhase', 'ritualType', 'elementsUsed'],
+        'Ancestral honoring or offerings': ['ancestorName', 'offeringType', 'location'],
+        'Sacred ceremonies and blessings': ['ceremonyType', 'participants', 'tools']
+      },
+      hana: {
+        'Daily or weekly task lists': ['taskName', 'priority', 'dueDate', 'status'],
+        'Client appointments and bookings': ['clientName', 'serviceType', 'time', 'paid'],
+        'Project planning and deadlines': ['projectName', 'milestone', 'deadline', 'status'],
+        'Work rosters and shift tracking': ['shiftType', 'role', 'time'],
+        'Chores, errands, and home care': ['taskType', 'location', 'assignedTo'],
+        'Business logistics and strategy': ['focus', 'goal', 'status']
+      }
+    };
+
+    const pillarSelect = document.getElementById('pillar');
+    const activitySelect = document.getElementById('activity-detail');
+    const dynamicFields = document.getElementById('dynamic-fields');
+
+    pillarSelect.addEventListener('change', () => {
+      const selected = pillarSelect.value;
+      activitySelect.innerHTML = '<option value="">Select activity</option>';
+      if (pillarActivityMap[selected]) {
+        Object.keys(pillarActivityMap[selected]).forEach(act => {
+          const option = document.createElement('option');
+          option.value = act;
+          option.textContent = act;
+          activitySelect.appendChild(option);
+        });
+      }
+      dynamicFields.innerHTML = '<h2>Details</h2>'; // Clear fields
+    });
+
+    activitySelect.addEventListener('change', () => {
+      const pillar = pillarSelect.value;
+      const activity = activitySelect.value;
+      dynamicFields.innerHTML = '<h2>Details</h2>'; // Reset section
+      if (pillarActivityMap[pillar] && pillarActivityMap[pillar][activity]) {
+        const fields = pillarActivityMap[pillar][activity];
+        fields.forEach(field => {
+          const label = document.createElement('label');
+          label.htmlFor = field;
+          label.textContent = field.replace(/([A-Z])/g, ' $1').replace(/([a-z])([A-Z])/g, '$1 $2');
+          const input = document.createElement('input');
+          input.type = 'text';
+          input.id = field;
+          input.name = field;
+          dynamicFields.appendChild(label);
+          dynamicFields.appendChild(input);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
