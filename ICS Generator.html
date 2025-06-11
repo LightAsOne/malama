@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Mālama Mana</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Open+Sans&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- PWA manifest -->
+  <link rel="manifest" href="manifest.json" />
+  <!-- Main stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+   
+    h1 {
+      text-align: center;
+    }
+    fieldset.form-section {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-weight: bold;
+    }
+    input, select, textarea {
+      width: 98%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+ 
+    textarea {
+      resize: vertical;
+    }
+    button {
+      padding: 0.75rem 1.5rem;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1rem;
+	  width: 120px;
+    }
+	.ics-pillar-activity-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.ics-pillar-col,
+.ics-activity-col {
+  flex: 1;
+  min-width: 200px;
+}
+
+.ics-pillar-col select,
+.ics-activity-col select {
+  width: 100%;
+}
+.ics-head {
+  margin-bottom: 1rem;
+}
+.sec2 {
+margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+.ics.app.contact.layout {
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
+  padding-top: 80px; /* ✅ clears the fixed header (60px) + spacing */
+  box-sizing: border-box;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 5rem;
+}
+#location-wrapper {
+  transition: all 0.3s ease;
+}
+label[for="location"] {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+
+#location-wrapper {
+  text-align: left;
+}
+
+/* only hide when `.hidden` */
+#location-wrapper.hidden {
+  display: none;
+}
+
+
+
+.ics-location-toggle {
+  margin-bottom: 0.5rem;
+  text-align: left;
+}
+
+.ics-location-toggle label {
+  display: inline-flex;
+  align-items: center;
+  font-weight: bold;
+  gap: 0.5rem;
+  margin: 0;
+  width: auto;
+}
+
+.ics-location-toggle input[type="checkbox"] {
+  margin: 0;
+}
+.ics-datetime-row {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: nowrap;
+  align-items: flex-end;
+  justify-content: flex-start;
+  margin-bottom: 1rem;
+
+}
+
+.ics-datetime-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 0 0 auto; /* prevents expanding */
+}
+
+.ics-datetime-input {
+  width: auto;
+  min-width: 180px;
+  max-width: 100%;
+  padding: 0.2rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+@media (max-width: 500px) {
+  .ics-datetime-row {
+    flex-wrap: wrap;
+  }
+}
+.ics-duration-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.duration-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: bold;
+  white-space: nowrap;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+}
+.duration-checkbox input[type="checkbox"] {
+  transform: translateY(2px); /* adjusts checkbox down slightly */
+}
+.duration-scroller {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.duration-display {
+  background-color: #f0f0f0;
+  padding: 0.4rem 0.75rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.duration-popup {
+  min-width: 220px;
+  position: absolute;
+  top: 2.2rem;
+  left: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 0.5rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  display: flex;
+  gap: 0.5rem;
+  z-index: 100;
+}
+
+.duration-popup select {
+  padding: 0.4rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.hidden {
+  display: none;
+}
+.readonly {
+  background-color: #eee !important;
+  pointer-events: none;
+  opacity: 0.6;
+}
+.ics-rrule-builder {
+  margin-bottom: 1rem;
+}
+
+.rrule-toggle-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.inline-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.inline-checkbox input[type="checkbox"] {
+  margin: 0;
+  transform: translateY(1px); /* Align tick with label */
+}
+
+.rrule-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+  flex-wrap: wrap;
+}
+
+.day-selectors {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.day-selectors label {
+  font-weight: normal;
+}
+
+#rrule {
+  width: 100%;
+  max-width: 500px;
+  padding: 0.4rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.hidden {
+  display: none;
+}
+.rrule-row label {
+  min-width: 120px;
+}
+.rrule-row input[type="text"],
+.rrule-row input[type="number"],
+.rrule-row input[type="date"],
+.rrule-row select {
+  flex: 1;
+}
+.rrule-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.inline-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+#rrule[readonly], #rrule-rec-end[readonly] {
+  background: #eee;
+  pointer-events: none;
+  opacity: 0.7;
+}
+.rrule-section {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px dashed #aaa;
+  border-radius: 6px;
+}
+
+.rrule-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.rrule-row label {
+  min-width: 140px;
+  font-weight: 600;
+}
+#rrule-weekdays-row .weekday-checkboxes label {
+  min-width: auto;
+  font-weight: normal;
+  margin-right: 0.05rem;
+  font-size:0.6rem;
+ 
+}
+
+
+#rrule-builder,
+fieldset,
+.form-section,
+.card-content {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.rrule-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: nowrap;
+}
+
+.weekday-wrapper {
+  flex: 1;
+  max-width: 350px; /* Or match to rrule-frequency line width */
+}
+
+.weekday-checkboxes {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  gap: 0.0rem;
+  
+   
+}
+
+.weekday-checkboxes label {
+  display: flex;
+  align-items: center;
+  gap: 0.05rem;
+  white-space: nowrap;
+  font-weight: normal;
+}
+/* make the three controls line up */
+.duration-options {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* remove any bottom-margins so they sit flush */
+.duration-options .inline-checkbox,
+.duration-options .ics-duration-toggle {
+  margin-bottom: 0;
+}
+/* line up start/end side by side */
+.datetime-row {
+  display: flex;
+  align-items: center;   /* vertical align inputs and labels */
+  gap: 1rem;             /* space between the two columns */
+  flex-wrap: wrap;       /* wrap on narrow screens */
+}
+
+/* remove any extra bottom margin so they sit flush */
+.datetime-row .ics-datetime-col {
+  margin-bottom: 0;
+}
+
+/* if your labels/inputs themselves have margin-bottom, reset it */
+.datetime-row .ics-datetime-col label,
+.datetime-row .ics-datetime-col input {
+  margin-bottom: 0;
+}
+.hidden {
+  display: none;
+}
+  </style>
+
+</head>
+
+<body class="settings-mode">
+
+<div class="lunar-bg"></div>
+<div class="moon-overlay"></div>
+ 
+
+  <!-- APP HEADER -->
+  <header class="app-header">
+    <div class="header-content">
+      <div id="header-greeting">Aloha,</div>
+      <h1>Mālama Mana</h1>
+      <div id="header-tide-info"></div>
+    </div>
+  </header>
+
+  <!-- MAIN APP -->
+  
+  <div class="ics app contact layout">
+  
+   <div class="ics-head">
+<div class="card">
+		<h1>Create Calendar Event</h1>
+
+  <fieldset class="form-section">
+    <legend>🌿 Select Pillar and Activity</legend>
+    
+      <div class="ics-pillar-activity-row">
+  <div class="ics-pillar-col">
+    <label for="pillar">Pillar</label>
+    <select id="pillar">
+      <option value="">Select pillar</option>
+      <option value="ke_kino">Ke Kino</option>
+      <option value="ka_manao">Ka Manaʻo</option>
+      <option value="ka_uhane">Ka ʻUhane</option>
+      <option value="hana">Hana</option>
+    </select>
+  </div>
+  <div class="ics-activity-col">
+    <label for="activity-detail">Activity Type</label>
+    <select id="activity-detail">
+      <option value="">Select activity</option>
+    </select>
+	+ Add Activity Type
+  </div>
+</div></fieldset>
+  
+       </div>    <!-- Two-column layout wrapper -->
+   </div>
+   <div class="main-columns">	
+		<!-- Left Column -->
+      <div class="left-column">
+		<div class="card">
+       
+  <fieldset class="form-section">
+    <legend>📅 Calendar Info (ICS)</legend>
+   
+      <div>
+        <label for="summary">TITLE</label>
+        <input type="text">
+      </div>
+     <div>
+    <label for="description">📝Descritpion (check if title lable)</label>
+    <textarea id="description" rows="12"></textarea>
+</div>
+<div class="ics-location-toggle">
+  <label for="toggle-location" class="inline-checkbox">
+    <input type="checkbox" id="toggle-location">
+    📍 Location
+  </label>
+</div>
+<div id="location-wrapper" class="hidden">
+ <input type="text" id="location" placeholder="Start typing address..." autocomplete="off" />
+</div>
+<!-- 
+    <label for="notes">not working (notes in ICS)</label>
+    <textarea id="notes" rows="1"></textarea>
+
+    <label for="tags">Tags (comma-separated)(delete this ddon`t use tags these are going to be category</label>
+    <input type="text" id="tags"/> -->
+</fieldset> 
+ 
+</div>
+  
+        <!-- Dynamic Tabbed Card -->        
+      
+
+</div>
+
+      <!-- Right Column -->
+      <div class="right-column">
+	  <div class="card">
+	  <fieldset class="form-section">
+  <legend>🕒 Date & Times</legend>
+
+  <!-- add a class to this wrapper -->
+  <div class="datetime-row">
+    <div class="ics-datetime-col">
+      <label for="dtstart">Start Date &amp; Time</label>
+      <input type="datetime-local" id="dtstart" class="ics-datetime-input" />
+    </div>
+    <div class="ics-datetime-col">
+      <label for="dtend">End Date &amp; Time</label>
+      <input type="datetime-local" id="dtend" class="ics-datetime-input" />
+    </div>
+  </div>
+</fieldset>
+ <fieldset class="form-section">
+   <legend class="inline-checkbox"><input type="checkbox"id="toggle-extra-settings">⚙️ Extra Settings</legend>
+
+  <div id="extra-settings-wrapper" class="hidden">
+    <!-- All Day -->
+    <div><label class="inline-checkbox">
+      <input type="checkbox">
+      Timezone
+    </label></div><div>
+<label class="inline-checkbox">
+      <input type="checkbox">
+      All day
+    </label></div>
+    <!-- Duration Picker -->
+    <div class="ics-duration-toggle">
+      <label class="inline-checkbox">
+        <input type="checkbox" id="use-duration">
+       ⏳ Duration:
+      </label>
+      <div class="duration-scroller">
+        <span id="duration-display" class="duration-display">0 hr 0 min</span>
+        <div id="duration-popup" class="duration-popup hidden">
+          <select id="scroll-hours"></select>
+          <select id="scroll-minutes"></select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Extra Time -->
+    <label class="inline-checkbox">
+      <input type="checkbox">
+      Extra Time Before & After
+    </label>
+  
+  <div class="ics-rrule-builder">
+  <label class="inline-checkbox">
+    <input type="checkbox" id="use-rrule">
+    Enable Recurrence
+  </label>
+
+  <div id="rrule-builder" class="hidden">
+    <div class="rrule-row">
+      <label for="rrule-mode">Recurrence Mode:</label>
+      <select id="rrule-mode">
+        <option value="count">Fixed # Occurrences</option>
+        <option value="until">Until Date</option>
+      </select>
+    </div>
+
+    <div class="rrule-row" id="rrule-count-row">
+      <label for="rrule-count">Occurrences:</label>
+      <input type="number" id="rrule-count" value="1" min="1">
+    </div>
+
+    <div class="rrule-row" id="rrule-until-row" style="display: none;">
+      <label for="rrule-until">Until Date & Time:</label>
+      <input type="datetime-local" id="rrule-until">
+    </div>
+
+    <div class="rrule-row">
+      <label for="rrule-frequency">Every:</label>
+      <select id="rrule-frequency">
+        <option value="HOURLY">Hour</option>
+        <option value="DAILY">Day</option>
+        <option value="WEEKLY">Week</option>
+        <option value="MONTHLY">Month</option>
+        <option value="YEARLY">Year</option>
+      </select>
+      <input type="number" id="rrule-interval" value="1" min="1">
+    </div>
+	<div class="rrule-row" id="rrule-weekdays-row" style="display: none;">
+  <label>Repeat on</label>
+  <div class="weekday-wrapper">
+  <div class="weekday-checkboxes">
+    <label>M<input type="checkbox" value="MO"></label>
+    <label>T<input type="checkbox" value="TU"></label>
+    <label>W<input type="checkbox" value="WE"></label>
+    <label>T<input type="checkbox" value="TH"></label>
+    <label>F<input type="checkbox" value="FR"></label>
+    <label>S<input type="checkbox" value="SA"></label>
+    <label>S<input type="checkbox" value="SU"></label>
+  </div>
+  <label>Chhanege all tis to outlook form and add a weekly scheduler with times start finish</label>
+  </div>
+</div>
+    <div class="rrule-row">
+      <label for="rrule-start">Start Date & Time:</label>
+      <input type="datetime-local" id="rrule-start">
+    </div>
+
+    <div class="rrule-row">
+      <label for="rrule-end">End Date & Time:</label>
+      <input type="datetime-local" id="rrule-end" readonly style="opacity: 0.6;">
+    </div>
+
+    <div class="rrule-row">
+      <label for="rrule">Generated RRule:</label>
+      <input type="text" id="rrule" readonly>
+    </div>
+  </div>
+</div>
+
+
+
+<div>
+ <label class="inline-checkbox">
+    <input type="checkbox">
+    Show time as 
+  </label>
+
+</div>
+<div>
+ <label class="inline-checkbox">
+    <input type="checkbox">
+    Don`t allow concurrent events 
+  </label>
+
+</div>
+<div>
+ <label class="inline-checkbox">
+    <input type="checkbox">
+    Reminder 
+  </label>
+
+</div>
+		
+   </div>
+  </fieldset>
+  <fieldset class="form-section">
+    <legend class="inline-checkbox"><input type="checkbox" id="toggle-people">📝 People </legend>
+    <div id="people-wrapper" class="hidden">
+	<label>Required</label> <label>Optional</label>
+    <input type="text" />
+     Add +
+	 </div>
+  </fieldset> 
+  
+  
+  <fieldset class="form-section">
+    <legend class="inline-checkbox"><input type="checkbox" id="toggle-shaze">📝 Share </legend>
+    <div id="shaze-wrapper" class="hidden">
+	<label>Social</label> <label>Etc</label>
+    <input type="text"/>
+	 </div>
+  </fieldset> 
+      </div>
+	   
+       
+	
+	 
+    </div>
+  </div>
+  <div class="sec2">
+  <div class="main-columns">	
+		<!-- Left Column -->
+      <div class="left-column">
+	<div class="card">
+	  <fieldset class="form-section">
+  <legend class="inline-checkbox"><input type="checkbox" id="toggle-details">🔧 Details  </legend>
+    <div id="details-wrapper" class="hidden">
+	<div id="dynamic-fields">
+      <!-- Injected form fields will appear here -->
+    </div>
+	</div>
+  </fieldset>
+
++Add Activity Detail
+	</div>
+    
+</div>
+
+      <!-- Right Column -->
+      <div class="right-column">
+       	
+	  <div class="card">
+  <fieldset class="form-section">
+    <legend class="inline-checkbox"><input type="checkbox"id="toggle-attachments">📝 Attachments</legend>
+    <div id="attachments-wrapper" class="hidden">
+	<label >Files +</label>
+    <textarea ></textarea>
+    <label >Video +</label>
+    <textarea ></textarea>
+    <label >links +</label>
+    <textarea ></textarea>
+    <label >Images +</label>
+    <textarea ></textarea>
+	<label >recipe Card</label>
+    <textarea ></textarea>
+</div>
+  </fieldset> 
+      </div>   
+	  
+ <div class="card">
+  <fieldset class="form-section">
+    <legend class="inline-checkbox"><input type="checkbox"id="toggle-aiprompt">📝 AI PROMPTS</legend>
+    <div id="aiprompt-wrapper" class="hidden">
+	<label >Title </label>
+    <textarea ></textarea>
+    <label >Prompt</label>
+    <textarea rows="8"></textarea>
+    <label >+ add prompt</label>
+    
+</div>
+  </fieldset> 
+      </div>   	  
+	  
+	  
+    </div>
+  </div>
+  </div>
+  <button onclick="generateICS()">Download .ics File</button>  
+</div>
+  <!-- SETTINGS MODAL -->
+
+  <!-- BOTTOM NAVIGATION -->
+<nav class="bottom-nav">
+   <div class="nav-inner">
+     <!-- Dashboard -->
+  <a href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+    </svg>
+    <span>Dashboard</span>
+  </a>
+
+  <!-- Today -->
+  <a href="#today">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="6" x2="12" y2="12"></line>
+      <line x1="12" y1="12" x2="16" y2="14"></line>
+    </svg>
+    <span>Today</span>
+  </a>
+
+  <!-- Week -->
+  <a href="#week">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="16" rx="2" ry="2"></rect>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+      <line x1="7" y1="14" x2="7" y2="14"></line>
+      <line x1="12" y1="14" x2="12" y2="14"></line>
+      <line x1="17" y1="14" x2="17" y2="14"></line>
+    </svg>
+    <span>Week</span>
+  </a>
+
+  <!-- Month -->
+  <a href="#month">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+      <line x1="7" y1="14" x2="7" y2="14"></line>
+      <line x1="12" y1="14" x2="12" y2="14"></line>
+      <line x1="17" y1="14" x2="17" y2="14"></line>
+      <line x1="7" y1="18" x2="7" y2="18"></line>
+      <line x1="12" y1="18" x2="12" y2="18"></line>
+      <line x1="17" y1="18" x2="17" y2="18"></line>
+    </svg>
+    <span>Month</span>
+  </a>
+
+  <a href="#" id="more-button-settings">
+<!-- more icon -->
+<svg fill="currentColor" viewbox="0 0 24 24">
+<circle cx="5" cy="12" r="2"></circle>
+<circle cx="12" cy="12" r="2"></circle>
+<circle cx="19" cy="12" r="2"></circle>
+</svg>
+<span>More</span>
+</a>
+  </nav>
+  <!-- MORE POPUP MENU -->
+ <!-- MORE POPUP MENU -->
+<div class="more-menu hidden" id="more-menu-settings">
+<button onclick="window.location.href='contact-form.html'">Kanaka</button>
+<button onclick="window.location.href='uhane.html'">Uhane</button>
+<button onclick="window.location.href='kekino.html'">Kino</button>
+<button onclick="window.location.href='manao.html'">Manao</button>
+<button onclick="window.location.href='hana.html'">Hana</button>
+<button onclick="window.location.href='settings.html'">Settings</button>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const moreBtn  = document.getElementById('more-button-settings');
+    const moreMenu = document.getElementById('more-menu-settings');
+
+    // if either is missing, skip the rest
+    if (!moreBtn || !moreMenu) return;
+
+    moreBtn.addEventListener('click', e => {
+      e.preventDefault();
+      moreMenu.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', e => {
+      if (!moreMenu.contains(e.target) && !moreBtn.contains(e.target)) {
+        moreMenu.classList.add('hidden');
+      }
+    });
+  });
+</script>
+
+	<script>
+    const pillarActivityMap = {
+      ke_kino: {
+        'Daily movement (walking, yoga, dancing, swimming)': ['activityType', 'duration', 'location'],
+        'Physical nourishment (meal planning, hydration)': ['nourishmentType', 'details'],
+        'Sleep/rest routines and recovery': ['restType', 'hours', 'restQuality'],
+        'Wellness sessions (massage, doctor, physio, etc.)': ['sessionType', 'provider', 'notes'],
+        'Personal care (bathing, sauna, hygiene rituals)': ['careType', 'duration', 'ritualNotes']
+      },
+      ka_manao: {
+        'Journaling sessions (morning/evening)': ['journalType', 'pagesWritten', 'reflection'],
+        'Writing intentions during key cycles': ['cycle', 'intention', 'category'],
+        'Affirmations and visualizations': ['affirmation', 'visualizationLength', 'focus'],
+        'Therapy or coaching conversations': ['sessionType', 'facilitator', 'topic', 'insight'],
+        'Quiet reflection or mindset tracking': ['moodBefore', 'moodAfter', 'reflectionNotes']
+      },
+      ka_uhane: {
+        'Breath practice and sacred ha': ['breathStyle', 'duration', 'effect'],
+        'Meditation or stillness sessions': ['method', 'duration', 'focus'],
+        'Prayer and devotional time': ['devotionType', 'intention', 'recipient'],
+        'Moon phase rituals and observances': ['moonPhase', 'ritualType', 'elementsUsed'],
+        'Ancestral honoring or offerings': ['ancestorName', 'offeringType', 'location'],
+        'Sacred ceremonies and blessings': ['ceremonyType', 'participants', 'tools']
+      },
+      hana: {
+        'Daily or weekly task lists': ['taskName', 'priority', 'dueDate', 'status'],
+        'Client appointments and bookings': ['clientName', 'serviceType', 'time', 'paid'],
+        'Project planning and deadlines': ['projectName', 'milestone', 'deadline', 'status'],
+        'Work rosters and shift tracking': ['shiftType', 'role', 'time'],
+        'Chores, errands, and home care': ['taskType', 'location', 'assignedTo'],
+        'Business logistics and strategy': ['focus', 'goal', 'status']
+      }
+    };
+
+    const pillarSelect = document.getElementById('pillar');
+    const activitySelect = document.getElementById('activity-detail');
+    const dynamicFields = document.getElementById('dynamic-fields');
+    const notesField = document.getElementById('notes');
+    const summaryField = document.getElementById('summary');
+    const descriptionField = document.getElementById('description');
+
+    pillarSelect.addEventListener('change', () => {
+      const selected = pillarSelect.value;
+      activitySelect.innerHTML = '<option value="">Select activity</option>';
+      if (pillarActivityMap[selected]) {
+        Object.keys(pillarActivityMap[selected]).forEach(act => {
+          const option = document.createElement('option');
+          option.value = act;
+          option.textContent = act;
+          activitySelect.appendChild(option);
+        });
+      }
+      dynamicFields.innerHTML = '';
+    });
+
+    activitySelect.addEventListener('change', () => {
+      const pillar = pillarSelect.value;
+      const activity = activitySelect.value;
+      dynamicFields.innerHTML = '';
+      if (pillarActivityMap[pillar] && pillarActivityMap[pillar][activity]) {
+        const fields = pillarActivityMap[pillar][activity];
+        fields.forEach(field => {
+          const label = document.createElement('label');
+          label.htmlFor = field;
+          label.textContent = field.replace(/([A-Z])/g, ' $1').replace(/([a-z])([A-Z])/g, '$1 $2');
+          const input = document.createElement('input');
+          input.type = 'text';
+          input.id = field;
+          input.name = field;
+          dynamicFields.appendChild(label);
+          dynamicFields.appendChild(input);
+        });
+      }
+      summaryField.value = pillarSelect.options[pillarSelect.selectedIndex].text + ' – ' + activity;
+    });
+
+    notesField.addEventListener('input', () => {
+      descriptionField.value = notesField.value;
+    });
+
+    function pad(n) {
+      return n < 10 ? '0' + n : n;
+    }
+
+    function formatDateICS(dt) {
+      const date = new Date(dt);
+      return date.getUTCFullYear() +
+        pad(date.getUTCMonth() + 1) +
+        pad(date.getUTCDate()) + 'T' +
+        pad(date.getUTCHours()) +
+        pad(date.getUTCMinutes()) +
+        pad(date.getUTCSeconds()) + 'Z';
+    }
+
+    function generateICS() {
+      const summary = summaryField.value || 'No Title';
+      const description = descriptionField.value || '';
+      let location = '';
+if (document.getElementById('toggle-location').checked) {
+  location = document.getElementById('location').value || '';
+}
+      const rrule = document.getElementById('rrule').value;
+      const dtstart = formatDateICS(document.getElementById('dtstart').value);
+      const dtend = formatDateICS(document.getElementById('dtend').value);
+
+      let icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//MalamaMana Calendar//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+SUMMARY:${summary}
+DESCRIPTION:${description}
+DTSTART:${dtstart}
+DTEND:${dtend}
+LOCATION:${location}
+`;
+
+      if (rrule) {
+        icsContent += `RRULE:${rrule}\n`;
+      }
+
+      icsContent += `END:VEVENT
+END:VCALENDAR`;
+
+      const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = summary.replace(/\s+/g, '_') + '.ics';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+  
+<script>
+  function initLocationAutocomplete() {
+    const input = document.getElementById("location");
+    if (!input) return;
+    const autocomplete = new google.maps.places.Autocomplete(input, {
+      types: ["geocode"]
+    });
+
+    // Optional: bias to user's location
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(position => {
+        const circle = new google.maps.Circle({
+          center: position.coords,
+          radius: position.coords.accuracy
+        });
+        autocomplete.setBounds(circle.getBounds());
+      });
+    }
+  }
+
+  window.addEventListener("load", initLocationAutocomplete);
+</script>
+
+<script>
+  const startInput = document.getElementById('dtstart');
+  const endInput = document.getElementById('dtend');
+  const useDuration = document.getElementById('use-duration');
+  const durationDisplay = document.getElementById('duration-display');
+  const durationPopup = document.getElementById('duration-popup');
+  const scrollHours = document.getElementById('scroll-hours');
+  const scrollMinutes = document.getElementById('scroll-minutes');
+  
+
+  // Generate options
+  for (let i = 0; i <= 24; i++) {
+    const option = document.createElement('option');
+    option.value = i;
+    option.textContent = `${i} hr`;
+    scrollHours.appendChild(option);
+  }
+
+  [0, 5, 10, 15, 30, 45, 59].forEach(min => {
+    const option = document.createElement('option');
+    option.value = min;
+    option.textContent = `${min} min`;
+    scrollMinutes.appendChild(option);
+  });
+
+  function updateEndTimeFromScroll() {
+  const h = parseInt(scrollHours.value) || 0;
+  const m = parseInt(scrollMinutes.value) || 0;
+  durationDisplay.textContent = `${h} hr ${m} min`;
+
+  if (useDuration.checked && startInput.value) {
+    const start = new Date(startInput.value);
+    const end = new Date(start.getTime() + (h * 60 + m) * 60000);
+    
+    // Convert back to local time ISO string
+    const tzOffset = end.getTimezoneOffset() * 60000;
+    const local = new Date(end - tzOffset).toISOString().slice(0, 16);
+    
+    endInput.value = local;
+    endInput.readOnly = true;
+    endInput.style.opacity = 0.6;
+  }
+}
+
+  scrollHours.addEventListener('change', updateEndTimeFromScroll);
+  scrollMinutes.addEventListener('change', updateEndTimeFromScroll);
+  startInput.addEventListener('change', updateEndTimeFromScroll);
+
+  durationDisplay.addEventListener('click', () => {
+    if (useDuration.checked) {
+      durationPopup.classList.toggle('hidden');
+    }
+  });
+
+ useDuration.addEventListener('change', () => {
+  durationPopup.classList.add('hidden');
+  const show = useDuration.checked;
+
+  if (show) {
+    updateEndTimeFromScroll();
+    endInput.classList.add('readonly');
+    endInput.readOnly = true;
+    endInput.style.opacity = 0.6;
+  } else {
+    endInput.classList.remove('readonly');
+    endInput.readOnly = false;
+    endInput.style.opacity = 1;
+  }
+
+  durationDisplay.parentElement.classList.toggle('hidden', !show);
+});
+
+  // Hide popup when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!durationPopup.contains(e.target) && !durationDisplay.contains(e.target)) {
+      durationPopup.classList.add('hidden');
+    }
+  });
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const useRRULE = document.getElementById('use-rrule');
+  const rruleBuilder = document.getElementById('rrule-builder');
+  const rruleMode = document.getElementById('rrule-mode');
+  const rruleCountRow = document.getElementById('rrule-count-row');
+  const rruleUntilRow = document.getElementById('rrule-until-row');
+  const rruleCount = document.getElementById('rrule-count');
+  const rruleUntil = document.getElementById('rrule-until');
+  const rruleInterval = document.getElementById('rrule-interval');
+  const rruleFrequency = document.getElementById('rrule-frequency');
+  const rruleStart = document.getElementById('rrule-start');
+  const rruleEnd = document.getElementById('rrule-end');
+  const rruleOutput = document.getElementById('rrule');
+  const dtstartInput = document.getElementById('dtstart');
+  const rruleWeekdayRow = document.getElementById('rrule-weekdays-row');
+
+  // Toggle recurrence section
+  useRRULE.addEventListener('change', () => {
+    const active = useRRULE.checked;
+    rruleBuilder.classList.toggle('hidden', !active);
+    if (active && dtstartInput.value) {
+      rruleStart.value = dtstartInput.value;
+    }
+    updateRRULE();
+  });
+
+  // Toggle count vs until
+  rruleMode.addEventListener('change', () => {
+    const isCount = rruleMode.value === 'count';
+    rruleCountRow.style.display = isCount ? 'flex' : 'none';
+    rruleUntilRow.style.display = !isCount ? 'flex' : 'none';
+    updateRRULE();
+  });
+
+  // Show weekdays only for DAILY
+ rruleFrequency.addEventListener('change', () => {
+  const showDays = rruleFrequency.value === 'DAILY';
+  document.getElementById('rrule-weekdays-row').style.display = showDays ? 'flex' : 'none';
+  updateRRULE();
+});
+
+  // Update rule on change
+  [
+    rruleCount, rruleUntil, rruleInterval, rruleFrequency,
+    rruleStart, ...document.querySelectorAll('#rrule-weekdays-row input')
+  ].forEach(el => el.addEventListener('change', updateRRULE));
+
+  // Copy main start when changed
+  dtstartInput.addEventListener('change', () => {
+    if (useRRULE.checked) {
+      rruleStart.value = dtstartInput.value;
+      updateRRULE();
+    }
+  });
+
+  function updateRRULE() {
+    if (!useRRULE.checked) return;
+
+    const freq = rruleFrequency.value;
+    const interval = parseInt(rruleInterval.value) || 1;
+    const start = rruleStart.value;
+    const mode = rruleMode.value;
+    const parts = [`FREQ=${freq}`, `INTERVAL=${interval}`];
+
+    // BYDAY logic only for DAILY
+    if (freq === 'DAILY') {
+      const checkedDays = [...document.querySelectorAll('#rrule-weekdays-row input:checked')]
+        .map(cb => cb.value);
+      if (checkedDays.length > 0) {
+        parts.push(`BYDAY=${checkedDays.join(',')}`);
+      }
+    }
+
+    if (mode === 'count') {
+      const count = parseInt(rruleCount.value);
+      if (count > 0) parts.push(`COUNT=${count}`);
+
+      // Calculate end
+      const startDate = new Date(start);
+      let endDate = new Date(startDate.getTime());
+      switch (freq) {
+        case 'HOURLY': endDate.setHours(endDate.getHours() + interval * (count - 1)); break;
+        case 'DAILY': endDate.setDate(endDate.getDate() + interval * (count - 1)); break;
+        case 'WEEKLY': endDate.setDate(endDate.getDate() + 7 * interval * (count - 1)); break;
+        case 'MONTHLY': endDate.setMonth(endDate.getMonth() + interval * (count - 1)); break;
+        case 'YEARLY': endDate.setFullYear(endDate.getFullYear() + interval * (count - 1)); break;
+      }
+
+      const offset = endDate.getTimezoneOffset() * 60000;
+      const localEnd = new Date(endDate - offset).toISOString().slice(0, 16);
+      rruleEnd.readOnly = true;
+      rruleEnd.style.opacity = 0.6;
+      rruleEnd.value = localEnd;
+
+    } else {
+      const until = rruleUntil.value;
+      if (until) {
+        parts.push(`UNTIL=${until.replace(/[-:]/g, '').slice(0, 15)}Z`);
+        rruleEnd.readOnly = true;
+        rruleEnd.style.opacity = 0.6;
+        rruleEnd.value = until;
+      } else {
+        rruleEnd.value = '';
+      }
+    }
+
+
+    if (start) {
+      parts.unshift(`DTSTART=${start.replace(/[-:]/g, '').slice(0, 15)}Z`);
+    }
+
+    rruleOutput.value = parts.join(';');
+  }
+});
+
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // helper to wire up any toggle + wrapper pair
+    function wireToggle(toggleId, wrapperId) {
+      const chk = document.getElementById(toggleId);
+      const box = document.getElementById(wrapperId);
+      chk.addEventListener('change', () => {
+        box.classList.toggle('hidden', !chk.checked);
+      });
+    }
+
+    // wire all sections
+    wireToggle('toggle-location',       'location-wrapper');
+    wireToggle('toggle-extra-settings', 'extra-settings-wrapper');
+    wireToggle('toggle-people',         'people-wrapper');
+    wireToggle('toggle-shaze',          'shaze-wrapper');
+    wireToggle('toggle-details',        'details-wrapper');
+    wireToggle('toggle-attachments',    'attachments-wrapper');
+	wireToggle('toggle-details',    'details-wrapper');
+	wireToggle('toggle-aiprompt',    'aiprompt-wrapper');
+  });
+</script>
+
+
+  <!-- Firebase CDN Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-init.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.9.0/suncalc.min.js"></script>
+  </body>
+</html>
