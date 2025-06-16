@@ -32,13 +32,19 @@
       margin-bottom: 0.3rem;
       font-weight: bold;
     }
-    input, select, textarea {
-      width: 98%;
-      padding: 0.5rem;
-      margin-bottom: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
+    input[type="text"],
+  input[type="number"],
+  input[type="date"],
+  input[type="time"],
+  input[type="datetime-local"],
+  select,
+  textarea {
+    width: 98%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
  
     textarea {
       resize: vertical;
@@ -165,7 +171,6 @@ label[for="location"] {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  margin-bottom: 1rem;
   flex-wrap: wrap;
 }
 
@@ -184,6 +189,7 @@ label[for="location"] {
 }
 .duration-scroller {
   display: flex;
+ 
   align-items: center;
   gap: 0.5rem;
   position: relative;
@@ -196,10 +202,11 @@ label[for="location"] {
   cursor: pointer;
   font-weight: bold;
   line-height: 1;
+  font-size: 0.75rem;
 }
 
 .duration-popup {
-  min-width: 220px;
+  min-width: 180px;
   position: absolute;
   top: 2.2rem;
   left: 0;
@@ -229,7 +236,7 @@ label[for="location"] {
   opacity: 0.6;
 }
 .ics-rrule-builder {
-  margin-bottom: 1rem;
+  
 }
 
 .rrule-toggle-row {
@@ -408,7 +415,824 @@ fieldset,
 .hidden {
   display: none;
 }
-  </style>
+extra-time-scroller {
+  /* same layout as .duration-scroller */
+}
+.time-line {
+  position: relative;    /* so each popup is anchored under its own line */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.time-display {
+  margin: 0 0.5rem;
+  cursor: pointer;  /* to open popup */
+}
+.time-popup {
+  /* reuse your .duration-popup styles */
+}
+/* ensure the wrapper is relative */
+#extra-time-scroller.duration-scroller {
+  position: relative;
+}
+
+/* position the popup directly beneath the display */
+#extra-popup.duration-popup {
+  top: calc(100% + 4px);
+  left: 0;
+  transform: none;
+}
+/* -------------------------------------------- */
+/* EXTRA‐TIME ON ONE LINE AT LARGE SCREEN       */
+/* -------------------------------------------- */
+@media (min-width: 600px) {
+  /* make the label + display sit side by side */
+  .ics-duration-toggle {
+    display: flex;
+    align-items: center;    /* vertically aligned */
+    gap: 0.75rem;           /* space between label and display */
+  }
+
+  /* ensure the display span doesn’t force a new line */
+  #extra-time-scroller {
+    display: inline-block;  /* shrink‐wrap its contents */
+    margin: 0;              /* remove any top margin */
+  }
+}
+
+/* -------------------------------------------- */
+/* STACK THEM ON SMALL SCREENS                  */
+/* -------------------------------------------- */
+@media (max-width: 599px) {
+  .ics-duration-toggle {
+    display: flex;
+    flex-direction: column; /* label on top, display below */
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  #extra-time-scroller {
+    width: 100%;            /* full width for easy tapping */
+  }
+}
+#timezone-scroller .duration-display {
+  min-width: 80px;  /* or whatever feels right */
+}
+
+#timezone-popup {
+  top: calc(100% + 4px);
+  left: 0;
+  width: 120px;
+}
+/* show/hide panels */
+
+.rr-panel { margin: .5rem 0; }
+.freq-tabs label { margin-right: 1rem; }
+.day-checkboxes { display: flex; gap: .5rem; flex-wrap: wrap; }
+.weekly-roster { width: 100%; border-collapse: collapse; margin-top: .5rem; }
+.weekly-roster th, .weekly-roster td { border: 1px solid #ccc; padding: .25rem .5rem; text-align: center; }
+.small-text { margin-top: .5rem; color: #555; font-size: .9rem; }
+/* make sure the scroller container is the positioning context */
+.duration-scroller {
+  position: relative;      /* you already have this, but just in case */
+  overflow: visible;       /* allow the popup to break out */
+}
+
+/* style the popup itself */
+.duration-popup {
+  position: absolute !important;
+  top: calc(100% + 4px) !important;  /* a little gap below the trigger */
+  left: 50% !important;              /* center under the trigger */
+  transform: translateX(-50%) !important;
+  z-index: 1000 !important;
+
+  /* constrain to viewport */
+  max-width: 90vw !important;
+  max-height: 80vh !important;
+  width: auto !important;            /* grow to content up to max-width */
+  box-sizing: border-box !important;
+  
+  /* allow scrolling if it’s too tall */
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+
+  /* optional: add a slight drop-shadow and padding */
+  padding: 1rem;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+/* 1) Make the scroller fill the card’s inner width */
+.ics-rrule-toggle .duration-scroller {
+  position: relative;   /* anchor for absolutely-positioned popup */
+  width: 100%;          /* match your card/input column */
+}
+
+/* 2) Pin the popup exactly to the left edge and give it that same 100% width */
+.ics-rrule-toggle .duration-popup {
+  position: absolute !important;
+  top: calc(100% + 4px) !important;  /* a small gap below the button */
+  left: 0 !important;                /* align left edge */
+  transform: none !important;        /* remove any translateX centering */
+
+  width: 100% !important;            /* fill the scroller (card) width */
+  max-width: 100% !important;        /* never exceed it */
+  box-sizing: border-box !important;
+
+  max-height: 80vh !important;       /* keep it from getting too tall */
+  overflow-y: auto !important;       /* scroll if needed */
+  z-index: 1000 !important;
+}
+/* 1) Kill the flex and gaps on your recurrence popup */
+.ics-rrule-toggle .duration-popup {
+  display: block !important;
+  gap: 0 !important;
+  flex-direction: initial !important;
+  width: 100% !important;        /* fill its scroller parent */
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 1rem !important;
+  overflow-y: auto !important;   /* scroll if content is tall */
+}
+
+/* 2) Undo the global “input, select, textarea {width:98%}” inside this popup */
+.ics-rrule-toggle .duration-popup input,
+.ics-rrule-toggle .duration-popup select,
+.ics-rrule-toggle .duration-popup textarea {
+  width: auto !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* 3) Force every child to wrap and never overflow */
+.ics-rrule-toggle .duration-popup * {
+  box-sizing: border-box !important;
+  max-width: 100% !important;
+  overflow-wrap: break-word !important;
+}
+
+/* 4) Stack only the inner rows and fieldsets vertically — NOT the panels themselves */
+.ics-rrule-toggle .duration-popup fieldset,
+.ics-rrule-toggle .duration-popup .rrule-row,
+.ics-rrule-toggle .duration-popup label {
+  display: block !important;
+  width: 100% !important;
+  margin-bottom: 1rem !important;
+}
+
+/* == Recurrence Popup – force all inputs/selects to fit inside == */
+.ics-rrule-toggle .duration-popup {
+  /* ensure popup itself is block and fills its container */
+  display: block !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  overflow-y: auto !important;
+}
+
+/* override the global 98% width */
+.ics-rrule-toggle .duration-popup input,
+.ics-rrule-toggle .duration-popup select,
+.ics-rrule-toggle .duration-popup textarea {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* make sure panels can still hide/show */
+.ics-rrule-toggle .duration-popup .rr-panel.hidden {
+  display: none !important;
+}
+/* 1) Weekly Roster: day label, checkbox & time on one line */
+.ics-rrule-toggle .duration-popup 
+  .rr-panel[data-panel="WEEKLY_ROSTER"] .weekly-roster > div {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+/* shrink the checkbox to its content */
+.ics-rrule-toggle .duration-popup 
+  .rr-panel[data-panel="WEEKLY_ROSTER"] .wr-day {
+  flex: none;
+}
+
+/* let the time input grow but not overflow */
+.ics-rrule-toggle .duration-popup 
+  .rr-panel[data-panel="WEEKLY_ROSTER"] .wr-time {
+  flex: 1 1 auto;
+  min-width: 6ch;
+}
+
+/* 2) Monthly: “Day X of every Y months” inline */
+.ics-rrule-toggle .duration-popup 
+  .rr-panel[data-panel="MONTHLY"] label:nth-of-type(1),
+.ics-rrule-toggle .duration-popup 
+  .rr-panel[data-panel="MONTHLY"] label:nth-of-type(2) {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+/* shrink the small inputs/selects */
+.ics-rrule-toggle .duration-popup 
+  .rr-panel[data-panel="MONTHLY"] input,
+.ics-rrule-toggle .duration-popup 
+  .rr-panel[data-panel="MONTHLY"] select {
+  flex: none;
+  width: auto !important;
+}
+
+/* 3) Yearly: “On Month Day” and “On the Nth Weekday of Month” inline */
+.ics-rrule-toggle .duration-popup 
+  .rr-panel[data-panel="YEARLY"] label:nth-of-type(1),
+.ics-rrule-toggle .duration-popup 
+  .rr-panel[data-panel="YEARLY"] label:nth-of-type(2) {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+/* shrink those selects/inputs too */
+.ics-rrule-toggle .duration-popup 
+  .rr-panel[data-panel="YEARLY"] input,
+.ics-rrule-toggle .duration-popup 
+  .rr-panel[data-panel="YEARLY"] select {
+  flex: none;
+  width: auto !important;
+}
+
+ /* ===================================================
+     ReCURRING POPUP OVERRIDES (Scoped, last in file)
+     =================================================== */
+
+  /* 1) Reset checkboxes & radios inside the popup back to auto-width */
+  #rrule-popup input[type="checkbox"],
+  #rrule-popup input[type="radio"] {
+    width: auto !important;
+    margin: 0 0.25rem 0 0 !important;
+    padding: 0 !important;
+    vertical-align: middle !important;
+  }
+
+  /* 2) Force the “week(s) on:” container to be one flex-row */
+  #rrule-popup .day-selectors {
+    display: flex !important;
+    flex-wrap: nowrap !important;       /* wrap only if super narrow */
+    align-items: center !important;
+    gap: 0.5rem !important;           /* small even spacing */
+    margin-top: 0.5rem !important;    /* space below label */
+    padding: 0 !important;            /* kill any inherited padding */
+  }
+  /* on small screens (under 600px wide), let them wrap */
+@media (max-width: 600px) {
+  #rrule-popup .day-selectors {
+    flex-wrap: wrap !important;
+  }
+}
+
+  /* 3) Keep each “Mon ☐” pair glued together */
+  #rrule-popup .day-selectors > label {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.25rem !important;          /* tiny gap between box & text */
+    white-space: nowrap !important;   /* prevent line-break under checkbox */
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  /* “Every [ 1 ] week(s) on:” all in one line with a 2-digit box */
+#rrule-popup .rr-panel[data-panel="WEEKLY"] > label {
+  display: inline-flex;       /* keep label + input on one line */
+  align-items: center;
+  gap: 0.25rem;               /* small gap between text and box */
+  white-space: nowrap;        /* prevent wrapping */
+}
+
+/* shrink the weekly-interval input to ~6 characters */
+#rrule-popup #rr-interval-weekly {
+  width: 6ch !important;      /* 2-character width */
+  min-width: 2ch !important;
+  padding: 0.25rem !important;/* tighten padding if you like */
+  box-sizing: border-box;
+}
+/* ————————————————————————————————
+   DAILY panel: “Every [ 1 ] day(s)” + “Weekdays only” on one line
+   ———————————————————————————————— */
+#rrule-popup .rr-panel[data-panel="DAILY"] {
+  display: flex !important;
+  align-items: center !important;
+  gap: 1rem !important;       /* space between the two labels */
+  flex-wrap: nowrap !important; /* wrap only if extremely narrow */
+}
+ /* on small screens (under 600px wide), let them wrap */
+@media (max-width: 600px) {
+  #rrule-popup .rr-panel[data-panel="DAILY"] {
+    flex-wrap: wrap !important;
+  }
+}
+
+/* shrink the daily-interval input to ~6 characters */
+#rrule-popup #rr-interval-daily {
+  width: 6ch !important;
+  min-width: 6ch !important;
+  box-sizing: border-box !important;
+  padding: 0.25rem !important; /* tighten padding if you like */
+}
+
+
+/* Weekly Roster rows: checkbox + start/end all on one line */
+#rrule-popup .rr-panel[data-panel="WEEKLY_ROSTER"] .weekly-roster > div {
+  display: flex;
+  align-items: center;
+  gap: 1rem;             /* space between each group */
+  flex-wrap: nowrap;       /* wrap only if super narrow */
+  margin-bottom: 0.5rem;
+}
+/* small screens: allow wrap on the row divs */
+@media (max-width: 600px) {
+  #rrule-popup .rr-panel[data-panel="WEEKLY_ROSTER"] .weekly-roster > div {
+    flex-wrap: wrap !important;    /* override to wrap */
+  }
+}
+
+/* tighten up the time inputs to ~5 characters (hh:mm) */
+#rrule-popup .wr-start,
+#rrule-popup .wr-end {
+  width: 5ch;
+  min-width: 5ch;
+  box-sizing: border-box;
+  padding: 0.25rem;
+}
+  .hidden {
+  display: none !important;
+}
+  /* Ensure hidden panels stay hidden */
+  .rr-panel.hidden { display: none !important; }
+  #rrule-popup .rr-panel.hidden {
+  display: none !important;
+}
+#rrule-popup {
+  position: absolute !important;
+  top: calc(100% + 4px) !important;
+  left: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 1rem !important;
+  background: white !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15) !important;
+  border: 1px solid #ccc !important;
+  overflow-y: auto !important;
+  z-index: 2000 !important; /* ensure it’s above everything else */
+}
+#rrule-popup.hidden {
+  display: none !important;
+}
+#rrule-popup .rr-panel.hidden {
+  display: none !important;
+}
+#rrule-popup {
+  pointer-events: auto;
+}
+@media (max-width: 540px) {
+  /* Make the frequency row wrap vertically if needed */
+  #rrule-popup .rrule-row,
+  #rrule-popup .rr-panel,
+  #rrule-popup .form-section {
+    max-width: 100vw;
+    overflow-x: visible;
+  }
+  #rrule-popup select,
+  #rrule-popup input[type="number"],
+  #rrule-popup input[type="date"],
+  #rrule-popup input[type="datetime-local"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box;
+    font-size: 1rem;
+  }
+  #rrule-popup label {
+    min-width: 0 !important;
+    width: 100% !important;
+    text-align: left !important;
+    margin-bottom: 0.25rem !important;
+  }
+  #rrule-popup .rrule-row {
+    flex-direction: column !important;
+    gap: 0.3rem !important;
+  }
+}
+@media (max-width: 540px) {
+  .rrule-after-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.3rem !important;
+  }
+  .rrule-after-row > div {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    width: 100%;
+  }
+  .rrule-after-row input[type="number"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+  }
+  .occurrences-label {
+    margin-left: 0 !important;
+    margin-top: 0.15em;
+    width: 100%;
+    text-align: left;
+  }
+}
+/* 1. Force popup and all its children to fit the viewport */
+#rrule-popup {
+  max-width: 98vw !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  left: 0 !important;
+  right: 0 !important;
+  overflow-x: auto !important;
+  padding: 1rem !important;
+}
+
+/* 2. Make all fields inside the popup responsive */
+#rrule-popup input[type="number"],
+#rrule-popup input[type="date"],
+#rrule-popup input[type="datetime-local"],
+#rrule-popup select {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* 3. Responsive row and fieldset stacking for mobile */
+@media (max-width: 600px) {
+  #rrule-popup fieldset,
+  #rrule-popup .rrule-row,
+  #rrule-popup .rrule-after-row,
+  #rrule-popup .rrule-row > div {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.5rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  #rrule-popup label,
+  #rrule-popup span,
+  #rrule-popup input,
+  #rrule-popup select {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    text-align: left !important;
+  }
+}
+
+/* 4. Prevent long fieldset titles from causing overflow */
+#rrule-popup legend {
+  max-width: 90vw !important;
+  white-space: normal !important;
+}
+/* Minimal fix for recurrence range rows in popup */
+#rrule-popup .rrule-row > div {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+/* Responsive: stack label/input/occurrences vertically on small screens */
+@media (max-width: 540px) {
+  #rrule-popup .rrule-row > div {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.2rem !important;
+    width: 100% !important;
+  }
+  #rrule-popup .rrule-row label,
+  #rrule-popup .rrule-row input,
+  #rrule-popup .rrule-row span {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    text-align: left !important;
+    margin-bottom: 0 !important;
+  }
+}
+/* === Recurrence Range row guaranteed fix === */
+#rrule-popup .rrule-row {
+  flex-direction: column;
+  gap: 0.6rem;
+}
+#rrule-popup .rrule-row > div {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 0.7rem !important;
+  width: 100% !important;
+}
+
+#rrule-popup .rrule-row > div label {
+  display: inline-flex !important;
+  align-items: center !important;
+  font-weight: bold;
+  min-width: 92px;
+  margin-bottom: 0 !important;
+  margin-right: 0.5rem;
+  gap: 0.4em;
+  white-space: nowrap;
+}
+#rrule-popup .rrule-row > div input[type="date"],
+#rrule-popup .rrule-row > div input[type="number"] {
+  min-width: 110px;
+  max-width: 150px;
+  width: auto;
+  margin-right: 0.5em;
+}
+#rrule-popup .rrule-row > div .occurrences-label {
+  margin-left: 0.2em;
+  white-space: nowrap;
+}
+
+/* Mobile: stack input and occurrences under label/radio, but keep radio+label inline */
+@media (max-width: 540px) {
+  #rrule-popup .rrule-row > div {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.1rem !important;
+    width: 100% !important;
+	margin-bottom: 20px !important;
+  }
+  #rrule-popup .rrule-row > div label {
+    min-width: 0 !important;
+    margin-bottom: 0 !important;
+    width: auto !important;
+  }
+  #rrule-popup .rrule-row > div input,
+  #rrule-popup .rrule-row > div span {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    text-align: left !important;
+    margin-right: 0 !important;
+  }
+  #rrule-popup .rrule-row > div .occurrences-label {
+    margin-left: 0 !important;
+    width: 100% !important;
+    margin-top: 0.15em;
+    text-align: left !important;
+  }
+}
+#rrule-popup .rrule-row > div input[type="date"] {
+  width: 150px !important;
+  min-width: 110px;
+  max-width: 180px;
+  flex: 0 0 auto;
+  margin-right: 0;
+}
+#rrule-popup .rrule-row > div input[type="number"] {
+  width: 90px !important;
+  min-width: 70px;
+  max-width: 130px;
+  flex: 0 0 auto;
+  margin-right: 0;
+}
+#rrule-popup .rrule-row > div label {
+  width: 105px;
+}
+#rrule-popup .rrule-row[style*="flex-direction: column"] > div {
+  display: flex !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  width: 100% !important;
+}
+#rrule-popup .rrule-row[style*="flex-direction: column"] > div label {
+  min-width: 90px !important;
+  width: auto !important;
+  margin-bottom: 0 !important;
+  font-weight: bold;
+  white-space: nowrap;
+}
+#rrule-popup .rrule-row[style*="flex-direction: column"] > div input[type="date"] {
+  width: 150px !important;
+  min-width: 120px !important;
+  max-width: 220px !important;
+  flex: 0 0 auto !important;
+  margin-right: 0 !important;
+}
+#rrule-popup .rrule-row[style*="flex-direction: column"] > div input[type="number"] {
+  width: 90px !important;
+  min-width: 70px !important;
+  max-width: 130px !important;
+  flex: 0 0 auto !important;
+  margin-right: 0 !important;
+}
+#rrule-popup .rrule-row[style*="flex-direction: column"] > div span {
+  margin-left: 0.5em !important;
+  white-space: nowrap !important;
+}
+
+/* Mobile: stack input and occurrences below label/radio */
+@media (max-width: 540px) {
+  #rrule-popup .rrule-row[style*="flex-direction: column"] > div {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.15rem !important;
+    width: 100% !important;
+  }
+  #rrule-popup .rrule-row[style*="flex-direction: column"] > div label {
+    min-width: 0 !important;
+    width: auto !important;
+    margin-bottom: 0 !important;
+  }
+  #rrule-popup .rrule-row[style*="flex-direction: column"] > div input,
+  #rrule-popup .rrule-row[style*="flex-direction: column"] > div span {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    text-align: left !important;
+  }
+  #rrule-popup .rrule-row[style*="flex-direction: column"] > div span {
+    margin-left: 0 !important;
+    margin-top: 0.1em !important;
+  }
+}
+#reminders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45em;
+  margin: 0.6em 0 0.3em 2em;
+}
+@media (max-width: 600px) {
+  #reminders-toggle-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4em;
+  }
+  #reminders-list {
+    margin-left: 0.5em;
+  }
+}
+
+#add-reminder-btn {
+  background: #eee;
+  color: #2366b2;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  padding: 0.25rem 0.8rem;
+  cursor: pointer;
+  margin-right: 1em;
+  margin-left: auto;
+  transition: background 0.2s, color 0.2s;
+  vertical-align: middle;
+  display: inline-block;
+}
+#add-reminder-btn:hover {
+  background: #cfe2ff;
+  color: #17447c;
+}
+#reminder-popup button {
+  background: #eee;
+  color: #444;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.4rem 0.8rem;
+  margin: 0.6em 0.4em 0 0;
+  cursor: pointer;
+  min-width: 40px;
+  transition: background 0.2s, color 0.2s;
+}
+#reminder-popup button:hover {
+  background: #cfe2ff;
+  color: #17447c;
+}
+
+#reminder-popup {
+  position: absolute;
+  top: 2.6em;  /* tweak as needed for best alignment */
+  left: 0;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+  min-width: 240px;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #ccd4e1;
+  padding: 1em 1em 0.8em 1em;
+}
+.remove-reminder-btn {
+  background: #f7e3e3;
+  color: #c91e1e;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.32rem 0.8rem;
+  cursor: pointer;
+  margin-left: 0.6em;
+  min-width: 30px;
+  transition: background 0.15s, color 0.15s;
+  vertical-align: middle;
+  display: inline-block;
+}
+.remove-reminder-btn:hover {
+  background: #ffdddd;
+  color: #a00;
+}
+.edit-reminder-btn {
+  background: #f7efd7;
+  color: #8b6c00;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.32rem 0.8rem;
+  cursor: pointer;
+  margin-left: 0.2em;
+  min-width: 30px;
+  transition: background 0.15s, color 0.15s;
+  vertical-align: middle;
+  display: inline-block;
+}
+.edit-reminder-btn:hover {
+  background: #ffe27a;
+  color: #5a4500;
+}
+#open-contact-picker {
+  background: #eee;
+  color: #2366b2;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.07rem;
+  font-weight: 600;
+  padding: 0.36rem 1.1rem;
+  cursor: pointer;
+  margin-left: 1em;
+  margin-bottom: 0.3em;
+  transition: background 0.18s, color 0.18s;
+  vertical-align: middle;
+  display: inline-block;
+}
+#open-contact-picker:hover {
+  background: #cfe2ff;
+  color: #17447c;
+}
+#contact-picker-modal button {
+  background: #eee;
+  color: #2366b2;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.11rem;
+  font-weight: 600;
+  padding: 0.38rem 1.1rem;
+  margin: 0 0.36em 0.5em 0;
+  cursor: pointer;
+  min-width: 90px;
+  transition: background 0.18s, color 0.18s;
+  vertical-align: middle;
+  display: inline-block;
+}
+#contact-picker-modal button:hover {
+  background: #cfe2ff;
+  color: #17447c;
+}
+#open-contact-picker,
+#new-contact-btn {
+  background: #eee;
+  color: #2366b2;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.08rem;
+  font-weight: 600;
+  padding: 0.32rem 1.2rem;
+  margin-bottom: 0.3em;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+  vertical-align: middle;
+  display: inline-block;
+}
+#open-contact-picker:hover,
+#new-contact-btn:hover {
+  background: #cfe2ff;
+  color: #17447c;
+}
+</style>
 
 </head>
 
@@ -473,7 +1297,7 @@ fieldset,
         <input type="text">
       </div>
      <div>
-    <label for="description">📝Descritpion (check if title lable)</label>
+    <label for="description">📝DESCRIPTION</label>
     <textarea id="description" rows="12"></textarea>
 </div>
 <div class="ics-location-toggle">
@@ -522,22 +1346,41 @@ fieldset,
    <legend class="inline-checkbox"><input type="checkbox"id="toggle-extra-settings">⚙️ Extra Settings</legend>
 
   <div id="extra-settings-wrapper" class="hidden">
-    <!-- All Day -->
-    <div><label class="inline-checkbox">
-      <input type="checkbox">
-      Timezone
-    </label></div><div>
-<label class="inline-checkbox">
-      <input type="checkbox">
-      All day
-    </label></div>
+    <!-- Timezone -->
+    <!-- Timezone Picker -->
+<div class="ics-timezone-toggle" style="display:flex; align-items:center; gap:0.5rem;">
+  <label class="inline-checkbox">
+    <input type="checkbox" id="toggle-timezone">
+    🌏 Timezone
+  </label>
+
+  <div id="timezone-scroller" class="duration-scroller hidden" style="position:relative; display:inline-block;">
+    <!-- short display on the same line -->
+    <span id="timezone-display" class="duration-display">UTC+10:00</span>
+
+    <!-- one popup with a single select -->
+    <div id="timezone-popup" class="duration-popup hidden">
+      <select id="timezone-select"></select>
+    </div>
+  </div>
+</div>
+
+	
+	    <!-- All Day -->
+		<div>
+  <label class="inline-checkbox">
+    <input type="checkbox" id="toggle-all-day">
+    🌅 All day
+  </label>
+</div>
+
     <!-- Duration Picker -->
     <div class="ics-duration-toggle">
       <label class="inline-checkbox">
         <input type="checkbox" id="use-duration">
        ⏳ Duration:
       </label>
-      <div class="duration-scroller">
+      <div class="duration-scroller hidden">
         <span id="duration-display" class="duration-display">0 hr 0 min</span>
         <div id="duration-popup" class="duration-popup hidden">
           <select id="scroll-hours"></select>
@@ -547,117 +1390,248 @@ fieldset,
     </div>
 
     <!-- Extra Time -->
-    <label class="inline-checkbox">
-      <input type="checkbox">
-      Extra Time Before & After
-    </label>
-  
-  <div class="ics-rrule-builder">
+  <div>
   <label class="inline-checkbox">
-    <input type="checkbox" id="use-rrule">
-    Enable Recurrence
+    <input type="checkbox" id="xtra">
+    ⏱️ Extra time
   </label>
-
-  <div id="rrule-builder" class="hidden">
-    <div class="rrule-row">
-      <label for="rrule-mode">Recurrence Mode:</label>
-      <select id="rrule-mode">
-        <option value="count">Fixed # Occurrences</option>
-        <option value="until">Until Date</option>
-      </select>
-    </div>
-
-    <div class="rrule-row" id="rrule-count-row">
-      <label for="rrule-count">Occurrences:</label>
-      <input type="number" id="rrule-count" value="1" min="1">
-    </div>
-
-    <div class="rrule-row" id="rrule-until-row" style="display: none;">
-      <label for="rrule-until">Until Date & Time:</label>
-      <input type="datetime-local" id="rrule-until">
-    </div>
-
-    <div class="rrule-row">
-      <label for="rrule-frequency">Every:</label>
-      <select id="rrule-frequency">
-        <option value="HOURLY">Hour</option>
-        <option value="DAILY">Day</option>
-        <option value="WEEKLY">Week</option>
-        <option value="MONTHLY">Month</option>
-        <option value="YEARLY">Year</option>
-      </select>
-      <input type="number" id="rrule-interval" value="1" min="1">
-    </div>
-	<div class="rrule-row" id="rrule-weekdays-row" style="display: none;">
-  <label>Repeat on</label>
-  <div class="weekday-wrapper">
-  <div class="weekday-checkboxes">
-    <label>M<input type="checkbox" value="MO"></label>
-    <label>T<input type="checkbox" value="TU"></label>
-    <label>W<input type="checkbox" value="WE"></label>
-    <label>T<input type="checkbox" value="TH"></label>
-    <label>F<input type="checkbox" value="FR"></label>
-    <label>S<input type="checkbox" value="SA"></label>
-    <label>S<input type="checkbox" value="SU"></label>
-  </div>
-  <label>Chhanege all tis to outlook form and add a weekly scheduler with times start finish</label>
-  </div>
-</div>
-    <div class="rrule-row">
-      <label for="rrule-start">Start Date & Time:</label>
-      <input type="datetime-local" id="rrule-start">
-    </div>
-
-    <div class="rrule-row">
-      <label for="rrule-end">End Date & Time:</label>
-      <input type="datetime-local" id="rrule-end" readonly style="opacity: 0.6;">
-    </div>
-
-    <div class="rrule-row">
-      <label for="rrule">Generated RRule:</label>
-      <input type="text" id="rrule" readonly>
+  <div id="extra-time-scroller" class="duration-scroller hidden" style="position: relative;">
+    <!-- single display span -->
+    <span id="extra-display" class="duration-display">
+      Before: 0 hr 0 min • After: 0 hr 0 min
+    </span>
+    <!-- one popup with two lines inside -->
+    <div id="extra-popup" class="duration-popup hidden">
+      <div class="time-line">
+        <label for="before-hours">Before:</label>
+        <select id="before-hours"></select>
+        <select id="before-minutes"></select>
+      </div>
+      <div class="time-line">
+        <label for="after-hours">After:</label>
+        <select id="after-hours"></select>
+        <select id="after-minutes"></select>
+      </div>
     </div>
   </div>
 </div>
+  <!-- 🔄 Recurrence Builder -->
 
+<!-- 🔄 Recurrence Builder (scroller popup) -->
+<div class="ics-rrule-toggle">
+  <label class="inline-checkbox">
+    <input type="checkbox" id="use-rrule"> 🔄 Enable Recurrence
+  </label>
+  <div id="rrule-english-scroller" class="scroller" style="margin-bottom:0.5em;">
+  <span id="rrule-english" style="color:#444; font-size:1.04em;">No recurrence set.</span>
+</div>
 
+  <div id="rrule-scroller" class="duration-scroller hidden" style="position: relative;">
+    <span id="rrule-display" class="duration-display">Configure Recurrence</span>
+    <div id="rrule-popup" class="duration-popup hidden" >
+      <!-- Recurrence settings -->
+      <fieldset class="form-section">
+        <legend>Recurrence pattern</legend>
+        <label for="rr-freq">Frequency:</label>
+        <select id="rr-freq">
+          <option value="DAILY">Daily</option>
+          <option value="WEEKLY">Weekly</option>
+          <option value="WEEKLY_ROSTER">Weekly Roster</option>
+          <option value="MONTHLY">Monthly</option>
+          <option value="YEARLY">Yearly</option>
+        </select>
+        <!-- DAILY -->
+        <div class="rr-panel hidden" data-panel="DAILY">
+          <label>Every <input type="number" id="rr-interval-daily" min="1" value="1"> day(s)</label>
+          <label class="inline-checkbox"><input type="checkbox" id="rr-weekdays-only"> Weekdays only</label>
+        </div>
+        <!-- WEEKLY -->
+        <div class="rr-panel hidden" data-panel="WEEKLY">
+          <label>Every <input type="number" id="rr-interval-weekly" min="1" value="1"> week(s) on:</label>
+          <div class="day-selectors">
+            <label><input type="checkbox" value="MO">M</label>
+            <label><input type="checkbox" value="TU">T</label>
+            <label><input type="checkbox" value="WE">W</label>
+            <label><input type="checkbox" value="TH">T</label>
+            <label><input type="checkbox" value="FR">F</label>
+            <label><input type="checkbox" value="SA">S</label>
+            <label><input type="checkbox" value="SU">S</label>
+          </div>
+        </div>
+        <!-- WEEKLY ROSTER -->
+        <div class="rr-panel hidden" data-panel="WEEKLY_ROSTER">
+  <p>Pick days &amp; times:</p>
+  <div class="weekly-roster">
+    <div>
+      <label><input type="checkbox" class="wr-day" data-day="MO"> Mon</label>
+      <label>Start: <input type="time" class="wr-start" data-day="MO" disabled></label>
+      <label>End:   <input type="time" class="wr-end"   data-day="MO" disabled></label>
+    </div>
+    <div>
+      <label><input type="checkbox" class="wr-day" data-day="TU"> Tue</label>
+      <label>Start: <input type="time" class="wr-start" data-day="TU" disabled></label>
+      <label>End:   <input type="time" class="wr-end"   data-day="TU" disabled></label>
+    </div>
+    <div>
+      <label><input type="checkbox" class="wr-day" data-day="WE"> Wed</label>
+      <label>Start: <input type="time" class="wr-start" data-day="WE" disabled></label>
+      <label>End:   <input type="time" class="wr-end"   data-day="WE" disabled></label>
+    </div>
+    <div>
+      <label><input type="checkbox" class="wr-day" data-day="TH"> Thu</label>
+      <label>Start: <input type="time" class="wr-start" data-day="TH" disabled></label>
+      <label>End:   <input type="time" class="wr-end"   data-day="TH" disabled></label>
+    </div>
+    <div>
+      <label><input type="checkbox" class="wr-day" data-day="FR"> Fri</label>
+      <label>Start: <input type="time" class="wr-start" data-day="FR" disabled></label>
+      <label>End:   <input type="time" class="wr-end"   data-day="FR" disabled></label>
+    </div>
+    <div>
+      <label><input type="checkbox" class="wr-day" data-day="SA"> Sat</label>
+      <label>Start: <input type="time" class="wr-start" data-day="SA" disabled></label>
+      <label>End:   <input type="time" class="wr-end"   data-day="SA" disabled></label>
+    </div>
+    <div>
+      <label><input type="checkbox" class="wr-day" data-day="SU"> Sun</label>
+      <label>Start: <input type="time" class="wr-start" data-day="SU" disabled></label>
+      <label>End:   <input type="time" class="wr-end"   data-day="SU" disabled></label>
+    </div>
+  </div>
+</div>
+        <!-- MONTHLY -->
+        <div class="rr-panel hidden" data-panel="MONTHLY">
+          <label><input type="radio" name="rr-monthly-mode" value="BYMONTHDAY" checked> Day <input type="number" id="rr-bymonthday" min="1" max="31" value="1"> of every <input type="number" id="rr-interval-monthly" min="1" value="1"> month(s)</label>
+          <label><input type="radio" name="rr-monthly-mode" value="BYDAY"> The <select id="rr-monthly-nth"><option>first</option><option>second</option><option>third</option><option>fourth</option><option>last</option></select> <select id="rr-monthly-weekday"><option>Mon</option><option>Tue</option><option>Wed</option><option>Thu</option><option>Fri</option><option>Sat</option><option>Sun</option></select> of every <input type="number" id="rr-interval-monthly2" min="1" value="1"> month(s)</label>
+        </div>
+        <!-- YEARLY -->
+        <div class="rr-panel hidden" data-panel="YEARLY">
+          <label><input type="radio" name="rr-yearly-mode" value="BYMONTH" checked> On <select id="rr-byyear-month"><option>January</option>...<option>December</option></select> <input type="number" id="rr-byyear-monthday" min="1" max="31" value="1"></label>
+          <label><input type="radio" name="rr-yearly-mode" value="BYDAY"> On the <select id="rr-yearly-nth"><option>first</option>...<option>last</option></select> <select id="rr-yearly-weekday"><option>Mon</option>...<option>Sun</option></select> of <select id="rr-yearly-month2"><option>Jan</option>...<option>Dec</option></select></label>
+        </div>
+        <!-- Range -->
+        <fieldset class="form-section">
+          <legend>Range</legend>
+         <div class="rrule-row">
+		<label for="rr-start-dt">Start:</label>
+		<input type="datetime-local" id="rr-start-dt">
+		</div>
+        <div class="rrule-row" style="flex-direction: column; gap: 0.7rem;">
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <label style="min-width: 80px; font-weight: bold;">
+        <input type="radio" name="rr-range" value="UNTIL" checked>
+        End by
+      </label>
+      <input type="date" id="rr-until-date" style="flex:1; min-width:160px;">
+    </div>
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <label style="min-width: 80px; font-weight: bold;">
+        <input type="radio" name="rr-range" value="COUNT">
+        After
+      </label>
+      <input type="number" id="rr-count" min="1" value="" style="flex:0 0 70px; min-width:70px; max-width:100px;" disabled>
+      <span style="margin-left:0.2em;">occurrences</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <label style="min-width: 80px; font-weight: bold;">
+        <input type="radio" name="rr-range" value="NEVER">
+        Never
+      </label>
+    </div>
+  </div>
+        </fieldset>
+		<button type="button" id="rrule-popup-close" style="margin-left:auto; font-size:1.1rem; background:#eee; color:#444; border-radius:6px; border:none; padding:0.4rem 0.8rem; cursor:pointer;" title="Close">CLOSE</button>
+      </fieldset>
+      <input type="hidden" id="rrule-export" name="rrule">
+      <div id="rrule-text" class="small-text"></div>
+    </div>
+  </div>
+</div>
 
 <div>
  <label class="inline-checkbox">
-    <input type="checkbox">
-    Show time as 
+    <input type="checkbox" id="toggle-showtimeas">
+    🚦Show time as 
   </label>
-
+<select id="showtimeas-select" name="showtimeas" style="display:none; min-width:165px; margin-left:1em;">
+    <option value="">— Not set —</option>
+    <option value="free">🟢 Free</option>
+    <option value="focus">🔵 Focused</option>
+    <option value="tentative">🟡 Tentative</option>
+    <option value="busy">🔴 Busy</option>
+    <option value="away">🟠 Away</option>
+    <option value="personal">💜 Personal</option>
+    <option value="hidden">🕵️ Private/Hidden</option>
+  </select>
 </div>
 <div>
- <label class="inline-checkbox">
-    <input type="checkbox">
-    Don`t allow concurrent events 
+  <label class="inline-checkbox">
+    <input type="checkbox" id="no-concurrent" name="no-concurrent" value="false">
+    ❌ Don’t allow concurrent events 
   </label>
-
 </div>
-<div>
- <label class="inline-checkbox">
-    <input type="checkbox">
-    Reminder 
+<div id="reminder-row" style="display:flex; align-items:center; gap:1em; flex-wrap:wrap;">
+  <label class="inline-checkbox" style="font-weight:600;">
+    <input type="checkbox" id="toggle-reminders">
+    <span style="margin-left:0.4em;">🔔 Reminder</span>
   </label>
-
+  <button type="button" id="add-reminder-btn"
+    title="Add reminder" style="display:none;">＋</button>
+  <div id="reminders-list"></div>
 </div>
+
+<!-- The popup for editing/adding -->
+<div id="reminder-popup-container" style="position:relative;">
+<div id="reminder-popup" class="duration-popup hidden" style="z-index:11000;">
+  <input type="text" id="reminder-label" placeholder="Label or note (optional)" style="margin-bottom:0.8em; width:95%; font-size:1em;">
+  <select id="reminder-value"></select>
+  <select id="reminder-unit">
+    <option value="minutes">Minutes before</option>
+    <option value="hours">Hours before</option>
+    <option value="days">Days before</option>
+    <option value="weeks">Weeks before</option>
+  </select>
+  <button type="button" id="save-reminder-btn" style="margin-left:1em;">+</button>
+  <button type="button" id="close-reminder-popup" style="margin-left:0.7em;">-</button>
+</div>
+</div>
+
 		
    </div>
   </fieldset>
   <fieldset class="form-section">
-    <legend class="inline-checkbox"><input type="checkbox" id="toggle-people">📝 People </legend>
-    <div id="people-wrapper" class="hidden">
-	<label>Required</label> <label>Optional</label>
-    <input type="text" />
-     Add +
-	 </div>
+    <legend class="inline-checkbox"><input type="checkbox" id="toggle-people">👥 People </legend>
+    <button id="open-contact-picker" style="display:none; margin-left:1em;">+ add</button>
+	<button id="new-contact-btn" style="display:none; margin-left:0.4em;">+ new</button>
+<!-- Where selected contacts will display -->
+<div id="selected-contacts-list" style="margin-top:0.7em;"></div>
+
+<!-- Contact Picker Modal (initially hidden) -->
+<div id="contact-picker-modal" style="display:none; position:fixed; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.15); z-index:99999; align-items:center; justify-content:center;">
+  <div style="background:#fff; border-radius:10px; min-width:320px; max-width:98vw; padding:1.2em 1.4em 1.4em 1.4em; box-shadow:0 5px 32px #8888; width:400px;">
+    <h3>Select people</h3>
+    <!-- SEARCH BAR -->
+    <div class="search-wrapper" style="margin-bottom:0.7em;">
+      <div class="contact-search">
+        <input type="text" id="contact-search-input" placeholder="Search contacts..." style="width:70%;">
+        <button id="contact-search-btn" style="margin-left:0.4em;"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </div>
+      <p id="contact-filter-label" class="filter-label" style="font-size:0.96em;">Showing all contacts</p>
+    </div>
+    <!-- RESULTS LIST -->
+    <div id="contact-picker-list" class="scrollable-results" style="max-height:260px; overflow:auto; border:1px solid #eee; border-radius:8px; background:#fafbfc;"></div>
+    <div style="text-align:right; margin-top:1em;">
+      <button type="button" id="close-contact-picker" style="margin-right:0.8em;">Cancel</button>
+      <button type="button" id="save-contact-picker">Add selected</button>
+    </div>
+  </div>
+</div>
+
   </fieldset> 
   
   
   <fieldset class="form-section">
-    <legend class="inline-checkbox"><input type="checkbox" id="toggle-shaze">📝 Share </legend>
+    <legend class="inline-checkbox"><input type="checkbox" id="toggle-shaze">⤴️ Share </legend>
     <div id="shaze-wrapper" class="hidden">
 	<label>Social</label> <label>Etc</label>
     <input type="text"/>
@@ -694,7 +1668,7 @@ fieldset,
        	
 	  <div class="card">
   <fieldset class="form-section">
-    <legend class="inline-checkbox"><input type="checkbox"id="toggle-attachments">📝 Attachments</legend>
+    <legend class="inline-checkbox"><input type="checkbox"id="toggle-attachments">🖇️ Attachments</legend>
     <div id="attachments-wrapper" class="hidden">
 	<label >Files +</label>
     <textarea ></textarea>
@@ -712,7 +1686,7 @@ fieldset,
 	  
  <div class="card">
   <fieldset class="form-section">
-    <legend class="inline-checkbox"><input type="checkbox"id="toggle-aiprompt">📝 AI PROMPTS</legend>
+    <legend class="inline-checkbox"><input type="checkbox"id="toggle-aiprompt">🤖 AI PROMPTS</legend>
     <div id="aiprompt-wrapper" class="hidden">
 	<label >Title </label>
     <textarea ></textarea>
@@ -807,6 +1781,151 @@ fieldset,
 <button onclick="window.location.href='hana.html'">Hana</button>
 <button onclick="window.location.href='settings.html'">Settings</button>
 </div>
+<!-- Contact Form Popup -->
+<div id="contact-form-popup" class="popup hidden">
+  <div class="popup-content">
+  <form id="contact-form">
+   <div class="form-header"> 
+	<h2>Add or Edit Contact</h2>
+	<button type="button"
+  class="close-button"
+  onclick="
+  document.getElementById('contact-form-popup').classList.add('hidden');
+  document.getElementById('contact-form').reset();
+  document.getElementById('category-fields-container').innerHTML = '';
+">
+  ×
+</button>
+ </div>
+
+    <div class="form-row">
+  <div class="form-group">
+    <label for="firstName">Name</label>
+    <input type="text" id="firstName" name="firstName" required />
+  </div>
+  <div class="form-group">
+    <label for="lastName">Surname</label>
+    <input type="text" id="lastName" name="lastName" required />
+  </div>
+</div>
+ <div class="form-row">
+  <div class="form-group">
+   <label>Birthday </label>
+   <input type="date" name="birthday">
+   </div>
+   <div class="form-group">
+    <label for="phone">Phone</label>
+    <input type="tel" id="phone" name="phone"  />
+  </div>
+   </div>
+   
+<div class="form-row">
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" />
+  </div>
+  
+</div>
+
+
+  <div class="form-group">
+  <label for="address">Address</label>
+  <input id="address" name="address" type="text" placeholder="Start typing address..." autocomplete="off" />
+</div>
+
+<!-- These will be auto-filled -->
+<input type="hidden" id="city" name="city" />
+<input type="hidden" id="postcode" name="postcode" />
+<input type="hidden" id="state" name="state" />
+<input type="hidden" id="country" name="country" />
+ 
+
+    <!-- Category Selection -->
+<div class="form-group">
+  <label>Category</label>
+  <div class="category-tags">
+    <label class="tag">
+      <input type="checkbox" name="category" value="ohana" />
+      <div class="category-label">
+        <span class="hawaiian">ʻOhana</span>
+        <span class="english">Family</span>
+      </div>
+    </label>
+    <label class="tag">
+      <input type="checkbox" name="category" value="hoaaloha" />
+      <div class="category-label">
+        <span class="hawaiian">Hoaaloha</span>
+        <span class="english">Friends</span>
+      </div>
+    </label>
+    <label class="tag">
+      <input type="checkbox" name="category" value="hana" />
+      <div class="category-label">
+        <span class="hawaiian">Hana</span>
+        <span class="english">Work</span>
+      </div>
+    </label>
+    <label class="tag">
+      <input type="checkbox" name="category" value="lawelawe" />
+      <div class="category-label">
+        <span class="hawaiian">Lawelawe</span>
+        <span class="english">Clients</span>
+      </div>
+    </label>
+    <label class="tag">
+      <input type="checkbox" name="category" value="kaiaulu" />
+      <div class="category-label">
+        <span class="hawaiian">Kaiaulu</span>
+        <span class="english">Community</span>
+      </div>
+    </label>
+    <label class="tag">
+      <input type="checkbox" name="category" value="hoola" />
+      <div class="category-label">
+        <span class="hawaiian">Hoʻōla</span>
+        <span class="english">Healers</span>
+      </div>
+    </label>
+    <label class="tag">
+      <input type="checkbox" name="category" value="kumu" />
+      <div class="category-label">
+        <span class="hawaiian">Kumu</span>
+        <span class="english">Teachers</span>
+      </div>
+    </label>
+    <label class="tag">
+      <input type="checkbox" name="category" value="eae" />
+      <div class="category-label">
+        <span class="hawaiian">ʻĒ Aʻe</span>
+        <span class="english">Other</span>
+      </div>
+    </label>
+  </div>
+</div>
+
+    <!-- Dynamic Category Fields -->
+    <div id="category-fields-container"></div>
+<div id="important-dates-section">
+  <div class="date-entry">
+    <div class="important-date-row">
+      <input type="text" name="dateLabel[]" placeholder="Label (e.g., Anniversary)">
+      <input type="date" name="dateValue[]">
+    </div>
+  </div>
+</div>
+<button type="button" onclick="addImportantDate()">+ Add Important Date</button>
+
+    <button type="button" onclick="saveContact()"id="save-contact-btn">Save Contact</button>
+  </form>
+</div>
+</div>
+<!-- END POPUP -->
+ <!-- Firebase CDN Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-init.js"></script>
+ 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const moreBtn  = document.getElementById('more-button-settings');
@@ -904,14 +2023,13 @@ fieldset,
       summaryField.value = pillarSelect.options[pillarSelect.selectedIndex].text + ' – ' + activity;
     });
 
-    notesField.addEventListener('input', () => {
-      descriptionField.value = notesField.value;
-    });
-
+ 
     function pad(n) {
       return n < 10 ? '0' + n : n;
     }
+</script>
 
+<script>
     function formatDateICS(dt) {
       const date = new Date(dt);
       return date.getUTCFullYear() +
@@ -959,30 +2077,31 @@ END:VCALENDAR`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+	 
+ 
     }
   </script>
-  
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBM98wzY41xWkUYP4v93sS6T_PCL-zmt2E&libraries=places"></script>  
 <script>
-  function initLocationAutocomplete() {
-    const input = document.getElementById("location");
-    if (!input) return;
-    const autocomplete = new google.maps.places.Autocomplete(input, {
-      types: ["geocode"]
-    });
+  // Only initialize autocomplete after the field is shown
+function initLocationAutocomplete() {
+  const input = document.getElementById("location");
+  if (!input || input.dataset.autocompleteLoaded) return;
+  input.dataset.autocompleteLoaded = "true";
 
-    // Optional: bias to user's location
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(position => {
-        const circle = new google.maps.Circle({
-          center: position.coords,
-          radius: position.coords.accuracy
-        });
-        autocomplete.setBounds(circle.getBounds());
-      });
-    }
+  if (window.google && google.maps && google.maps.places) {
+    new google.maps.places.Autocomplete(input, { types: ["geocode"] });
+  } else {
+    // Retry if script is slow to load
+    setTimeout(initLocationAutocomplete, 300);
   }
+}
 
-  window.addEventListener("load", initLocationAutocomplete);
+// When location is toggled ON, initialize autocomplete after field is visible
+document.getElementById('toggle-location').addEventListener('change', function() {
+  if (this.checked) setTimeout(initLocationAutocomplete, 200); // Wait for show
+});
+;
 </script>
 
 <script>
@@ -1040,22 +2159,31 @@ END:VCALENDAR`;
   });
 
  useDuration.addEventListener('change', () => {
-  durationPopup.classList.add('hidden');
   const show = useDuration.checked;
 
   if (show) {
+    // 1) lock the end-time
     updateEndTimeFromScroll();
     endInput.classList.add('readonly');
     endInput.readOnly = true;
     endInput.style.opacity = 0.6;
+
+    // 2) show the popup immediately
+    durationPopup.classList.remove('hidden');
   } else {
+    // 1) unlock the end-time
     endInput.classList.remove('readonly');
     endInput.readOnly = false;
     endInput.style.opacity = 1;
+
+    // 2) hide the popup
+    durationPopup.classList.add('hidden');
   }
 
+  // 3) show or hide the entire scroller wrapper
   durationDisplay.parentElement.classList.toggle('hidden', !show);
 });
+
 
   // Hide popup when clicking outside
   document.addEventListener('click', (e) => {
@@ -1064,123 +2192,7 @@ END:VCALENDAR`;
     }
   });
 </script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const useRRULE = document.getElementById('use-rrule');
-  const rruleBuilder = document.getElementById('rrule-builder');
-  const rruleMode = document.getElementById('rrule-mode');
-  const rruleCountRow = document.getElementById('rrule-count-row');
-  const rruleUntilRow = document.getElementById('rrule-until-row');
-  const rruleCount = document.getElementById('rrule-count');
-  const rruleUntil = document.getElementById('rrule-until');
-  const rruleInterval = document.getElementById('rrule-interval');
-  const rruleFrequency = document.getElementById('rrule-frequency');
-  const rruleStart = document.getElementById('rrule-start');
-  const rruleEnd = document.getElementById('rrule-end');
-  const rruleOutput = document.getElementById('rrule');
-  const dtstartInput = document.getElementById('dtstart');
-  const rruleWeekdayRow = document.getElementById('rrule-weekdays-row');
 
-  // Toggle recurrence section
-  useRRULE.addEventListener('change', () => {
-    const active = useRRULE.checked;
-    rruleBuilder.classList.toggle('hidden', !active);
-    if (active && dtstartInput.value) {
-      rruleStart.value = dtstartInput.value;
-    }
-    updateRRULE();
-  });
-
-  // Toggle count vs until
-  rruleMode.addEventListener('change', () => {
-    const isCount = rruleMode.value === 'count';
-    rruleCountRow.style.display = isCount ? 'flex' : 'none';
-    rruleUntilRow.style.display = !isCount ? 'flex' : 'none';
-    updateRRULE();
-  });
-
-  // Show weekdays only for DAILY
- rruleFrequency.addEventListener('change', () => {
-  const showDays = rruleFrequency.value === 'DAILY';
-  document.getElementById('rrule-weekdays-row').style.display = showDays ? 'flex' : 'none';
-  updateRRULE();
-});
-
-  // Update rule on change
-  [
-    rruleCount, rruleUntil, rruleInterval, rruleFrequency,
-    rruleStart, ...document.querySelectorAll('#rrule-weekdays-row input')
-  ].forEach(el => el.addEventListener('change', updateRRULE));
-
-  // Copy main start when changed
-  dtstartInput.addEventListener('change', () => {
-    if (useRRULE.checked) {
-      rruleStart.value = dtstartInput.value;
-      updateRRULE();
-    }
-  });
-
-  function updateRRULE() {
-    if (!useRRULE.checked) return;
-
-    const freq = rruleFrequency.value;
-    const interval = parseInt(rruleInterval.value) || 1;
-    const start = rruleStart.value;
-    const mode = rruleMode.value;
-    const parts = [`FREQ=${freq}`, `INTERVAL=${interval}`];
-
-    // BYDAY logic only for DAILY
-    if (freq === 'DAILY') {
-      const checkedDays = [...document.querySelectorAll('#rrule-weekdays-row input:checked')]
-        .map(cb => cb.value);
-      if (checkedDays.length > 0) {
-        parts.push(`BYDAY=${checkedDays.join(',')}`);
-      }
-    }
-
-    if (mode === 'count') {
-      const count = parseInt(rruleCount.value);
-      if (count > 0) parts.push(`COUNT=${count}`);
-
-      // Calculate end
-      const startDate = new Date(start);
-      let endDate = new Date(startDate.getTime());
-      switch (freq) {
-        case 'HOURLY': endDate.setHours(endDate.getHours() + interval * (count - 1)); break;
-        case 'DAILY': endDate.setDate(endDate.getDate() + interval * (count - 1)); break;
-        case 'WEEKLY': endDate.setDate(endDate.getDate() + 7 * interval * (count - 1)); break;
-        case 'MONTHLY': endDate.setMonth(endDate.getMonth() + interval * (count - 1)); break;
-        case 'YEARLY': endDate.setFullYear(endDate.getFullYear() + interval * (count - 1)); break;
-      }
-
-      const offset = endDate.getTimezoneOffset() * 60000;
-      const localEnd = new Date(endDate - offset).toISOString().slice(0, 16);
-      rruleEnd.readOnly = true;
-      rruleEnd.style.opacity = 0.6;
-      rruleEnd.value = localEnd;
-
-    } else {
-      const until = rruleUntil.value;
-      if (until) {
-        parts.push(`UNTIL=${until.replace(/[-:]/g, '').slice(0, 15)}Z`);
-        rruleEnd.readOnly = true;
-        rruleEnd.style.opacity = 0.6;
-        rruleEnd.value = until;
-      } else {
-        rruleEnd.value = '';
-      }
-    }
-
-
-    if (start) {
-      parts.unshift(`DTSTART=${start.replace(/[-:]/g, '').slice(0, 15)}Z`);
-    }
-
-    rruleOutput.value = parts.join(';');
-  }
-});
-
-</script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     // helper to wire up any toggle + wrapper pair
@@ -1195,21 +2207,952 @@ document.addEventListener('DOMContentLoaded', () => {
     // wire all sections
     wireToggle('toggle-location',       'location-wrapper');
     wireToggle('toggle-extra-settings', 'extra-settings-wrapper');
-    wireToggle('toggle-people',         'people-wrapper');
+    
     wireToggle('toggle-shaze',          'shaze-wrapper');
     wireToggle('toggle-details',        'details-wrapper');
     wireToggle('toggle-attachments',    'attachments-wrapper');
 	wireToggle('toggle-details',    'details-wrapper');
 	wireToggle('toggle-aiprompt',    'aiprompt-wrapper');
+ // grab references
+const allDayToggle = document.getElementById('toggle-all-day');
+const dtstartInput  = document.getElementById('dtstart');
+const endInput      = document.getElementById('dtend');
+const useDuration   = document.getElementById('use-duration');
+const useRRule      = document.getElementById('use-rrule');
+  const xtra = document.getElementById('xtra');
+  
+allDayToggle.addEventListener('change', () => {
+  const isAllDay = allDayToggle.checked;
+
+  // disable duration & recurrence
+  useDuration.checked  = false;
+  useDuration.disabled = isAllDay;
+  xtra.checked     = false;
+  xtra.disabled    = isAllDay;
+
+  if (isAllDay) {
+    // figure out which date to use (either what's already in the input, or today)
+    let date = dtstartInput.value
+      ? dtstartInput.value.split('T')[0]
+      : new Date().toISOString().slice(0,10);
+
+    // set the times
+    dtstartInput.value = `${date}T00:00`;
+    // if your browser/input allows “24:00” you can use that, otherwise use 23:59
+    endInput.value     = `${date}T23:59`;
+  }
+});
+
+// **Right here**, paste the population loop:  
+ // grab refs
+const useExtra      = document.getElementById('xtra');
+const extraScroller = document.getElementById('extra-time-scroller');
+const extraDisplay  = document.getElementById('extra-display');
+const extraPopup    = document.getElementById('extra-popup');
+const beforeH       = document.getElementById('before-hours');
+const beforeM       = document.getElementById('before-minutes');
+const afterH        = document.getElementById('after-hours');
+const afterM        = document.getElementById('after-minutes');
+
+// 1) Populate all four selects
+const minuteOpts = [0,5,10,15,30,45,59];
+for (let h = 0; h <= 24; h++) {
+  beforeH.add(new Option(`${h} hr`, h));
+  afterH .add(new Option(`${h} hr`, h));
+}
+minuteOpts.forEach(m => {
+  beforeM.add(new Option(`${m} min`, m));
+  afterM .add(new Option(`${m} min`, m));
+});
+
+// 2) Show/hide the whole scroller & auto-open the popup
+useExtra.addEventListener('change', () => {
+  const on = useExtra.checked;
+  extraScroller.classList.toggle('hidden', !on);
+  if (on) {
+    extraPopup.classList.remove('hidden');
+    updateExtraDisplay();
+  } else {
+    extraPopup.classList.add('hidden');
+  }
+});
+
+// 3) Toggle popup on clicking the display span
+extraDisplay.addEventListener('click', e => {
+  e.stopPropagation();
+  if (!extraScroller.classList.contains('hidden')) {
+    extraPopup.classList.toggle('hidden');
+  }
+});
+
+// 4) Clicking outside closes it
+document.addEventListener('click', e => {
+  if (!extraScroller.contains(e.target)) {
+    extraPopup.classList.add('hidden');
+  }
+});
+
+// 5) Update the text whenever any select changes
+function updateExtraDisplay() {
+  const bh = beforeH.value, bm = beforeM.value;
+  const ah = afterH .value, am = afterM .value;
+  extraDisplay.textContent =
+    `Before: ${bh} hr ${bm} min • After: ${ah} hr ${am} min`;
+}
+[beforeH, beforeM, afterH, afterM].forEach(el =>
+  el.addEventListener('change', updateExtraDisplay)
+);
+ 
+ 
+ // —— Timezone picker ——  
+const tzToggle   = document.getElementById('toggle-timezone');
+const tzScroller = document.getElementById('timezone-scroller');
+const tzDisplay  = document.getElementById('timezone-display');
+const tzPopup    = document.getElementById('timezone-popup');
+const tzSelect   = document.getElementById('timezone-select');
+const tzCountryMap = {
+  '-12:00': 'Baker Island',
+  '-11:00': 'American Samoa',
+  '-10:00': 'Hawaii',
+  '-09:30': 'Marquesas Islands',
+  '-09:00': 'Alaska',
+  '-08:00': 'Pacific US, Canada',
+  '-07:00': 'US Mountain',
+  '-06:00': 'Central US, Mexico',
+  '-05:00': 'Eastern US, Colombia',
+  '-04:00': 'Atlantic Canada, Venezuela',
+  '-03:30': 'Newfoundland',
+  '-03:00': 'Argentina, Brazil',
+  '-02:00': 'South Georgia',
+  '-01:00': 'Azores',
+  '+00:00': 'UK, Portugal, Morocco',
+  '+01:00': 'Central Europe, Nigeria',
+  '+02:00': 'South Africa, Greece',
+  '+03:00': 'Moscow, Saudi Arabia',
+  '+03:30': 'Iran',
+  '+04:00': 'UAE, Oman',
+  '+04:30': 'Afghanistan',
+  '+05:00': 'Pakistan, Uzbekistan',
+  '+05:30': 'India, Sri Lanka',
+  '+05:45': 'Nepal',
+  '+06:00': 'Bangladesh, Bhutan',
+  '+06:30': 'Cocos Islands, Myanmar',
+  '+07:00': 'Thailand, Vietnam',
+  '+08:00': 'China, Western Australia',
+  '+08:45': 'SE Western Australia',
+  '+09:00': 'Japan, Korea',
+  '+09:30': 'Central Australia',
+  '+10:00': 'Eastern Australia, Papua New Guinea',
+  '+10:30': 'Lord Howe Island',
+  '+11:00': 'Solomon Islands, Vanuatu',
+  '+12:00': 'New Zealand, Fiji',
+  '+12:45': 'Chatham Islands',
+  '+13:00': 'Tonga, Phoenix Islands',
+  '+14:00': 'Line Islands'
+};
+
+// 1) Populate UTC offsets from –12 to +14
+for (let offset = -12; offset <= 14; offset++) {
+  // handle :30 and :45 half-hour timezones
+  let subOffsets = [':00'];
+  if ([ -9, -3, -2, -1, 3, 4, 5, 5, 5, 6, 8, 9, 9, 10, 12 ].includes(offset)) subOffsets.push(':30');
+  if ([ 5, 8, 12 ].includes(offset)) subOffsets.push(':45');
+  for (let sub of subOffsets) {
+    // avoid invalid combos
+    if (offset === -12 && sub !== ':00') continue;
+    if (offset === 14 && sub !== ':00') continue;
+    const sign = offset >= 0 ? '+' : '-';
+    const absH = String(Math.abs(offset)).padStart(2, '0');
+    const key = `${sign}${absH}${sub}`;
+    const label = `UTC${sign}${absH}${sub}`;
+    const region = tzCountryMap[key] || '';
+    const display = region ? `${label} – ${region}` : label;
+    const opt = document.createElement('option');
+    opt.value = key;
+    opt.textContent = display;
+    tzSelect.appendChild(opt);
+  }
+}
+
+// 2) Toggle the scroller & auto-open popup when checked
+tzToggle.addEventListener('change', () => {
+  const on = tzToggle.checked;
+  tzScroller.classList.toggle('hidden', !on);
+  if (on) {
+    // initialize display & open popup
+    tzDisplay.textContent = tzSelect.selectedOptions[0].textContent;
+    tzPopup.classList.remove('hidden');
+  } else {
+    tzPopup.classList.add('hidden');
+  }
+});
+
+// 3) Clicking the display toggles the popup
+tzDisplay.addEventListener('click', e => {
+  e.stopPropagation();
+  if (tzToggle.checked) tzPopup.classList.toggle('hidden');
+});
+
+// 4) Selecting a new offset updates display & closes popup
+tzSelect.addEventListener('change', () => {
+  tzDisplay.textContent = tzSelect.selectedOptions[0].textContent;
+  tzPopup.classList.add('hidden');
+});
+
+// 5) Clicking anywhere else outside closes the popup
+document.addEventListener('click', e => {
+  if (!tzScroller.contains(e.target)) {
+    tzPopup.classList.add('hidden');
+  }
+});
+ // 5) Showtime toggle
+ document.getElementById('toggle-showtimeas').addEventListener('change', function() {
+  document.getElementById('showtimeas-select').style.display = this.checked ? '' : 'none';
+});
+ 
+ const showtimeasSelect = document.getElementById('showtimeas-select');
+const noConcurrent     = document.getElementById('no-concurrent');
+
+// Rule: If "Busy", check (and lock) the concurrent box; else, uncheck and unlock
+showtimeasSelect.addEventListener('change', function() {
+  if (this.value === 'busy') {
+    noConcurrent.checked = true;
+    noConcurrent.disabled = true; // Lock if you want
+  } else {
+    noConcurrent.checked = false;
+    noConcurrent.disabled = false;
+  }
+});
+ 
+function syncNoConcurrentValue() {
+  noConcurrent.value = noConcurrent.checked ? "true" : "false";
+}
+
+// Always update value on change
+noConcurrent.addEventListener('change', syncNoConcurrentValue);
+// ...and once on load
+syncNoConcurrentValue();
+ 
+ 
+// --- Reminder Logic: Multiple reminders, each with label ---
+
+const toggleReminders = document.getElementById('toggle-reminders');
+const addReminderBtn  = document.getElementById('add-reminder-btn');
+const remindersList   = document.getElementById('reminders-list');
+const reminderPopup   = document.getElementById('reminder-popup');
+const reminderValue   = document.getElementById('reminder-value');
+const reminderUnit    = document.getElementById('reminder-unit');
+const reminderLabel   = document.getElementById('reminder-label');
+const saveReminderBtn = document.getElementById('save-reminder-btn');
+const closeReminderPopup = document.getElementById('close-reminder-popup');
+
+let reminders = [];
+let editingIndex = null;
+
+// Fill value select (1–60)
+reminderValue.innerHTML = '';
+for (let i = 1; i <= 60; i++) {
+  const opt = document.createElement('option');
+  opt.value = i;
+  opt.textContent = i;
+  reminderValue.appendChild(opt);
+}
+
+// Show/hide UI
+function updateReminderUI() {
+  const on = toggleReminders.checked;
+  addReminderBtn.style.display = on ? '' : 'none';
+  remindersList.style.display  = on ? '' : 'none';
+  if (!on) reminderPopup.classList.add('hidden');
+  renderReminders();
+}
+
+// Render list or "Set reminder..."
+function renderReminders() {
+  remindersList.innerHTML = '';
+  if (reminders.length === 0) {
+   remindersList.innerHTML = `
+  <div id="set-reminder-scroller" class="reminder-scroller-row">
+    Set reminder…
+  </div>
+`;
+    document.getElementById('set-reminder-scroller').onclick = () => {
+      editingIndex = null;
+      reminderValue.value = "10";
+      reminderUnit.value = "minutes";
+      reminderLabel.value = "";
+      reminderPopup.classList.remove('hidden');
+    };
+    return;
+  }
+  reminders.forEach((rem, idx) => {
+    let text = '';
+    switch (rem.unit) {
+      case 'minutes': text = `${rem.value} min before`; break;
+      case 'hours':   text = `${rem.value} hr before`; break;
+      case 'days':    text = `${rem.value} day${rem.value>1?'s':''} before`; break;
+      case 'weeks':   text = `${rem.value} week${rem.value>1?'s':''} before`; break;
+    }
+    let labelText = rem.label ? ` <span style="color:#999;">– ${rem.label}</span>` : "";
+    remindersList.innerHTML += `
+      <div style="margin-bottom:0.5em; display:flex; align-items:center; gap:0.7em; background:#f7f7fa; border-radius:6px; padding:0.32em 1em;">
+        <span>${text}${labelText}</span>
+        <button type="button" data-idx="${idx}" class="edit-reminder-btn" style="font-size:1em;">✏️</button>
+        <button type="button" data-idx="${idx}" class="remove-reminder-btn" style="font-size:1em; color:#d33;">🗑️</button>
+      </div>
+    `;
   });
+}
+
+// Toggle
+toggleReminders.addEventListener('change', updateReminderUI);
+
+// + button adds new
+addReminderBtn.addEventListener('click', () => {
+  editingIndex = null;
+  reminderValue.value = "10";
+  reminderUnit.value = "minutes";
+  reminderLabel.value = "";
+  reminderPopup.classList.remove('hidden');
+});
+
+// Save
+saveReminderBtn.addEventListener('click', () => {
+  const newRem = {
+    value: reminderValue.value,
+    unit: reminderUnit.value,
+    label: reminderLabel.value.trim()
+  };
+  if (editingIndex !== null) {
+    reminders[editingIndex] = newRem;
+  } else {
+    reminders.push(newRem);
+  }
+  updateReminderUI();
+  reminderPopup.classList.add('hidden');
+  editingIndex = null;
+});
+
+// Edit/remove
+remindersList.addEventListener('click', function(e) {
+  if (e.target.classList.contains('edit-reminder-btn')) {
+    editingIndex = +e.target.dataset.idx;
+    const r = reminders[editingIndex];
+    reminderValue.value = r.value;
+    reminderUnit.value = r.unit;
+    reminderLabel.value = r.label || "";
+    reminderPopup.classList.remove('hidden');
+  }
+  if (e.target.classList.contains('remove-reminder-btn')) {
+    reminders.splice(+e.target.dataset.idx, 1);
+    updateReminderUI();
+  }
+});
+
+// Cancel
+closeReminderPopup.addEventListener('click', () => {
+  reminderPopup.classList.add('hidden');
+  editingIndex = null;
+});
+
+// Hide popup if click outside
+document.addEventListener('mousedown', e => {
+  if (!reminderPopup.contains(e.target) && !addReminderBtn.contains(e.target)) {
+    reminderPopup.classList.add('hidden');
+    editingIndex = null;
+  }
+});
+
+window.addEventListener('DOMContentLoaded', updateReminderUI);
+
+// For export: use reminders array!
+window.getReminders = () => reminders;
+
+
+// contact 
+// ---- Global Data ----
+let userContacts = [];
+let allContacts = [];
+let selectedContacts = [];
+let pickerSearch = "";
+
+const categoryColorMap = {
+  ohana: "#f4c542",
+  hoaaloha: "#51b3a2",
+  hana: "#3b82f6",
+  lawelawe: "#9b59b6",
+  kaiaulu: "#e67e22",
+  hoola: "#44b78b",
+  kumu: "#d35400",
+  eae: "#7f8c8d"
+};
+
+// ---- Helper Functions ----
+function getInitials(name) {
+  const parts = name.trim().split(" ");
+  return parts.length > 1
+    ? (parts[0][0] + parts[1][0]).toUpperCase()
+    : (parts[0] ? parts[0][0].toUpperCase() : "");
+}
+function getPieGradient(colors) {
+  if (!Array.isArray(colors) || colors.length === 0) return "#ccc";
+  const uniqueColors = [...new Set(colors)].filter(Boolean);
+  if (uniqueColors.length === 1) return uniqueColors[0];
+  const angleStep = 360 / uniqueColors.length;
+  let gradient = "conic-gradient(";
+  uniqueColors.forEach((color, i) => {
+    const start = i * angleStep;
+    const end = (i + 1) * angleStep;
+    gradient += `${color} ${start}deg ${end}deg${i < uniqueColors.length - 1 ? "," : ""}`;
+  });
+  gradient += ")";
+  return gradient;
+}
+
+// ---- Firebase Loading ----
+window.addEventListener('DOMContentLoaded', () => {
+  firebase.auth().onAuthStateChanged(user => {
+    if (user) {
+      loadContactsFromFirebase(user.uid);
+    }
+  });
+});
+function loadContactsFromFirebase(uid) {
+  const db = firebase.firestore();
+  db.collection('users').doc(uid).collection('contacts').orderBy('firstName').get()
+    .then(snapshot => {
+      userContacts = [];
+      allContacts = [];
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const contact = {
+          id: doc.id,
+          name: `${data.firstName || ""} ${data.lastName || ""}`.trim(),
+          ...data
+        };
+        userContacts.push(contact);
+        allContacts.push(contact);
+      });
+      if (typeof renderPickerList === "function") renderPickerList();
+      if (typeof renderFilteredContacts === "function") renderFilteredContacts('all');
+    })
+    .catch(err => {
+      console.error("Error fetching contacts:", err);
+    });
+}
+
+// ---- Contact Picker Elements ----
+const togglePeople        = document.getElementById('toggle-people');
+const openPickerBtn       = document.getElementById('open-contact-picker');
+const selectedContactsDiv = document.getElementById('selected-contacts-list');
+const pickerModal         = document.getElementById('contact-picker-modal');
+const pickerList          = document.getElementById('contact-picker-list');
+const pickerClose         = document.getElementById('close-contact-picker');
+const pickerSave          = document.getElementById('save-contact-picker');
+const pickerSearchInput   = document.getElementById('contact-search-input');
+const pickerSearchBtn     = document.getElementById('contact-search-btn');
+const pickerFilterLabel   = document.getElementById('contact-filter-label');
+
+// ---- Picker Modal Show/Hide ----
+if (togglePeople) {
+  togglePeople.addEventListener('change', function() {
+    const show = this.checked ? '' : 'none';
+    if (openPickerBtn) openPickerBtn.style.display = show;
+    if (document.getElementById('new-contact-btn')) document.getElementById('new-contact-btn').style.display = show;
+    if (selectedContactsDiv) selectedContactsDiv.style.display = show;
+    if (!this.checked) {
+      selectedContacts = [];
+      renderSelectedContacts();
+    }
+  });
+}
+
+if (document.getElementById('new-contact-btn')) {
+  document.getElementById('new-contact-btn').addEventListener('click', function() {
+    showContactFormPopup();
+  });
+}
+
+if (openPickerBtn) {
+  openPickerBtn.addEventListener('click', () => {
+    pickerModal.style.display = 'flex';
+    pickerSearchInput.value = "";
+    pickerSearch = "";
+    renderPickerList();
+  });
+}
+
+if (pickerClose) {
+  pickerClose.addEventListener('click', () => {
+    pickerModal.style.display = 'none';
+  });
+}
+
+// ---- Picker Search ----
+if (pickerSearchInput) {
+  pickerSearchInput.addEventListener('input', function() {
+    pickerSearch = this.value.trim().toLowerCase();
+    renderPickerList();
+  });
+}
+if (pickerSearchBtn) {
+  pickerSearchBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    pickerSearch = pickerSearchInput.value.trim().toLowerCase();
+    renderPickerList();
+  });
+}
+
+// ---- Picker List Render ----
+function renderPickerList() {
+  if (!pickerList) return;
+  let filtered = userContacts.filter(c => 
+    (!pickerSearch || c.name.toLowerCase().includes(pickerSearch)) &&
+    !selectedContacts.some(sc => sc.id === c.id)
+  );
+  if (pickerFilterLabel)
+    pickerFilterLabel.textContent = filtered.length
+      ? `Showing ${filtered.length} contact${filtered.length > 1 ? 's' : ''}`
+      : "No contacts found";
+  pickerList.innerHTML = filtered.map(c => `
+    <div class="contact-card" style="display:flex;align-items:center;padding:0.65em 1em;border-bottom:1px solid #f3f3f3;cursor:pointer;">
+      <input type="checkbox" value="${c.id}" style="margin-right:1em;">
+      <div class="contact-initials" style="width:36px;height:36px;border-radius:50%;background:#d2e4f5;color:#175a96;font-weight:700;display:flex;align-items:center;justify-content:center;margin-right:1em;">${getInitials(c.name)}</div>
+      <div class="contact-info" style="flex:1 1 0;">
+        <div class="contact-name" style="font-size:1.07em;font-weight:600;">${c.name}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ---- Picker Save ----
+if (pickerSave) {
+  pickerSave.addEventListener('click', () => {
+    const checked = pickerList.querySelectorAll('input[type="checkbox"]:checked');
+    checked.forEach(cb => {
+      const contact = userContacts.find(c => c.id == cb.value);
+      if (contact && !selectedContacts.some(sc => sc.id === contact.id)) {
+        selectedContacts.push({ ...contact, required: false });
+      }
+    });
+    renderSelectedContacts();
+    pickerModal.style.display = 'none';
+  });
+}
+
+// ---- Render Selected Contacts Pills ----
+function renderSelectedContacts() {
+  if (!selectedContactsDiv) return;
+  selectedContactsDiv.innerHTML = selectedContacts.map((c, i) => `
+    <div style="display:flex; align-items:center; margin-bottom:0.3em; background:#f7f9fb; border-radius:6px; padding:0.5em 1em; gap:1em;">
+      <div class="contact-initials" style="width:34px;height:34px;border-radius:50%;background:#d2e4f5;color:#175a96;font-weight:700;display:flex;align-items:center;justify-content:center;margin-right:0.8em;">${getInitials(c.name)}</div>
+      <span style="font-size:1.1em;">${c.name}</span>
+      <label style="font-size:0.93em;">
+        <input type="checkbox" ${c.required ? 'checked' : ''} data-required="${i}" style="margin-right:0.4em;">
+        required
+      </label>
+      <button type="button" data-remove="${i}" style="margin-left:0.8em; background:#eee; color:#d33; border:none; border-radius:4px; font-size:1.05em; cursor:pointer; padding:0.18em 0.75em;">✖</button>
+    </div>
+  `).join('');
+}
+
+// ---- Remove or update required status ----
+if (selectedContactsDiv) {
+  selectedContactsDiv.addEventListener('click', function(e) {
+    if (e.target.matches('button[data-remove]')) {
+      const idx = +e.target.dataset.remove;
+      selectedContacts.splice(idx, 1);
+      renderSelectedContacts();
+    }
+  });
+  selectedContactsDiv.addEventListener('change', function(e) {
+    if (e.target.type === "checkbox" && e.target.hasAttribute('data-required')) {
+      const idx = +e.target.getAttribute('data-required');
+      selectedContacts[idx].required = e.target.checked;
+    }
+  });
+}
+
+// ---- Exportable people array ----
+window.getPeople = () => selectedContacts;
+
+// ---- Popup Show/Hide Helpers ----
+function showContactFormPopup() {
+  document.getElementById('contact-form-popup').classList.remove('hidden');
+}
+function hideContactFormPopup() {
+  document.getElementById('contact-form-popup').classList.add('hidden');
+  document.getElementById('contact-form').reset();
+  document.getElementById('category-fields-container').innerHTML = '';
+}
+
+function addImportantDate() {
+  const container = document.getElementById("important-dates-section");
+
+  const entry = document.createElement("div");
+  entry.className = "date-entry";
+
+  entry.innerHTML = `
+    <div class="important-date-row">
+      <input type="text" name="dateLabel[]" placeholder="Label (e.g., Anniversary)">
+      <input type="date" name="dateValue[]">
+      <button type="button" class="remove-date" title="Remove" onclick="this.closest('.date-entry').remove()">
+        <i class="fa-solid fa-trash"></i>
+      </button>
+    </div>
+  `;
+
+  container.appendChild(entry);
+}
+window.addImportantDate = addImportantDate;
+// ---- End Script ----
+
+
+ });
+ 
+
+  
 </script>
 
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const useR = id => document.getElementById(id);
+  const scroller = useR('rrule-scroller');
+  const popup = useR('rrule-popup');
+  const freqSelect = useR('rr-freq');
+  const rruleDisplay = useR('rrule-display');
+  const useRrule = useR('use-rrule');
 
-  <!-- Firebase CDN Scripts -->
-  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
-  <script src="firebase-init.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.9.0/suncalc.min.js"></script>
-  </body>
+  // Function to show/hide panels clearly
+  function showPanel(freq) {
+    document.querySelectorAll('.rr-panel').forEach(panel => {
+      panel.classList.toggle('hidden', panel.dataset.panel !== freq);
+    });
+  }
+
+  // Enable recurrence checkbox toggles the recurrence popup
+  useRrule.addEventListener('change', () => {
+    const checked = useRrule.checked;
+    scroller.classList.toggle('hidden', !checked);
+popup.classList.add('hidden'); // Always close popup when toggling
+if (checked) {
+  showPanel(freqSelect.value);
+  buildRule();
+}
+  });
+function toggleEnglishSummary() {
+  var enabled = document.getElementById('use-rrule').checked;
+  document.getElementById('rrule-english-scroller').style.display = enabled ? '' : 'none';
+}
+
+// When recurrence checkbox changes, show/hide the summary
+document.getElementById('use-rrule').addEventListener('change', toggleEnglishSummary);
+
+// Run once on load to set the correct state
+toggleEnglishSummary();
+  // Show popup explicitly when clicking recurrence display
+  rruleDisplay.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (!scroller.classList.contains('hidden')) {
+      popup.classList.toggle('hidden');
+      if (!popup.classList.contains('hidden')) {
+        showPanel(freqSelect.value);
+      }
+    }
+  });
+
+  // Correct close-when-click-outside logic
+document.addEventListener('click', function (e) {
+  const popup = document.getElementById('rrule-popup');
+  const display = document.getElementById('rrule-display');
+    const isPopupOpen = popup && !popup.classList.contains('hidden');
+  if (isPopupOpen) {
+    // If the click is not inside the popup, and not the display span, close it.
+    if (!popup.contains(e.target) && !display.contains(e.target)) {
+      popup.classList.add('hidden');
+    }
+  }
+});
+
+  // Frequency selection changes panel visibility
+  freqSelect.addEventListener('change', () => {
+    showPanel(freqSelect.value);
+    buildRule();
+  });
+
+  // Ensure all recurrence inputs trigger rebuild
+  document.querySelectorAll('.rr-panel input, .rr-panel select').forEach(input => {
+    input.addEventListener('change', buildRule);
+  });
+
+  function buildRule() { let parts = [];
+    if (!useRrule.checked) return;
+
+    const dtstart = window.getRecurrenceStartICS();
+
+    const freq = freqSelect.value;
+    parts.push(`FREQ=${freq}`);
+    const iv = +useR(`rr-interval-${freq.toLowerCase()}`)?.value || 1;
+    parts.push(`INTERVAL=${iv}`);
+
+    if (freq === 'DAILY' && useR('rr-weekdays-only').checked) {
+      parts.push('BYDAY=MO,TU,WE,TH,FR');
+    }
+    if (freq === 'WEEKLY') {
+      const days = [...document.querySelectorAll('.day-selectors input:checked')].map(cb => cb.value);
+      if (days.length) parts.push('BYDAY=' + days.join(','));
+    }
+    if (freq === 'WEEKLY_ROSTER') {
+      const days = [...document.querySelectorAll('.wr-day:checked')].map(cb => cb.value);
+      if (days.length) parts.push('BYDAY=' + days.join(','));
+    }
+    if (freq === 'MONTHLY') {
+      if (document.querySelector('input[name="rr-monthly-mode"]:checked').value === 'BYMONTHDAY') {
+        parts.push('BYMONTHDAY=' + useR('rr-bymonthday').value);
+      } else {
+        const nth = useR('rr-monthly-nth').value;
+        const wd = useR('rr-monthly-weekday').value.slice(0,2).toUpperCase();
+        parts.push(`BYDAY=${nth[0].toUpperCase() + nth.slice(1,3).toUpperCase()}${wd}`);
+      }
+    }
+    if (freq === 'YEARLY') {
+      if (document.querySelector('input[name="rr-yearly-mode"]:checked').value === 'BYMONTH') {
+        const m = useR('rr-byyear-month').selectedIndex + 1;
+        parts.push(`BYMONTH=${m}`, `BYMONTHDAY=${useR('rr-byyear-monthday').value}`);
+      } else {
+        const nth = useR('rr-yearly-nth').value;
+        const wd = useR('rr-yearly-weekday').value.slice(0,2).toUpperCase();
+        const m = useR('rr-yearly-month2').selectedIndex + 1;
+        parts.push(`BYDAY=${nth[0].toUpperCase() + nth.slice(1,3).toUpperCase()}${wd}`, `BYMONTH=${m}`);
+      }
+    }
+
+    const range = document.querySelector('input[name="rr-range"]:checked').value;
+    if (range === 'COUNT') {
+      parts.push('COUNT=' + useR('rr-count').value);
+    } else if (range === 'UNTIL') {
+      parts.push('UNTIL=' + useR('rr-until-date').value.replace(/-/g,'').replace(/:/g,'') + 'T000000Z');
+    }
+
+    useR('rrule-export').value = parts.join(';');
+    useR('rrule-text').textContent = parts.filter(p => !p.startsWith('DTSTART')).join('; ').replace(/([A-Z]+=)/g, '$1 ');
+  describeRRule();
+  }
+  const rrulePopupClose = document.getElementById('rrule-popup-close');
+if (rrulePopupClose) {
+  rrulePopupClose.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation(); // This line is key!
+    document.getElementById('rrule-popup').classList.add('hidden');
+  });
+}
+// Set rr-start-dt to now if empty
+  const rrStart = document.getElementById('rr-start-dt');
+  if (rrStart && !rrStart.value) {
+    const now = new Date();
+    const pad = n => n < 10 ? '0'+n : n;
+    // Get local date and time, no seconds
+    const localISO = now.getFullYear() + '-' +
+      pad(now.getMonth()+1) + '-' +
+      pad(now.getDate()) + 'T' +
+      pad(now.getHours()) + ':' +
+      pad(now.getMinutes());
+    rrStart.value = localISO;
+  }
+
+  // Helper: get RRULE DTSTART in ICS format (YYYYMMDDTHHMMSS)
+  window.getRecurrenceStartICS = function() {
+    if (!rrStart) return '';
+    const val = rrStart.value; // "2024-06-16T19:20"
+    if (!val) return '';
+    // Remove "-" and ":" for ICS
+    return val.replace(/[-:]/g, '') + '00';
+  };
+  // === Recurrence Range radio logic ===
+  const rangeRadios = document.querySelectorAll('input[name="rr-range"]');
+  const untilInput  = document.getElementById('rr-until-date');
+  const countInput  = document.getElementById('rr-count');
+
+  function updateRangeInputs() {
+    const selected = document.querySelector('input[name="rr-range"]:checked').value;
+    untilInput.disabled = (selected !== 'UNTIL');
+    countInput.disabled = (selected !== 'COUNT');
+  }
+  rangeRadios.forEach(r => r.addEventListener('change', updateRangeInputs));
+  updateRangeInputs();
+  
+  // Enable/disable time inputs for checked days in Weekly Roster
+  document.querySelectorAll('.weekly-roster .wr-day').forEach(function(dayCheckbox) {
+    dayCheckbox.addEventListener('change', function() {
+      const day = this.dataset.day;
+      const startInput = document.querySelector('.wr-start[data-day="' + day + '"]');
+      const endInput   = document.querySelector('.wr-end[data-day="' + day + '"]');
+      const enabled = this.checked;
+      if (startInput) startInput.disabled = !enabled;
+      if (endInput)   endInput.disabled   = !enabled;
+    });
+    // Initialize on load
+    dayCheckbox.dispatchEvent(new Event('change'));
+  });
+  
+  document.querySelectorAll('input[name="rr-range"]').forEach(radio =>
+  radio.addEventListener('change', buildRule)
+);
+const untilDate = document.getElementById('rr-until-date');
+if (untilDate) untilDate.addEventListener('change', buildRule);
+if (countInput) countInput.addEventListener('input', buildRule);
+
+
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const useRrule     = document.getElementById('use-rrule');
+  const scroller     = document.getElementById('rrule-scroller');
+  const popup        = document.getElementById('rrule-popup');
+  const rruleDisplay = document.getElementById('rrule-display');
+  const closeBtn     = document.getElementById('rrule-popup-close');
+
+  // Step 1: Show/hide the recurrence controls when checkbox toggled
+  if (useRrule) {
+  useRrule.addEventListener('change', function() {
+    if (useRrule.checked) {
+      scroller.classList.remove('hidden');
+      popup.classList.remove('hidden');   // <--- this line is new
+    } else {
+      scroller.classList.add('hidden');
+      popup.classList.add('hidden');
+    }
+  });
+}
+
+  // Step 2: Show the popup when you click "Configure Recurrence"
+  if (rruleDisplay) {
+    rruleDisplay.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (scroller && !scroller.classList.contains('hidden')) {
+        popup.classList.remove('hidden');
+      }
+    });
+  }
+
+  // Step 3: Hide the popup when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!popup.classList.contains('hidden')) {
+      if (!popup.contains(e.target) && !rruleDisplay.contains(e.target)) {
+        popup.classList.add('hidden');
+      }
+    }
+  });
+
+  // Step 4: Hide the popup when clicking the close button
+  if (closeBtn) {
+    closeBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      popup.classList.add('hidden');
+    });
+  }
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // MONTHLY panel logic
+  function updateMonthlyFields() {
+    const mode = document.querySelector('input[name="rr-monthly-mode"]:checked')?.value;
+    // Day-of-month mode
+    document.getElementById('rr-bymonthday').disabled = (mode !== 'BYMONTHDAY');
+    document.getElementById('rr-interval-monthly').disabled = (mode !== 'BYMONTHDAY');
+    // "Nth weekday" mode
+    document.getElementById('rr-monthly-nth').disabled = (mode !== 'BYDAY');
+    document.getElementById('rr-monthly-weekday').disabled = (mode !== 'BYDAY');
+    document.getElementById('rr-interval-monthly2').disabled = (mode !== 'BYDAY');
+  }
+  document.querySelectorAll('input[name="rr-monthly-mode"]').forEach(radio => {
+    radio.addEventListener('change', updateMonthlyFields);
+  });
+  updateMonthlyFields();
+
+  // YEARLY panel logic
+  function updateYearlyFields() {
+    const mode = document.querySelector('input[name="rr-yearly-mode"]:checked')?.value;
+    // "Month/day" mode
+    document.getElementById('rr-byyear-month').disabled = (mode !== 'BYMONTH');
+    document.getElementById('rr-byyear-monthday').disabled = (mode !== 'BYMONTH');
+    // "Nth weekday/month" mode
+    document.getElementById('rr-yearly-nth').disabled = (mode !== 'BYDAY');
+    document.getElementById('rr-yearly-weekday').disabled = (mode !== 'BYDAY');
+    document.getElementById('rr-yearly-month2').disabled = (mode !== 'BYDAY');
+  }
+  document.querySelectorAll('input[name="rr-yearly-mode"]').forEach(radio => {
+    radio.addEventListener('change', updateYearlyFields);
+  });
+  updateYearlyFields();
+});
+// --- RRULE to English Summary Block ---
+
+function describeRRule() {
+  var rrule = (document.getElementById('rrule-export') || {}).value || '';
+  var out = document.getElementById('rrule-english');
+  if (!out) return;
+  if (!rrule || !/FREQ=/.test(rrule)) {
+    out.textContent = 'No recurrence set.';
+    return;
+  }
+  let text = '';
+  if (/FREQ=DAILY/.test(rrule)) {
+    text += 'Repeats every ';
+    const interval = (rrule.match(/INTERVAL=(\d+)/) || [])[1] || 1;
+    text += interval == 1 ? 'day' : interval + ' days';
+    if (/BYDAY=MO,TU,WE,TH,FR/.test(rrule)) text += ', weekdays only';
+  } else if (/FREQ=WEEKLY/.test(rrule)) {
+    const interval = (rrule.match(/INTERVAL=(\d+)/) || [])[1] || 1;
+    text += `Repeats every ${interval == 1 ? 'week' : interval + ' weeks'}`;
+    const byday = (rrule.match(/BYDAY=([A-Z,]+)/) || [])[1];
+    if (byday) {
+      const days = byday.split(',').map(code =>
+        ({
+          MO: 'Mon', TU: 'Tue', WE: 'Wed', TH: 'Thu', FR: 'Fri', SA: 'Sat', SU: 'Sun'
+        })[code] || code
+      );
+      text += ` on ${days.join(', ')}`;
+    }
+  } else if (/FREQ=MONTHLY/.test(rrule)) {
+    const interval = (rrule.match(/INTERVAL=(\d+)/) || [])[1] || 1;
+    text += `Repeats every ${interval == 1 ? 'month' : interval + ' months'}`;
+    const bymonthday = (rrule.match(/BYMONTHDAY=(\d+)/) || [])[1];
+    const byday = (rrule.match(/BYDAY=([A-Z0-9]+)/) || [])[1];
+    if (bymonthday) text += ` on day ${bymonthday}`;
+    else if (byday) text += ` on the ${byday.replace(/1/, 'First ').replace(/2/, 'Second ').replace(/3/, 'Third ').replace(/-1/, 'Last ')} weekday`;
+  } else if (/FREQ=YEARLY/.test(rrule)) {
+    text += 'Repeats yearly';
+  }
+  if (/COUNT=(\d+)/.test(rrule)) {
+    text += `. Ends after ${(rrule.match(/COUNT=(\d+)/) || [])[1]} occurrences.`;
+  }
+  if (/UNTIL=(\d{8})/.test(rrule)) {
+    let until = (rrule.match(/UNTIL=(\d{8})/) || [])[1];
+    if (until)
+      text += `. Ends by ${until.slice(0,4)}-${until.slice(4,6)}-${until.slice(6,8)}.`;
+  }
+  if (!text) text = rrule.replace(/;/g, '; ');
+  out.textContent = text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+
+// -- PATCH buildRule so it always calls describeRRule --
+(function patchRRuleEnglish() {
+  describeRRule();
+  // Patch all listeners that update RRULE
+  if (typeof buildRule === "function") {
+    const prev = buildRule;
+    window.buildRule = function() {
+      prev.apply(this, arguments);
+      describeRRule();
+    };
+  }
+})();
+</script>
+ 
+ 
+</body>
 </html>
