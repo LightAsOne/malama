@@ -1232,6 +1232,60 @@ extra-time-scroller {
   background: #cfe2ff;
   color: #17447c;
 }
+.contact-name {
+  font-size: 1.1em;
+  word-break: break-word;
+  white-space: normal;
+  flex: 1;
+}
+#contact-form-popup {
+  max-width: 600px;
+  max-height: 90vh;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.popup-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .popup-form {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      width: 400px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .popup-form label {
+      display: block;
+      margin-top: 0.5rem;
+    }
+    .popup-form input,
+    .popup-form textarea {
+      width: 100%;
+      margin-bottom: 0.5rem;
+      padding: 0.4rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .popup-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }
+    .btn-standard {
+      background-color: #eee;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 0.3rem 0.6rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
 </style>
 
 </head>
@@ -1255,32 +1309,31 @@ extra-time-scroller {
   
   <div class="ics app contact layout">
   
-   <div class="ics-head">
-<div class="card">
-		<h1>Create Calendar Event</h1>
+  <div class="ics-head">
+  <div class="card">
+    <h1>Create Calendar Event</h1>
 
-  <fieldset class="form-section">
-    <legend>🌿 Select Pillar and Activity</legend>
-    
+    <fieldset class="form-section">
+      <legend>🌿 Select Pillar and Activity</legend>
       <div class="ics-pillar-activity-row">
-  <div class="ics-pillar-col">
-    <label for="pillar">Pillar</label>
-    <select id="pillar">
-      <option value="">Select pillar</option>
-      <option value="ke_kino">Ke Kino</option>
-      <option value="ka_manao">Ka Manaʻo</option>
-      <option value="ka_uhane">Ka ʻUhane</option>
-      <option value="hana">Hana</option>
-    </select>
-  </div>
-  <div class="ics-activity-col">
-    <label for="activity-detail">Activity Type</label>
-    <select id="activity-detail">
-      <option value="">Select activity</option>
-    </select>
-	+ Add Activity Type
-  </div>
-</div></fieldset>
+        <div class="ics-pillar-col">
+          <label for="pillar">Pillar</label>
+          <select id="pillar">
+            <option value="">Select pillar</option>
+          </select>
+          <button id="add-pillar" class="btn-standard">+ Add Pillar</button>
+		  <button id="edit-pillar" class="btn-standard">✏️ Edit/Delete</button>
+        </div>
+        <div class="ics-activity-col">
+          <label for="activity-detail">Activity Type</label>
+          <select id="activity-detail">
+            <option value="">Select activity</option>
+          </select>
+          <button id="add-activity" class="btn-standard">+ Add Activity</button>
+		  <button id="edit-activity" class="btn-standard">✏️ Edit/Delete</button>
+        </div>
+      </div>
+    </fieldset>
   
        </div>    <!-- Two-column layout wrapper -->
    </div>
@@ -1294,7 +1347,7 @@ extra-time-scroller {
    
       <div>
         <label for="summary">TITLE</label>
-        <input type="text">
+        <input type="text"id="summary">
       </div>
      <div>
     <label for="description">📝DESCRIPTION</label>
@@ -1604,6 +1657,7 @@ extra-time-scroller {
     <button id="open-contact-picker" style="display:none; margin-left:1em;">+ add</button>
 	<button id="new-contact-btn" style="display:none; margin-left:0.4em;">+ new</button>
 <!-- Where selected contacts will display -->
+<div id="selected-contacts-listn" style="margin-top:0.7em;"></div>
 <div id="selected-contacts-list" style="margin-top:0.7em;"></div>
 
 <!-- Contact Picker Modal (initially hidden) -->
@@ -1649,16 +1703,19 @@ extra-time-scroller {
 		<!-- Left Column -->
       <div class="left-column">
 	<div class="card">
-	  <fieldset class="form-section">
-  <legend class="inline-checkbox"><input type="checkbox" id="toggle-details">🔧 Details  </legend>
-    <div id="details-wrapper" class="hidden">
-	<div id="dynamic-fields">
-      <!-- Injected form fields will appear here -->
-    </div>
-	</div>
-  </fieldset>
+	 <fieldset class="form-section">
+      <legend class="inline-checkbox">
+        <input type="checkbox" id="toggle-details"> 🔧 Details
+      </legend>
+      <div id="details-wrapper" class="hidden">
+        <div id="dynamic-fields"></div>
+		<div id="custom-fields"></div>
+       <button id="add-detail" class="btn-standard">+ Add Detail</button>
+	   <button id="edit-detail" class="btn-standard">✏️ Edit/Delete</button>
+    
+	  </div>
+    </fieldset>
 
-+Add Activity Detail
 	</div>
     
 </div>
@@ -1782,22 +1839,19 @@ extra-time-scroller {
 <button onclick="window.location.href='settings.html'">Settings</button>
 </div>
 <!-- Contact Form Popup -->
-<div id="contact-form-popup" class="popup hidden">
-  <div class="popup-content">
-  <form id="contact-form">
-   <div class="form-header"> 
-	<h2>Add or Edit Contact</h2>
-	<button type="button"
-  class="close-button"
-  onclick="
-  document.getElementById('contact-form-popup').classList.add('hidden');
-  document.getElementById('contact-form').reset();
-  document.getElementById('category-fields-container').innerHTML = '';
-">
-  ×
-</button>
- </div>
-
+<div id="contact-form-popup" class="popup hidden" style="display:flex; flex-direction:column; max-height:90vh;">
+  <!-- Header stays fixed -->
+  <div class="form-header" style="flex-shrink:0; display:flex; justify-content:space-between; align-items:center; padding:1em;">
+    <h2 style="margin:0;">Add or Edit Contact</h2>
+    <button type="button"
+      class="close-button"
+      onclick="document.getElementById('contact-form-popup').classList.add('hidden'); document.getElementById('contact-form').reset(); document.getElementById('category-fields-container').innerHTML = '';"
+      style="background:#875f34; color:white; border:none; border-radius:6px; font-size:1.2em; padding:0.3em 0.6em; cursor:pointer;">
+      ×
+    </button>
+  </div>
+ <div class="form-scroll" style="overflow-y:auto; padding:1em; flex-grow:1;">
+    <form id="contact-form">
     <div class="form-row">
   <div class="form-group">
     <label for="firstName">Name</label>
@@ -1917,9 +1971,66 @@ extra-time-scroller {
 
     <button type="button" onclick="saveContact()"id="save-contact-btn">Save Contact</button>
   </form>
+  </DIV>
 </div>
 </div>
 <!-- END POPUP -->
+<!-- Pillar Popup -->
+<div id="popup-container" class="popup-overlay" style="display:none;">
+  <form id="pillar-form" class="popup-form">
+    <h3>Add New Pillar</h3>
+    <label>Title: <input type="text" id="pillar-title" required></label>
+    <label>Short Description: <input type="text" id="pillar-shortDesc"></label>
+    <label>Icon (FontAwesome class): <input type="text" id="pillar-icon"></label>
+    <label>Subtitle (English): <input type="text" id="pillar-sub-en"></label>
+    <label>Subtitle (ʻŌlelo HawaiʻI): <input type="text" id="pillar-sub-olelo"></label>
+    <label>Description:<br><textarea id="pillar-description"></textarea></label>
+    <div class="popup-buttons">
+      <button type="button" id="cancel-popup" class="btn-standard">Cancel</button>
+      <button type="submit" class="btn-standard">Add</button>
+    </div>
+  </form>
+</div>
+
+<!-- Add Activity Detail Popup -->
+<div id="detail-popup" class="popup-overlay" style="display:none;">
+  <form id="detail-form" class="popup-form">
+    <h3>Add Activity Detail</h3>
+    <label>Field Name: <input type="text" id="custom-field-name" required></label>
+    <div class="popup-buttons">
+      <button type="button" id="cancel-detail-popup" class="btn-standard">Cancel</button>
+      <button type="submit" class="btn-standard">Add</button>
+    </div>
+  </form>
+</div>
+
+<!-- Add Activity Type Popup -->
+<div id="activity-popup" class="popup-overlay" style="display:none;">
+  <form id="activity-form" class="popup-form">
+    <h3>Add Activity Type</h3>
+    <label>Activity Title: <input type="text" id="activity-title" required></label>
+   
+    <div class="popup-buttons">
+      <button type="button" id="cancel-activity-popup" class="btn-standard">Cancel</button>
+      <button type="submit" class="btn-standard">Add</button>
+    </div>
+  </form>
+</div>
+<!-- Universal Edit/Delete Popup -->
+<div id="edit-popup" class="popup-overlay" style="display:none;">
+  <form id="edit-form" class="popup-form">
+    <h3 id="edit-title">Edit</h3>
+    <div id="edit-fields"></div>
+	
+	
+    <div class="popup-buttons">
+      <button type="button" id="delete-btn" class="btn-standard">Delete</button>
+	  <button type="button" id="cancel-edit-popup" class="btn-standard">Cancel</button>
+      <button type="submit" class="btn-standard">Save</button>
+      <button type="button" id="delete-detail-btn" class="btn-standard" style="background:#fdd; display: none;">Delete</button>
+    </div>
+  </form>
+</div>
  <!-- Firebase CDN Scripts -->
   <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
@@ -1947,87 +2058,474 @@ extra-time-scroller {
   });
 </script>
 
-	<script>
-    const pillarActivityMap = {
-      ke_kino: {
-        'Daily movement (walking, yoga, dancing, swimming)': ['activityType', 'duration', 'location'],
-        'Physical nourishment (meal planning, hydration)': ['nourishmentType', 'details'],
-        'Sleep/rest routines and recovery': ['restType', 'hours', 'restQuality'],
-        'Wellness sessions (massage, doctor, physio, etc.)': ['sessionType', 'provider', 'notes'],
-        'Personal care (bathing, sauna, hygiene rituals)': ['careType', 'duration', 'ritualNotes']
-      },
-      ka_manao: {
-        'Journaling sessions (morning/evening)': ['journalType', 'pagesWritten', 'reflection'],
-        'Writing intentions during key cycles': ['cycle', 'intention', 'category'],
-        'Affirmations and visualizations': ['affirmation', 'visualizationLength', 'focus'],
-        'Therapy or coaching conversations': ['sessionType', 'facilitator', 'topic', 'insight'],
-        'Quiet reflection or mindset tracking': ['moodBefore', 'moodAfter', 'reflectionNotes']
-      },
-      ka_uhane: {
-        'Breath practice and sacred ha': ['breathStyle', 'duration', 'effect'],
-        'Meditation or stillness sessions': ['method', 'duration', 'focus'],
-        'Prayer and devotional time': ['devotionType', 'intention', 'recipient'],
-        'Moon phase rituals and observances': ['moonPhase', 'ritualType', 'elementsUsed'],
-        'Ancestral honoring or offerings': ['ancestorName', 'offeringType', 'location'],
-        'Sacred ceremonies and blessings': ['ceremonyType', 'participants', 'tools']
-      },
-      hana: {
-        'Daily or weekly task lists': ['taskName', 'priority', 'dueDate', 'status'],
-        'Client appointments and bookings': ['clientName', 'serviceType', 'time', 'paid'],
-        'Project planning and deadlines': ['projectName', 'milestone', 'deadline', 'status'],
-        'Work rosters and shift tracking': ['shiftType', 'role', 'time'],
-        'Chores, errands, and home care': ['taskType', 'location', 'assignedTo'],
-        'Business logistics and strategy': ['focus', 'goal', 'status']
-      }
+<script>
+const pillarSelect = document.getElementById('pillar');
+const activitySelect = document.getElementById('activity-detail');
+const dynamicFields = document.getElementById('dynamic-fields');
+const popup = document.getElementById('popup-container');
+const detailPopup = document.getElementById('detail-popup');
+const activityPopup = document.getElementById('activity-popup');
+let userId = null;
+let pillarActivityMap = {};
+
+function clearAllSelectors() {
+  pillarSelect.innerHTML = '<option value="">Select pillar</option>';
+  activitySelect.innerHTML = '<option value="">Select activity</option>';
+  dynamicFields.innerHTML = '';
+}
+
+async function loadPillarsAndActivities() {
+  clearAllSelectors();
+  pillarActivityMap = {};
+  if (!userId) return;
+
+  // Load admin/global pillars
+  const globalPillarsSnap = await db.collection("pillars").get();
+  globalPillarsSnap.forEach(doc => {
+    const id = doc.id;
+    pillarActivityMap[id] = {
+      data: doc.data(),
+      activities: {},
+      isAdmin: true
+    };
+  });
+
+  // Overwrite/add with user pillars
+  const userPillarsSnap = await db.collection("users").doc(userId).collection("pillars").get();
+  userPillarsSnap.forEach(doc => {
+    const id = doc.id;
+    pillarActivityMap[id] = {
+      data: doc.data(),
+      activities: {},
+      isAdmin: false
+    };
+  });
+
+  // Populate pillar selector (show all pillars, annotate admin)
+  Object.keys(pillarActivityMap).forEach(pid => {
+    const opt = document.createElement('option');
+    opt.value = pid;
+    opt.textContent = pillarActivityMap[pid].data.title || pid;
+    if (pillarActivityMap[pid].isAdmin) opt.textContent += " (admin)";
+    pillarSelect.appendChild(opt);
+  });
+
+  // Now for each pillar, load activities (admin then user, user wins if id same)
+  for (const pid of Object.keys(pillarActivityMap)) {
+    // Admin activities
+    const adminActsSnap = await db.collection("pillars").doc(pid).collection("activities").get();
+    adminActsSnap.forEach(doc => {
+      pillarActivityMap[pid].activities[doc.id] = {
+        ...doc.data(),
+        isAdmin: true
+      };
+    });
+    // User activities overwrite/admin
+    const userActsSnap = await db.collection("users").doc(userId).collection("pillars").doc(pid).collection("activities").get();
+    userActsSnap.forEach(doc => {
+      pillarActivityMap[pid].activities[doc.id] = {
+        ...doc.data(),
+        isAdmin: false
+      };
+    });
+  }
+}
+
+firebase.auth().onAuthStateChanged(async user => {
+  userId = user ? user.uid : null;
+  if (userId) await loadPillarsAndActivities();
+});
+
+// --- Pillar selector change: populate activities ---
+pillarSelect.addEventListener('change', () => {
+  activitySelect.innerHTML = '<option value="">Select activity</option>';
+  dynamicFields.innerHTML = '';
+  const pid = pillarSelect.value;
+  if (!pid || !pillarActivityMap[pid]) return;
+  const acts = pillarActivityMap[pid].activities;
+  Object.keys(acts).forEach(aid => {
+    const opt = document.createElement('option');
+    opt.value = aid;
+    opt.textContent = acts[aid].title || aid;
+    if (acts[aid].isAdmin) opt.textContent += " (admin)";
+    activitySelect.appendChild(opt);
+  });
+});
+
+// --- Activity selector change: show dynamic fields (all) ---
+activitySelect.addEventListener('change', async () => {
+  dynamicFields.innerHTML = '';
+  const pid = pillarSelect.value, aid = activitySelect.value;
+  if (!pid || !aid || !pillarActivityMap[pid]?.activities[aid]) return;
+  let fields = [...(pillarActivityMap[pid].activities[aid].fields || [])];
+  // Now also add detail fields from details collections (admin & user)
+  let allNames = new Set(fields);
+  // Admin details
+  const adminDetSnap = await db.collection("pillars").doc(pid).collection("activities").doc(aid).collection("details").get();
+ 
+  adminDetSnap.forEach(doc => {
+    if (doc.data()?.name) allNames.add(doc.data().name);
+  });
+  // User details
+  const userDetSnap = await db.collection("users").doc(userId).collection("pillars").doc(pid).collection("activities").doc(aid).collection("details").get();
+  userDetSnap.forEach(doc => {
+    if (doc.data()?.name) allNames.add(doc.data().name);
+  });
+  allNames = Array.from(allNames);
+  allNames.forEach(field => {
+    const label = document.createElement('label');
+    label.htmlFor = field;
+    label.textContent = field;
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.id = field;
+    input.name = field;
+    dynamicFields.appendChild(label);
+    dynamicFields.appendChild(input);
+  });
+});
+
+// -- Add pillar --
+document.getElementById('add-pillar').onclick = () => {
+  popup.style.display = 'flex';
+  document.getElementById('pillar-form').reset();
+};
+document.getElementById('cancel-popup').onclick = () => {
+  popup.style.display = 'none';
+  document.getElementById('pillar-form').reset();
+};
+document.getElementById('pillar-form').onsubmit = async e => {
+  e.preventDefault();
+  if (!userId) return;
+  const id = document.getElementById('pillar-title').value.toLowerCase().replace(/\s+/g, '_');
+  await db.collection("users").doc(userId).collection("pillars").doc(id).set({
+    title: document.getElementById('pillar-title').value,
+    shortDesc: document.getElementById('pillar-shortDesc').value,
+    icon: document.getElementById('pillar-icon').value,
+    subtitle_en: document.getElementById('pillar-sub-en').value,
+    subtitle_olelo: document.getElementById('pillar-sub-olelo').value,
+    description: document.getElementById('pillar-description').value
+  });
+  popup.style.display = 'none';
+  await loadPillarsAndActivities();
+  pillarSelect.value = id;
+  pillarSelect.dispatchEvent(new Event('change'));
+};
+
+// -- Add activity --
+document.getElementById('add-activity').onclick = () => {
+  if (!pillarSelect.value) return alert('Select a pillar first');
+  activityPopup.style.display = 'flex';
+  document.getElementById('activity-form').reset();
+};
+document.getElementById('cancel-activity-popup').onclick = () => {
+  activityPopup.style.display = 'none';
+  document.getElementById('activity-form').reset();
+};
+document.getElementById('activity-form').onsubmit = async e => {
+  e.preventDefault();
+  if (!userId) return;
+  const pillarId = pillarSelect.value;
+  const title = document.getElementById('activity-title').value.trim();
+  const id = title.toLowerCase().replace(/\s+/g, '_');
+  await db.collection("users").doc(userId).collection("pillars").doc(pillarId).collection("activities").doc(id).set({
+    title, fields: []
+  });
+  activityPopup.style.display = 'none';
+  await loadPillarsAndActivities();
+  activitySelect.value = id;
+  activitySelect.dispatchEvent(new Event('change'));
+};
+
+// -- Add detail --
+document.getElementById('add-detail').onclick = () => {
+  if (!pillarSelect.value || !activitySelect.value) return alert('Select pillar and activity first');
+  detailPopup.style.display = 'flex';
+  document.getElementById('detail-form').reset();
+};
+document.getElementById('cancel-detail-popup').onclick = () => {
+  detailPopup.style.display = 'none';
+  document.getElementById('detail-form').reset();
+};
+document.getElementById('detail-form').onsubmit = async e => {
+  e.preventDefault();
+  if (!userId) return;
+  const name = document.getElementById('custom-field-name').value.trim();
+  if (!name) return;
+  const pillarId = pillarSelect.value, actId = activitySelect.value;
+  await db.collection("users").doc(userId)
+    .collection("pillars").doc(pillarId)
+    .collection("activities").doc(actId)
+    .collection("details").doc(name.toLowerCase().replace(/\s+/g, '_'))
+    .set({ name });
+  detailPopup.style.display = 'none';
+  await loadPillarsAndActivities();
+  activitySelect.value = actId;
+  activitySelect.dispatchEvent(new Event('change'));
+};
+
+// ---- Edit & Delete Popups ----
+document.getElementById('edit-pillar').onclick = () => showEditPopup('pillar');
+document.getElementById('edit-activity').onclick = () => showEditPopup('activity');
+document.getElementById('edit-detail').onclick = () => showEditPopup('detail');
+
+async function showEditPopup(type) {
+
+  const editPopup = document.getElementById('edit-popup');
+  const editFields = document.getElementById('edit-fields');
+  const editForm = document.getElementById('edit-form');
+  const deleteBtn = document.getElementById('delete-btn');
+  editFields.innerHTML = '';
+console.log('[DEBUG] showEditPopup called with', type);
+  let selector = document.createElement('select');
+  selector.innerHTML = '<option value="">Select</option>';
+
+if (type === 'pillar') {
+  console.log('[DEBUG] pillar keys:', Object.keys(pillarActivityMap));
+  Object.keys(pillarActivityMap).forEach(pid => {
+    const opt = document.createElement('option');
+    opt.value = pid;
+    opt.textContent = pillarActivityMap[pid].data.title || pid;
+    if (pillarActivityMap[pid].isAdmin) opt.textContent += " (admin)";
+    selector.appendChild(opt);
+  });
+  editFields.appendChild(selector);
+
+    selector.onchange = async () => {
+    editFields.innerHTML = '';
+    editFields.appendChild(selector);
+    const pid = selector.value;
+    if (!pid) return;
+    const isUser = !pillarActivityMap[pid].isAdmin;
+    const data = pillarActivityMap[pid].data;
+    ['title', 'subtitle_en', 'subtitle_olelo', 'shortDesc', 'description', 'icon'].forEach(field => {
+      const input = document.createElement('input');
+      input.name = input.id = field;
+      input.value = data[field] || '';
+      input.placeholder = field;
+      input.disabled = !isUser;
+      editFields.appendChild(input);
+    });
+    deleteBtn.style.display = isUser ? '' : 'none';
+  };
+    deleteBtn.onclick = async () => {
+      const pid = selector.value;
+      if (!pid || pillarActivityMap[pid].isAdmin) return alert('Cannot delete admin pillar.');
+      if (!confirm('Delete this pillar and all related data?')) return;
+      await db.collection('users').doc(userId).collection('pillars').doc(pid).delete();
+      editPopup.style.display = 'none';
+      await loadPillarsAndActivities();
     };
 
-    const pillarSelect = document.getElementById('pillar');
-    const activitySelect = document.getElementById('activity-detail');
-    const dynamicFields = document.getElementById('dynamic-fields');
-    const notesField = document.getElementById('notes');
-    const summaryField = document.getElementById('summary');
-    const descriptionField = document.getElementById('description');
+    editForm.onsubmit = async (e) => {
+      e.preventDefault();
+      const pid = selector.value;
+      if (!pid || pillarActivityMap[pid].isAdmin) return alert('Cannot edit admin pillar.');
+      const formData = new FormData(editForm);
+      const obj = {};
+      for (const [key, value] of formData.entries()) obj[key] = value;
+      await db.collection('users').doc(userId).collection('pillars').doc(pid).update(obj);
+      editPopup.style.display = 'none';
+      await loadPillarsAndActivities();
+    };
 
-    pillarSelect.addEventListener('change', () => {
-      const selected = pillarSelect.value;
-      activitySelect.innerHTML = '<option value="">Select activity</option>';
-      if (pillarActivityMap[selected]) {
-        Object.keys(pillarActivityMap[selected]).forEach(act => {
-          const option = document.createElement('option');
-          option.value = act;
-          option.textContent = act;
-          activitySelect.appendChild(option);
-        });
-      }
-      dynamicFields.innerHTML = '';
-    });
+  } else if (type === 'activity') {
+  const pid = pillarSelect.value;
+  if (!pid) return alert('Select a pillar first.');
+  const acts = pillarActivityMap[pid].activities;
+  Object.keys(acts).forEach(aid => {
+    const opt = document.createElement('option');
+    opt.value = aid;
+    opt.textContent = acts[aid].title || aid;
+    if (acts[aid].isAdmin) opt.textContent += " (admin)";
+    selector.appendChild(opt);
+  });
+  editFields.appendChild(selector);
 
-    activitySelect.addEventListener('change', () => {
-      const pillar = pillarSelect.value;
-      const activity = activitySelect.value;
-      dynamicFields.innerHTML = '';
-      if (pillarActivityMap[pillar] && pillarActivityMap[pillar][activity]) {
-        const fields = pillarActivityMap[pillar][activity];
-        fields.forEach(field => {
-          const label = document.createElement('label');
-          label.htmlFor = field;
-          label.textContent = field.replace(/([A-Z])/g, ' $1').replace(/([a-z])([A-Z])/g, '$1 $2');
-          const input = document.createElement('input');
-          input.type = 'text';
-          input.id = field;
-          input.name = field;
-          dynamicFields.appendChild(label);
-          dynamicFields.appendChild(input);
-        });
-      }
-      summaryField.value = pillarSelect.options[pillarSelect.selectedIndex].text + ' – ' + activity;
-    });
+  selector.onchange = async () => {
+    editFields.innerHTML = '';
+    editFields.appendChild(selector);
+    const aid = selector.value;
+    if (!aid) return;
+    const isUser = !pillarActivityMap[pid].activities[aid].isAdmin;
+    const data = pillarActivityMap[pid].activities[aid];
+    const input = document.createElement('input');
+    input.name = input.id = 'title';
+    input.value = data.title || '';
+    input.placeholder = 'title';
+    input.disabled = !isUser;
+    editFields.appendChild(input);
+    deleteBtn.style.display = isUser ? '' : 'none';
+  };
 
- 
-    function pad(n) {
-      return n < 10 ? '0' + n : n;
+    deleteBtn.onclick = async () => {
+      const aid = selector.value;
+      if (!aid || pillarActivityMap[pillarSelect.value].activities[aid].isAdmin)
+        return alert('Cannot delete admin activity.');
+      await db.collection('users').doc(userId).collection('pillars')
+        .doc(pillarSelect.value).collection('activities').doc(aid).delete();
+      editPopup.style.display = 'none';
+      await loadPillarsAndActivities();
+    };
+
+    editForm.onsubmit = async (e) => {
+      e.preventDefault();
+      const aid = selector.value;
+      if (!aid || pillarActivityMap[pillarSelect.value].activities[aid].isAdmin)
+        return alert('Cannot edit admin activity.');
+      const formData = new FormData(editForm);
+      const obj = {};
+      for (const [key, value] of formData.entries()) obj[key] = value;
+      await db.collection('users').doc(userId).collection('pillars')
+        .doc(pillarSelect.value).collection('activities').doc(aid).update(obj);
+      editPopup.style.display = 'none';
+      await loadPillarsAndActivities();
+    };
+
+} else if (type === 'detail') {
+  // Use selected pillar and activity
+  const pid = pillarSelect.value;
+  const aid = activitySelect.value;
+  if (!pid || !aid) return alert('Select both pillar and activity first.');
+  let selector = document.createElement('select');
+  selector.innerHTML = '<option value="">Select</option>';
+
+  // --- Gather all global fields from the activity's 'fields' array (admin) ---
+  let adminFields = [];
+  if (
+    pillarActivityMap[pid] &&
+    pillarActivityMap[pid].activities &&
+    pillarActivityMap[pid].activities[aid] &&
+    Array.isArray(pillarActivityMap[pid].activities[aid].fields)
+  ) {
+    adminFields = pillarActivityMap[pid].activities[aid].fields;
+  }
+
+  // --- Gather all user details documents ---
+  let userDetailNames = [];
+  const userDetSnap = await db.collection("users").doc(userId)
+    .collection("pillars").doc(pid)
+    .collection("activities").doc(aid)
+    .collection("details").get();
+  userDetSnap.forEach(doc => {
+    if (doc.data()?.name) userDetailNames.push(doc.data().name);
+  });
+
+  // --- Combine all names, no duplicates ---
+  const allNames = Array.from(new Set([...adminFields, ...userDetailNames]));
+
+  // --- Populate the selector ---
+  allNames.forEach(name => {
+    const opt = document.createElement('option');
+    opt.value = name;
+    opt.textContent = name + (adminFields.includes(name) ? ' (admin)' : '');
+    selector.appendChild(opt);
+  });
+
+  editFields.appendChild(selector);
+
+  selector.onchange = async () => {
+    // Remove everything except the selector
+    while (editFields.children.length > 1) editFields.removeChild(editFields.lastChild);
+    const detailName = selector.value;
+    if (!detailName) return;
+
+    // Is this a user detail?
+    const userDoc = await db.collection('users').doc(userId)
+      .collection('pillars').doc(pid)
+      .collection('activities').doc(aid)
+      .collection('details').doc(detailName.toLowerCase().replace(/\s+/g, '_')).get();
+
+    if (userDoc.exists) {
+      // Editable input for user detail
+      const input = document.createElement('input');
+      input.name = input.id = 'name';
+      input.value = userDoc.data().name || '';
+      input.placeholder = 'name';
+      editFields.appendChild(input);
+      deleteBtn.style.display = '';
+    } else if (adminFields.includes(detailName)) {
+      // Admin/global field — show as read-only
+      const input = document.createElement('input');
+      input.value = detailName;
+      input.disabled = true;
+      editFields.appendChild(input);
+      const msg = document.createElement('p');
+      msg.className = 'readonly-msg';
+      msg.textContent = 'This detail is an admin field and cannot be edited or deleted. Add as your own detail if you want to modify.';
+      editFields.appendChild(msg);
+      deleteBtn.style.display = 'none';
+    } else {
+      // Should never happen
+      editFields.appendChild(document.createTextNode('Not found'));
+      deleteBtn.style.display = 'none';
     }
+  };
+
+  deleteBtn.onclick = async () => {
+    const detailName = selector.value;
+    if (!detailName) return;
+    // Only allow delete if user detail
+    const userDoc = await db.collection('users').doc(userId)
+      .collection('pillars').doc(pid)
+      .collection('activities').doc(aid)
+      .collection('details').doc(detailName.toLowerCase().replace(/\s+/g, '_')).get();
+    if (!userDoc.exists) return alert('Cannot delete admin detail.');
+    await db.collection('users').doc(userId)
+      .collection('pillars').doc(pid)
+      .collection('activities').doc(aid)
+      .collection('details').doc(detailName.toLowerCase().replace(/\s+/g, '_')).delete();
+    editPopup.style.display = 'none';
+    await loadPillarsAndActivities();
+  };
+
+  editForm.onsubmit = async (e) => {
+    e.preventDefault();
+    const detailName = selector.value;
+    if (!detailName) return;
+    // Only allow edit if user detail
+    const userDoc = await db.collection('users').doc(userId)
+      .collection('pillars').doc(pid)
+      .collection('activities').doc(aid)
+      .collection('details').doc(detailName.toLowerCase().replace(/\s+/g, '_')).get();
+    if (!userDoc.exists) return alert('Cannot edit admin detail.');
+    const formData = new FormData(editForm);
+    const obj = {};
+    for (const [key, value] of formData.entries()) obj[key] = value;
+    await db.collection('users').doc(userId)
+      .collection('pillars').doc(pid)
+      .collection('activities').doc(aid)
+      .collection('details').doc(detailName.toLowerCase().replace(/\s+/g, '_')).update(obj);
+    editPopup.style.display = 'none';
+    await loadPillarsAndActivities();
+  };
+
+  
+}
+// Show and reset popup
+  editPopup.style.display = 'flex';
+  document.getElementById('edit-form').reset();
+}
+
+// Cancel handler for edit popup
+document.getElementById('cancel-edit-popup').onclick = () => {
+  document.getElementById('edit-popup').style.display = 'none';
+};
+document.getElementById('edit-pillar').onclick = () => {
+  console.log('[DEBUG] Edit Pillar button clicked');
+  showEditPopup('pillar');
+};
+document.getElementById('edit-activity').onclick = () => {
+  console.log('[DEBUG] Edit Activity button clicked');
+  showEditPopup('activity');
+};
 </script>
+
+
+
+
+
+
 
 <script>
     function formatDateICS(dt) {
@@ -2194,6 +2692,7 @@ document.getElementById('toggle-location').addEventListener('change', function()
 </script>
 
 <script>
+
   document.addEventListener('DOMContentLoaded', () => {
     // helper to wire up any toggle + wrapper pair
     function wireToggle(toggleId, wrapperId) {
@@ -2640,6 +3139,7 @@ function loadContactsFromFirebase(uid) {
       console.error("Error fetching contacts:", err);
     });
 }
+window.selectedContacts = window.selectedContacts || [];
 
 // ---- Contact Picker Elements ----
 const togglePeople        = document.getElementById('toggle-people');
@@ -2743,17 +3243,28 @@ if (pickerSave) {
 // ---- Render Selected Contacts Pills ----
 function renderSelectedContacts() {
   if (!selectedContactsDiv) return;
-  selectedContactsDiv.innerHTML = selectedContacts.map((c, i) => `
-    <div style="display:flex; align-items:center; margin-bottom:0.3em; background:#f7f9fb; border-radius:6px; padding:0.5em 1em; gap:1em;">
-      <div class="contact-initials" style="width:34px;height:34px;border-radius:50%;background:#d2e4f5;color:#175a96;font-weight:700;display:flex;align-items:center;justify-content:center;margin-right:0.8em;">${getInitials(c.name)}</div>
-      <span style="font-size:1.1em;">${c.name}</span>
+ selectedContactsDiv.innerHTML = selectedContacts.map((c, i) => `
+  <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.6em; background:#f7f9fb; border-radius:6px; padding:0.6em 1em; gap:1em;">
+    <!-- Left: Initials and Name -->
+    <div style="display:flex; align-items:center; gap:1em; flex:1; min-width:0;">
+      <div class="contact-initials" style="width:34px;height:34px;border-radius:50%;background:#d2e4f5;color:#175a96;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        ${getInitials(c.name)}
+      </div>
+      <span style="font-size:1.1em; word-break:break-word; white-space:normal;">${c.name}</span>
+    </div>
+
+    <!-- Right: Required + Delete stacked -->
+    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:0.4em;">
       <label style="font-size:0.93em;">
         <input type="checkbox" ${c.required ? 'checked' : ''} data-required="${i}" style="margin-right:0.4em;">
         required
       </label>
-      <button type="button" data-remove="${i}" style="margin-left:0.8em; background:#eee; color:#d33; border:none; border-radius:4px; font-size:1.05em; cursor:pointer; padding:0.18em 0.75em;">✖</button>
+      <button type="button" data-remove="${i}" style="background:#eee; color:#d33; border:none; border-radius:4px; font-size:1.05em; cursor:pointer; padding:0.18em 0.75em;">
+        ✖
+      </button>
     </div>
-  `).join('');
+  </div>
+`).join('');
 }
 
 // ---- Remove or update required status ----
@@ -2775,16 +3286,96 @@ if (selectedContactsDiv) {
 
 // ---- Exportable people array ----
 window.getPeople = () => selectedContacts;
+// ---------------- DYNAMIC CATEGORY FIELD LOGIC -----------------
 
-// ---- Popup Show/Hide Helpers ----
-function showContactFormPopup() {
-  document.getElementById('contact-form-popup').classList.remove('hidden');
+// This map must match your contact form categories
+const categoryFieldMap = {
+  ohana: [
+    { label: 'Family Role', name: 'familyRole' },
+    { label: 'Shared Memories', name: 'sharedMemories' }
+  ],
+  hoaaloha: [
+    { label: 'How You Met', name: 'howYouMet' },
+    { label: 'Favorite Moments', name: 'favoriteMoments' }
+  ],
+  hana: [
+    { label: 'Work Role', name: 'workRole' },
+    { label: 'Business/Organization', name: 'workplace' }
+  ],
+  lawelawe: [
+    { label: 'Client Notes', name: 'clientNotes' },
+    { label: 'Service Provided', name: 'serviceProvided' },
+    { label: 'Last Session Date', name: 'lastSessionDate' }
+  ],
+  kaiaulu: [
+    { label: 'Community Role', name: 'communityRole' },
+    { label: 'Events Participated', name: 'eventsParticipated' },
+    { label: 'Organization', name: 'organization' }
+  ],
+  hoola: [
+    { label: 'Healing Modalities', name: 'healingModalities' },
+    { label: 'Session Notes', name: 'sessionNotes' },
+    { label: 'Healing Type', name: 'healingType' }
+  ],
+  kumu: [
+    { label: 'Study Taken', name: 'studyTaken' },
+    { label: 'School/Lineage', name: 'schoolLineage' },
+    { label: 'Lessons Learned', name: 'lessonsLearned' }
+  ],
+  eae: [
+    { label: 'Other Notes', name: 'otherNotes' },
+    { label: 'Context/Where Met', name: 'contextMet' },
+    { label: 'Shared Activities', name: 'sharedActivities' }
+  ]
+};
+function hyphenate(str) {
+  return str.toLowerCase().replace(/[ /]+/g, '-').replace(/[^a-z0-9\-]/g, '');
 }
-function hideContactFormPopup() {
-  document.getElementById('contact-form-popup').classList.add('hidden');
+
+function updateCategoryFields() {
+  const checked = Array.from(document.querySelectorAll('#contact-form input[name="category"]:checked')).map(cb => cb.value);
+  const container = document.getElementById('category-fields-container');
+  container.innerHTML = '';
+  checked.forEach(category => {
+    (categoryFieldMap[category] || []).forEach(field => {
+      const fullFieldName = category + '-' + hyphenate(field.label); // <-- key change
+      const div = document.createElement('div');
+      div.className = 'form-group';
+      div.innerHTML = `
+        <label>${field.label}</label>
+        <input type="text" name="${fullFieldName}" />
+      `;
+      container.appendChild(div);
+    });
+  });
+}
+
+function attachCategoryListeners() {
+  // Remove and re-add listeners to prevent duplicates if called multiple times
+  document.querySelectorAll('#contact-form input[name="category"]').forEach(cb => {
+    cb.removeEventListener('change', updateCategoryFields);
+    cb.addEventListener('change', updateCategoryFields);
+  });
+}
+
+// Run once on load (for initial form)
+document.addEventListener('DOMContentLoaded', function() {
+  attachCategoryListeners();
+  updateCategoryFields();
+});
+
+// If you have a function that shows the popup, run this each time too:
+function showContactFormPopup() {
+  const popup = document.getElementById('contact-form-popup');
+  popup.classList.remove('hidden');
   document.getElementById('contact-form').reset();
   document.getElementById('category-fields-container').innerHTML = '';
+  attachCategoryListeners();
+  updateCategoryFields();
 }
+// And make sure your "+ new" button or contact add button calls showContactFormPopup()
+
+// ---------------- END DYNAMIC CATEGORY FIELD LOGIC -----------------
 
 function addImportantDate() {
   const container = document.getElementById("important-dates-section");
@@ -2806,6 +3397,62 @@ function addImportantDate() {
 }
 window.addImportantDate = addImportantDate;
 // ---- End Script ----
+ 
+function setupCategoryFields() {
+  const catTags = document.querySelectorAll('#contact-form .category-tags input[type="checkbox"]');
+  const catFieldsContainer = document.getElementById('category-fields-container');
+  if (!catTags.length || !catFieldsContainer) return;
+
+  // Remove all old fields when categories change
+  catTags.forEach(cb => {
+    cb.addEventListener('change', () => {
+      catFieldsContainer.innerHTML = '';
+      catTags.forEach(tag => {
+        if (tag.checked) {
+          // Create field for each checked category
+          let extra = '';
+          switch (tag.value) {
+            case 'ohana':
+              extra = `<input class="dynamic-field" name="dynamic-ohana-role" type="text" placeholder="Family Role (e.g., parent, sibling)">`;
+              break;
+            case 'hoaaloha':
+              extra = `<input class="dynamic-field" name="dynamic-hoaaloha-how" type="text" placeholder="How you met">`;
+              break;
+            // Add all your extra category fields here!
+            // case 'hana': ...
+            default: break;
+          }
+          if (extra) {
+            const div = document.createElement('div');
+            div.innerHTML = extra;
+            catFieldsContainer.appendChild(div);
+          }
+        }
+      });
+    });
+  });
+}
+
+// Call after showing popup/modal, or on DOMContentLoaded for persistent forms
+setupCategoryFields();
+
+const categoryFields = {
+  ohana: ['Family Role', 'Shared Memories'],
+  hoaaloha: ['How You Met', 'Favorite Moments'],
+  hana: ['Work Role', 'Business/Organisaztion', 'Workplace Location'],
+  lawelawe: ['Client Notes', 'Service Provided', 'Last Session Date'],
+  kaiaulu: ['Community Role', 'Events Participated', 'Organization'],
+  hoola: ['Healing Modalities', 'Session Notes', 'Healing Type'],
+  kumu: ['Study Taken', 'School/Lineage', 'Lessons Learned'],
+  eae: ['Other Notes', 'Context/Where Met', 'Shared Activities']
+};
+
+// turns "Family Role" into "family-role"
+function slugify(str) {
+  return str.toLowerCase().replace(/[ /]+/g, '-').replace(/[^a-z0-9\-]/g, '');
+}
+
+
 
 
  });
@@ -2815,6 +3462,141 @@ window.addImportantDate = addImportantDate;
 </script>
 
 <script>
+
+const categoryFields = {
+  ohana: ['Family Role', 'Shared Memories'],
+  hoaaloha: ['How You Met', 'Favorite Moments'],
+  hana: ['Work Role', 'Business/Organisaztion', 'Workplace Location'],
+  lawelawe: ['Client Notes', 'Service Provided', 'Last Session Date'],
+  kaiaulu: ['Community Role', 'Events Participated', 'Organization'],
+  hoola: ['Healing Modalities', 'Session Notes', 'Healing Type'],
+  kumu: ['Study Taken', 'School/Lineage', 'Lessons Learned'],
+  eae: ['Other Notes', 'Context/Where Met', 'Shared Activities']
+};
+
+// turns "Family Role" into "family-role"
+function slugify(str) {
+  return str.toLowerCase().replace(/[ /]+/g, '-').replace(/[^a-z0-9\-]/g, '');
+}
+
+function saveContact() {
+  const user = firebase.auth().currentUser;
+  if (!user) {
+    alert("Not logged in.");
+    return;
+  }
+  const uid = user.uid;
+  const db = firebase.firestore();
+  const form = document.getElementById("contact-form");
+  const contactData = {};
+
+  // 1. Standard fields (name, surname, phone, etc.)
+  // Use only names used in your contact-form.html
+  form.querySelectorAll('input, textarea, select').forEach(el => {
+    const rawKey = el.name;
+    if (!rawKey) return;
+    // Ignore important date fields (handled below)
+    if (rawKey.startsWith("dateLabel") || rawKey.startsWith("dateValue")) return;
+    // Skip hidden category fields for now (handled below)
+    if (rawKey === "category") return;
+    // For checkboxes, only save if checked
+    if (el.type === "checkbox" && !el.checked) return;
+    // Sanitize field name to match your Firestore
+    const key = rawKey.replace(/[./[\]#]/g, "-");
+    contactData[key] = el.value.trim();
+  });
+
+   // Category array
+  contactData.category = [];
+  form.querySelectorAll('input[name="category"]:checked').forEach(cb => {
+    contactData.category.push(cb.value);
+  });
+
+  // Dynamic extra fields—exact naming match!
+  contactData.category.forEach(cat => {
+    (categoryFields[cat] || []).forEach(label => {
+      const fieldName = cat + '-' + slugify(label);
+      const input = form.querySelector(`[name="${fieldName}"]`);
+      if (input && input.value.trim()) {
+        contactData[fieldName] = input.value.trim();
+      }
+    });
+  });
+
+  // Important dates
+  contactData["dateLabel[]"] = [];
+  contactData["dateValue[]"] = [];
+  form.querySelectorAll('.important-date-row').forEach(row => {
+    const lbl = row.querySelector('input[name="dateLabel[]"]')?.value.trim() || "";
+    const val = row.querySelector('input[name="dateValue[]"]')?.value.trim() || "";
+    contactData["dateLabel[]"].push(lbl);
+    contactData["dateValue[]"].push(val);
+  });
+window.selectedContacts = window.selectedContacts || [];
+const selectedContactsDiv = document.getElementById("selected-contacts-listn");
+function getInitials(name) {
+  if (!name) return '';
+  return name
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase())
+    .slice(0, 2)
+    .join('');
+}
+function renderSelectedContacts() {
+  if (!selectedContactsDiv) return;
+  selectedContactsDiv.innerHTML = selectedContacts.map((c, i) => `
+  <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.6em; background:#f7f9fb; border-radius:6px; padding:0.6em 1em; gap:1em;">
+    <!-- Left: Initials and Name -->
+    <div style="display:flex; align-items:center; gap:1em; flex:1; min-width:0;">
+      <div class="contact-initials" style="width:34px;height:34px;border-radius:50%;background:#d2e4f5;color:#175a96;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        ${getInitials(c.name)}
+      </div>
+      <span style="font-size:1.1em; word-break:break-word; white-space:normal;">${c.name}</span>
+    </div>
+
+    <!-- Right: Required + Delete stacked -->
+    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:0.4em;">
+      <label style="font-size:0.93em;">
+        <input type="checkbox" ${c.required ? 'checked' : ''} data-required="${i}" style="margin-right:0.4em;">
+        required
+      </label>
+      <button type="button" data-remove="${i}" style="background:#eee; color:#d33; border:none; border-radius:4px; font-size:1.05em; cursor:pointer; padding:0.18em 0.75em;">
+        ✖
+      </button>
+    </div>
+  </div>
+`).join('');
+}
+  // 5. Save to Firestore
+  db.collection("users").doc(uid).collection("contacts").add(contactData)
+  .then((docRef) => {
+    window.selectedContacts.push({
+      id: docRef.id,
+      name: (contactData.firstName || "") + " " + (contactData.lastName || ""),
+      required: false
+    });
+    renderSelectedContacts();
+
+    form.reset();
+    document.getElementById('category-fields-container').innerHTML = '';
+    document.getElementById('contact-form-popup').classList.add('hidden');
+    alert("Contact saved.");
+  })
+  .catch((error) => {
+    console.error("Error saving contact:", error);
+    alert("Failed to save contact.");
+  });
+
+}
+
+
+
+
+
+
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
   const useR = id => document.getElementById(id);
   const scroller = useR('rrule-scroller');
