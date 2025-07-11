@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Mālama Mana</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Open+Sans&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- PWA manifest -->
+  <link rel="manifest" href="manifest.json" />
+  <!-- Main stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* Icon: big and bold */
+#pillar-icon {
+  font-size: 3.2rem;       /* Big icon */
+  font-weight: bold;
+  line-height: 1;
+  margin-bottom: 0.6em;    /* One line space */
+  display: inline-block;
+  vertical-align: middle;
+}
+/* Title: big, bold, same line as icon, 2 spaces after icon */
+#pillar-title {
+  font-size: 2.2rem;
+  font-weight: bold;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 1em;       /* Two spaces visually (adjust as needed) */
+  line-height: 1;
+}
+
+/* Hawaiian: medium, bold, one line space below title */
+#pillar-hawaiian {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-top: 1em;
+  margin-bottom: 0.7em;
+}
+
+/* English: medium, italic, two spaces below hawaiian */
+#pillar-english {
+  font-size: 1.1rem;
+  font-style: italic;
+  margin-top: 1.4em;
+  margin-bottom: 1em;
+  font-weight: 400;
+}
+
+/* Description: default styling, just ensure spacing is clean */
+#pillar-desc {
+  font-size: 1.08rem;
+  margin-top: 1.2em;
+  color: #444;
+}
+
+.calendar-view-card {
+  height: 450px;
+  min-height: 450px;
+  max-height: 450px;
+  background: #f5f7fa;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 14px;
+  padding: 1.2em 1em;
+  margin-top: 1.5em;
+  box-shadow: 0 1px 8px #0001;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  overflow-y: auto;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body class="settings-mode">
+
+<div class="lunar-bg"></div>
+<div class="moon-overlay"></div>
+ 
+
+  <!-- APP HEADER -->
+  <header class="app-header">
+    <div class="header-content">
+      <div id="header-greeting">Aloha,</div>
+      <h1>Mālama Mana</h1>
+      <div id="header-tide-info"></div>
+    </div>
+  </header>
+
+  <!-- MAIN APP -->
+  
+  <div class="app">
+  
+   
+    <!-- Two-column layout wrapper -->
+    <div class="main-columns">
+      <!-- Left Column -->
+      <!-- LEFT COLUMN -->
+<div class="left-column">
+  <div class="card">
+    <div class="pi-icon" id="pillar-icon"></div>
+    <div class="pi-title" id="pillar-title"></div>
+    <div class="pi-focus" id="pillar-hawaiian"></div>
+    <div class="pi-role" id="pillar-english"></div>
+    <div class="pi-desc" id="pillar-desc"></div>
+  </div>
+  
+  <div class="card calendar-view-card" id="pillar-calendar-view" style="height:600px; margin-top:1.5em; overflow:auto;">
+  <!-- Calendar widget content will go here -->
+</div>
+  
+</div>
+
+<!-- RIGHT COLUMN -->
+<div class="right-column" id="pillar-activities">
+  <!-- Activity cards will be injected here -->
+</div>
+
+	  
+	  
+	  
+    </div>
+  </div>
+
+  <!-- SETTINGS MODAL -->
+
+  <!-- BOTTOM NAVIGATION -->
+<nav class="bottom-nav">
+   <div class="nav-inner">
+     <!-- Dashboard -->
+  <a href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+    </svg>
+    <span>Dashboard</span>
+  </a>
+
+  <!-- Today -->
+  <a href="#today">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="6" x2="12" y2="12"></line>
+      <line x1="12" y1="12" x2="16" y2="14"></line>
+    </svg>
+    <span>Today</span>
+  </a>
+
+  <!-- Week -->
+  <a href="#week">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="16" rx="2" ry="2"></rect>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+      <line x1="7" y1="14" x2="7" y2="14"></line>
+      <line x1="12" y1="14" x2="12" y2="14"></line>
+      <line x1="17" y1="14" x2="17" y2="14"></line>
+    </svg>
+    <span>Week</span>
+  </a>
+
+  <!-- Month -->
+  <a href="#month">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+      <line x1="7" y1="14" x2="7" y2="14"></line>
+      <line x1="12" y1="14" x2="12" y2="14"></line>
+      <line x1="17" y1="14" x2="17" y2="14"></line>
+      <line x1="7" y1="18" x2="7" y2="18"></line>
+      <line x1="12" y1="18" x2="12" y2="18"></line>
+      <line x1="17" y1="18" x2="17" y2="18"></line>
+    </svg>
+    <span>Month</span>
+  </a>
+
+  <a href="#" id="more-button-settings">
+<!-- more icon -->
+<svg fill="currentColor" viewbox="0 0 24 24">
+<circle cx="5" cy="12" r="2"></circle>
+<circle cx="12" cy="12" r="2"></circle>
+<circle cx="19" cy="12" r="2"></circle>
+</svg>
+<span>More</span>
+</a>
+  </nav>
+  <!-- MORE POPUP MENU -->
+ <!-- MORE POPUP MENU -->
+<div class="more-menu hidden" id="more-menu-settings">
+<button onclick="window.location.href='contact-form.html'">Kanaka</button>
+<button onclick="window.location.href='uhane.html'">Uhane</button>
+<button onclick="window.location.href='kekino.html'">Kino</button>
+<button onclick="window.location.href='manao.html'">Manao</button>
+<button onclick="window.location.href='hana.html'">Hana</button>
+<button onclick="window.location.href='settings.html'">Settings</button>
+</div>
+<script>
+    const moreBtn = document.getElementById('more-button-settings');
+    const moreMenu = document.getElementById('more-menu-settings');
+
+    moreBtn.addEventListener('click', e => {
+      e.preventDefault();
+      moreMenu.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', e => {
+      if (!moreMenu.contains(e.target) && !moreBtn.contains(e.target)) {
+        moreMenu.classList.add('hidden');
+      }
+    })
+	
+	
+	
+	; </script>
+	
+	  <!-- Firebase CDN Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-init.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.9.0/suncalc.min.js"></script>
+  
+  
+<script>
+function getPillarId() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('id');
+}
+
+function renderIcon(icon) {
+  const faClass = icon && icon.startsWith('fa-') ? icon : 'fa-solid fa-star';
+  return `<i class="${faClass}"></i>`;
+}
+
+async function loadPillar() {
+  const pillarId = getPillarId();
+  if (!pillarId) return;
+
+  const db = firebase.firestore();
+  let pillarDoc = null;
+
+  // Try global pillar
+  let sysDoc = await db.collection('pillars').doc(pillarId).get();
+  if (sysDoc.exists) {
+    pillarDoc = sysDoc.data();
+  } else {
+    // Try user pillar (if logged in)
+    const auth = firebase.auth().currentUser;
+    if (auth) {
+      let userDoc = await db.collection('users')
+        .doc(auth.uid).collection('pillars').doc(pillarId).get();
+      if (userDoc.exists) pillarDoc = userDoc.data();
+    }
+  }
+
+  // If not found
+  if (!pillarDoc) {
+    document.querySelector('.left-column .card').innerHTML = `<h2>Pillar not found.</h2>`;
+    document.getElementById('pillar-activities').innerHTML = '';
+    return;
+  }
+
+  // LEFT COLUMN
+  document.getElementById('pillar-icon').innerHTML = renderIcon(pillarDoc.icon || 'fa-solid fa-star');
+  document.getElementById('pillar-title').textContent = pillarDoc.title || pillarId;
+  document.getElementById('pillar-hawaiian').textContent = pillarDoc.subtitle_olelo || '';
+  document.getElementById('pillar-english').textContent = pillarDoc.subtitle_en || '';
+  document.getElementById('pillar-desc').textContent = pillarDoc.description || '';
+
+  // RIGHT COLUMN: Load activities subcollection
+  const activitiesDiv = document.getElementById('pillar-activities');
+  activitiesDiv.innerHTML = '<div style="color:#888; font-size:0.95em;">Loading activities...</div>';
+  let activities = [];
+
+  // First try global
+  let actsSnap = await db.collection('pillars').doc(pillarId).collection('activities').get();
+  actsSnap.forEach(doc => activities.push({id: doc.id, ...doc.data()}));
+
+  // If none, try user pillar activities (if not found above and user is logged in)
+  if (activities.length === 0 && sysDoc.exists === false && firebase.auth().currentUser) {
+    actsSnap = await db.collection('users').doc(firebase.auth().currentUser.uid)
+      .collection('pillars').doc(pillarId).collection('activities').get();
+    actsSnap.forEach(doc => activities.push({id: doc.id, ...doc.data()}));
+  }
+
+  if (activities.length === 0) {
+    activitiesDiv.innerHTML = `<div style="color:#888; font-size:0.95em;">No activities found for this pillar.</div>`;
+  } else {
+    activitiesDiv.innerHTML = activities.map(act => {
+      return `<div class="card">
+        <div class="pi-detail">
+          <b>${act.title || ''}</b>
+        </div>
+      </div>`;
+    }).join('');
+  }
+}
+
+firebase.auth().onAuthStateChanged(function(user) {
+  loadPillar();
+});
+</script>
+<script>
+function renderCalendarView(view) {
+  const container = document.getElementById('pillar-calendar-view');
+  if (!container) return;
+  if (view === 'today') {
+    container.innerHTML = `
+      <h2>Day View</h2>
+      <div style="text-align:center;margin:2em 0;">
+        <div style="font-size:3em; color:#9bb;">📅</div>
+        <div style="font-size:1.3em; margin:0.5em 0;">${new Date().toLocaleDateString()}</div>
+        <div style="margin-top:1.5em; color:#666;">(Daily schedule/events coming soon...)</div>
+      </div>
+    `;
+  } else if (view === 'week') {
+    const today = new Date();
+    const weekDates = Array.from({length: 7}, (_,i) => {
+      let d = new Date(today); d.setDate(today.getDate()-today.getDay()+i);
+      return d.toLocaleDateString('en-AU',{weekday:'short', month:'short', day:'numeric'});
+    });
+    container.innerHTML = `
+      <h2>Week View</h2>
+      <div style="display:flex; justify-content:space-between; margin:1em 0 2em 0;">
+        ${weekDates.map(d=>`<div style="flex:1; text-align:center; color:#888;">${d}</div>`).join('')}
+      </div>
+      <div style="color:#666;text-align:center;">(Weekly schedule/events coming soon...)</div>
+    `;
+  } else if (view === 'month') {
+    const today = new Date();
+    const monthName = today.toLocaleDateString('en-AU', {month:'long', year:'numeric'});
+    container.innerHTML = `
+      <h2>Month View</h2>
+      <div style="text-align:center;font-size:1.2em;margin:1em 0 2em 0;">
+        ${monthName}
+      </div>
+      <div style="color:#666;text-align:center;">(Monthly calendar coming soon...)</div>
+    `;
+  }
+}
+
+// Initial load (defaults to day view)
+renderCalendarView('today');
+
+// Listen for bottom nav clicks
+document.querySelectorAll('.bottom-nav a').forEach(a => {
+  a.addEventListener('click', function(e) {
+    // Map bottom nav button hrefs to calendar views
+    if (a.href.endsWith('#today')) {
+      e.preventDefault(); renderCalendarView('today');
+    }
+    if (a.href.endsWith('#week')) {
+      e.preventDefault(); renderCalendarView('week');
+    }
+    if (a.href.endsWith('#month')) {
+      e.preventDefault(); renderCalendarView('month');
+    }
+  });
+});
+</script>
+
+  </body>
+</html>
