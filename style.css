@@ -414,6 +414,7 @@ td.current-day {
   flex-direction: column;
   width: 100%;
   gap: 0.5rem;
+  
 }
 
 .today-snapshot span {
@@ -1995,6 +1996,7 @@ body.contact-mode .pillar.selected {
   min-height: 100%;
   display: flex;
   flex-direction: column;
+   margin-bottom: 5rem;
 }
 /* PUPUP VARD */
 /* Popup overlay */
@@ -2795,4 +2797,33 @@ input[type="checkbox"]:checked + .category-label::before {
 .popup-buttons button {
   padding: 0.4rem 0.8rem;
   font-weight: bold;
+}
+.pillars {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr); /* <-- 8 per row */
+  gap: 1.25rem 2rem;                     /* vertical, horizontal gap (tweak as you like) */
+  margin-bottom: 2rem;
+  margin-top: 1rem;
+}
+
+@media (max-width: 1024px) {
+  .pillars {
+    grid-template-columns: repeat(4, 1fr);  /* 4 per row on medium screens */
+  }
+}
+@media (max-width: 768px) {
+  .pillars {
+    grid-template-columns: repeat(2, 1fr);  /* 2 per row on small screens */
+  }
+}
+.pillar h2 {
+  font-size: 1rem;
+  margin-bottom: 0.1rem; /* Or 0rem for very tight */
+  line-height: 1.1;
+}
+
+.pillar p {
+  font-size: 0.8rem;
+  margin-top: 0rem;  /* Ensure no extra margin above */
+  line-height: 1.2;
 }

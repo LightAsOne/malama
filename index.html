@@ -17,10 +17,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 .today-snapshot {
-  max-height: 350px;
+  max-height: 620px;
   overflow-y: auto;
   /* Optional for visual consistency: */
-  min-height: 350px;
+  min-height: 620px;
 }
 </style>
 </head>
@@ -138,6 +138,7 @@
             </div>
           </div>
         </div>
+		
       </div>
 
       <!-- Right Column -->
@@ -146,11 +147,9 @@
         <div class="today-box">
           <div id="today-snapshot" class="today-snapshot"></div>
         </div>
-		<div class="pillars" id="pillars-list">
-        
-        </div>
+		
       </div>
-    </div>
+  
   </div>
 
   <!-- SETTINGS MODAL -->
@@ -167,7 +166,7 @@
       <line x1="8" y1="2" x2="8" y2="6"></line>
       <line x1="3" y1="10" x2="21" y2="10"></line>
     </svg>
-    <span>Dashboard</span>
+    <span>Kēia Lā</span>
   </a>
 
   <!-- Today -->
@@ -178,7 +177,7 @@
       <line x1="12" y1="6" x2="12" y2="12"></line>
       <line x1="12" y1="12" x2="16" y2="14"></line>
     </svg>
-    <span>Today</span>
+    <span>lā</span>
   </a>
 
   <!-- Week -->
@@ -191,7 +190,7 @@
       <line x1="12" y1="14" x2="12" y2="14"></line>
       <line x1="17" y1="14" x2="17" y2="14"></line>
     </svg>
-    <span>Week</span>
+    <span>anahalu</span>
   </a>
 
   <!-- Month -->
@@ -207,7 +206,7 @@
       <line x1="12" y1="18" x2="12" y2="18"></line>
       <line x1="17" y1="18" x2="17" y2="18"></line>
     </svg>
-    <span>Month</span>
+    <span>malama</span>
   </a>
 
   <a href="#" id="more-button-settings">
@@ -223,12 +222,7 @@
   <!-- MORE POPUP MENU -->
  <!-- MORE POPUP MENU -->
 <div class="more-menu hidden" id="more-menu-settings">
-<button onclick="window.location.href='contact-form.html'">Kanaka</button>
-<button onclick="window.location.href='uhane.html'">Uhane</button>
-<button onclick="window.location.href='kekino.html'">Kino</button>
-<button onclick="window.location.href='manao.html'">Manao</button>
-<button onclick="window.location.href='hana.html'">Hana</button>
-<button onclick="window.location.href='settings.html'">Settings</button>
+
 </div>
 <script>
     const moreBtn = document.getElementById('more-button-settings');
@@ -256,99 +250,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.9.0/suncalc.min.js"></script>
   <script src="app.js"></script>
   <script src="lunarData.js" defer></script>	
-<script>
-async function loadPillars() {
-  const pillarsContainer = document.getElementById('pillars-list');
-  pillarsContainer.innerHTML = '<p>Loading pillars...</p>';
 
-  const db = firebase.firestore();
-  let systemPillars = [];
-  let userPillars = [];
-
-  // Get system pillars
-  const sysSnap = await db.collection('pillars').get();
-  sysSnap.forEach(doc => {
-    systemPillars.push({ id: doc.id, ...doc.data(), source: 'system' });
-  });
-
-  // Get user pillars (only if logged in)
-  let userId;
-  try {
-    userId = firebase.auth().currentUser.uid;
-  } catch (e) {
-    userId = null;
-  }
-  if (userId) {
-    const userSnap = await db.collection('users').doc(userId).collection('pillars').get();
-    userSnap.forEach(doc => {
-      userPillars.push({ id: doc.id, ...doc.data(), source: 'user' });
-    });
-  }
-
-  // Order system pillars as before
-  const pillarOrder = [
-    { id: 'ke_kino', label: 'ke kino', icon: 'fa-child-reaching', desc: 'Physical wellbeing & embodied care' },
-    { id: 'ka_manao', label: 'ka mana‘o', icon: 'fa-brain', desc: 'Inner clarity & conscious thought' },
-    { id: 'ka_uhane', label: 'ka ‘uhane', icon: 'fa-hands-praying', desc: 'Spiritual alignment & sacred practice' },
-    { id: 'hana', label: 'hana', icon: 'fa-briefcase', desc: 'Work & life commitments' }
-  ];
-
-  pillarsContainer.innerHTML = '';
-
-  // System pillars in order
-  pillarOrder.forEach(po => {
-    const found = systemPillars.find(p => p.id === po.id);
-    if (found) {
-      pillarsContainer.innerHTML += createPillarDiv({
-        label: po.label,
-        icon: po.icon,
-        desc: po.desc,
-        id: po.id
-      });
-    }
-  });
-
-  // Kanaka/Ike static
- pillarsContainer.innerHTML += `
-  <a href="contact-form.html"><div class="pillar">
-    <h2>kānaka <i class="fa-solid fa-people-group"></i></h2>
-    <p>ʻOhana, Friends & Contacts</p>
-  </div></a>
-  <a href="ike.html"><div class="pillar">
-    <h2>Ike <i class="fa-solid fa-book-open"></i></h2>
-    <p>Wisdom &<br>Knowledge</p>
-  </div></a>
-`;
-
-  // User-created pillars at the end
-  userPillars.forEach(p => {
-    pillarsContainer.innerHTML += createPillarDiv({
-      label: p.title || p.id,
-      icon: p.icon || 'fa-star',
-      desc: p.shortDesc || p.description || '',
-      id: p.id
-    });
-  });
-}
-
-function createPillarDiv({ label, icon, desc, id }) {
-  return `
-    <a href="pillar.html?id=${encodeURIComponent(id)}">
-      <div class="pillar">
-        <h2>${label} <i class="fa-solid ${icon || 'fa-star'}"></i></h2>
-        <p>${desc || ''}</p>
-      </div>
-    </a>
-  `;
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  // Wait for Firebase Auth to be ready
-  firebase.auth().onAuthStateChanged(function(user) {
-    if (user) loadPillars();
-  });
-});
-</script>
 
 <script>
 // ---- Calendar Snapshot Card for Dashboard ----
@@ -408,7 +310,71 @@ document.querySelectorAll('.bottom-nav a').forEach(a => {
   });
 });
 </script>
+<script>
+async function loadMoreMenu() {
+  const menu = document.getElementById('more-menu-settings');
+  if (!menu) return;
+  menu.innerHTML = '<div style="padding: 0.5em 1em; color:#888;">Loading...</div>';
 
+  const db = firebase.firestore();
+  let systemPillars = [];
+  let userPillars = [];
+
+  // System pillars
+  const sysSnap = await db.collection('pillars').get();
+  sysSnap.forEach(doc => {
+    systemPillars.push({ id: doc.id, ...doc.data(), source: 'system' });
+  });
+
+  // User pillars
+  let userId;
+  try { userId = firebase.auth().currentUser.uid; } catch (e) { userId = null; }
+  if (userId) {
+    const userSnap = await db.collection('users').doc(userId).collection('pillars').get();
+    userSnap.forEach(doc => {
+      userPillars.push({ id: doc.id, ...doc.data(), source: 'user' });
+    });
+  }
+
+  // Your desired order for system pillars
+  const pillarOrder = [
+    { id: 'ke_kino', label: 'Kino', url: 'pillar.html?id=ke_kino' },
+    { id: 'ka_manao', label: 'Manaʻo', url: 'pillar.html?id=ka_manao' },
+    { id: 'ka_uhane', label: 'ʻUhane', url: 'pillar.html?id=ka_uhane' },
+    { id: 'hana', label: 'Hana', url: 'pillar.html?id=hana' }
+  ];
+
+  // Clear and populate
+  menu.innerHTML = '';
+
+  // System pillars, ordered
+  pillarOrder.forEach(po => {
+    const found = systemPillars.find(p => p.id === po.id);
+    if (found) {
+      menu.innerHTML += `<button onclick="window.location.href='${po.url}'">${po.label}</button>`;
+    }
+  });
+
+  // Static extras
+  menu.innerHTML += `<button onclick="window.location.href='contact-form.html'">Kanaka</button>`;
+  menu.innerHTML += `<button onclick="window.location.href='ike.html'">Ike</button>`;
+
+  // User-created pillars
+  userPillars.forEach(p => {
+    menu.innerHTML += `<button onclick="window.location.href='pillar.html?id=${encodeURIComponent(p.id)}'">${p.title || p.id}</button>`;
+  });
+
+  // Always include Settings last
+  menu.innerHTML += `<button onclick="window.location.href='settings.html'">Settings</button>`;
+}
+
+// Call when user is logged in (like your pillars)
+document.addEventListener('DOMContentLoaded', function() {
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) loadMoreMenu();
+  });
+});
+</script>
 
   <div id="loading-screen">
     <div class="spinner"></div>

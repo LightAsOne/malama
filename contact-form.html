@@ -29,6 +29,13 @@ input[type="date"] {
   border-radius: 4px;
   appearance: auto;
 }
+#contact-form-popup {
+  max-width: 600px;
+  max-height: 90vh;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
 </style>
 
 </head>
@@ -125,145 +132,7 @@ input[type="date"] {
   </div>
 </div>
 
-<!-- Contact Form Popup -->
-<div id="contact-form-popup" class="popup hidden">
-  <div class="popup-content">
-  <form id="contact-form">
-   <div class="form-header"> 
-	<h2>Add or Edit Contact</h2>
-	<button type="button"
-  class="close-button"
-  onclick="
-  document.getElementById('contact-form-popup').classList.add('hidden');
-  document.getElementById('contact-form').reset();
-  document.getElementById('category-fields-container').innerHTML = '';
-">
-  ×
-</button>
- </div>
 
-    <div class="form-row">
-  <div class="form-group">
-    <label for="firstName">Name</label>
-    <input type="text" id="firstName" name="firstName" required />
-  </div>
-  <div class="form-group">
-    <label for="lastName">Surname</label>
-    <input type="text" id="lastName" name="lastName" required />
-  </div>
-</div>
- <div class="form-row">
-  <div class="form-group">
-   <label>Birthday </label>
-   <input type="date" name="birthday">
-   </div>
-   <div class="form-group">
-    <label for="phone">Phone</label>
-    <input type="tel" id="phone" name="phone"  />
-  </div>
-   </div>
-   
-<div class="form-row">
-  <div class="form-group">
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" />
-  </div>
-  
-</div>
-
-
-  <div class="form-group">
-  <label for="address">Address</label>
-  <input id="address" name="address" type="text" placeholder="Start typing address..." autocomplete="off" />
-</div>
-
-<!-- These will be auto-filled -->
-<input type="hidden" id="city" name="city" />
-<input type="hidden" id="postcode" name="postcode" />
-<input type="hidden" id="state" name="state" />
-<input type="hidden" id="country" name="country" />
- 
-
-    <!-- Category Selection -->
-<div class="form-group">
-  <label>Category</label>
-  <div class="category-tags">
-    <label class="tag">
-      <input type="checkbox" name="category" value="ohana" />
-      <div class="category-label">
-        <span class="hawaiian">ʻOhana</span>
-        <span class="english">Family</span>
-      </div>
-    </label>
-    <label class="tag">
-      <input type="checkbox" name="category" value="hoaaloha" />
-      <div class="category-label">
-        <span class="hawaiian">Hoaaloha</span>
-        <span class="english">Friends</span>
-      </div>
-    </label>
-    <label class="tag">
-      <input type="checkbox" name="category" value="hana" />
-      <div class="category-label">
-        <span class="hawaiian">Hana</span>
-        <span class="english">Work</span>
-      </div>
-    </label>
-    <label class="tag">
-      <input type="checkbox" name="category" value="lawelawe" />
-      <div class="category-label">
-        <span class="hawaiian">Lawelawe</span>
-        <span class="english">Clients</span>
-      </div>
-    </label>
-    <label class="tag">
-      <input type="checkbox" name="category" value="kaiaulu" />
-      <div class="category-label">
-        <span class="hawaiian">Kaiaulu</span>
-        <span class="english">Community</span>
-      </div>
-    </label>
-    <label class="tag">
-      <input type="checkbox" name="category" value="hoola" />
-      <div class="category-label">
-        <span class="hawaiian">Hoʻōla</span>
-        <span class="english">Healers</span>
-      </div>
-    </label>
-    <label class="tag">
-      <input type="checkbox" name="category" value="kumu" />
-      <div class="category-label">
-        <span class="hawaiian">Kumu</span>
-        <span class="english">Teachers</span>
-      </div>
-    </label>
-    <label class="tag">
-      <input type="checkbox" name="category" value="eae" />
-      <div class="category-label">
-        <span class="hawaiian">ʻĒ Aʻe</span>
-        <span class="english">Other</span>
-      </div>
-    </label>
-  </div>
-</div>
-
-    <!-- Dynamic Category Fields -->
-    <div id="category-fields-container"></div>
-<div id="important-dates-section">
-  <div class="date-entry">
-    <div class="important-date-row">
-      <input type="text" name="dateLabel[]" placeholder="Label (e.g., Anniversary)">
-      <input type="date" name="dateValue[]">
-    </div>
-  </div>
-</div>
-<button type="button" onclick="addImportantDate()">+ Add Important Date</button>
-
-    <button type="button" onclick="saveContact()"id="save-contact-btn">Save Contact</button>
-  </form>
-</div>
-</div>
-<!-- END POPUP -->
 
 
  <div class="main-columns">
@@ -408,13 +277,145 @@ input[type="date"] {
   </nav>
 <!-- MORE POPUP MENU -->
 <div class="more-menu hidden" id="more-menu-settings">
-<button onclick="window.location.href='contact-form.html'">Kanaka</button>
-<button onclick="window.location.href='uhane.html'">Uhane</button>
-<button onclick="window.location.href='kekino.html'">Kino</button>
-<button onclick="window.location.href='manao.html'">Manao</button>
-<button onclick="window.location.href='Hana.html'">Hana</button>
-<button onclick="window.location.href='settings.html'">Settings</button>
+
 </div>
+<!-- Contact Form Popup -->
+<div id="contact-form-popup" class="popup hidden" style="display:flex; flex-direction:column; max-height:90vh;">
+  <!-- Header stays fixed -->
+  <div class="form-header" style="flex-shrink:0; display:flex; justify-content:space-between; align-items:center; padding:1em;">
+    <h2 style="margin:0;">Add or Edit Contact</h2>
+    <button type="button"
+      class="close-button"
+      onclick="document.getElementById('contact-form-popup').classList.add('hidden'); document.getElementById('contact-form').reset(); document.getElementById('category-fields-container').innerHTML = '';"
+      style="background:#875f34; color:white; border:none; border-radius:6px; font-size:1.2em; padding:0.3em 0.6em; cursor:pointer;">
+      ×
+    </button>
+  </div>
+ <div class="form-scroll" style="overflow-y:auto; padding:1em; flex-grow:1;">
+    <form id="contact-form">
+    <div class="form-row">
+  <div class="form-group">
+    <label for="firstName">Name</label>
+    <input type="text" id="firstName" name="firstName" required />
+  </div>
+  <div class="form-group">
+    <label for="lastName">Surname</label>
+    <input type="text" id="lastName" name="lastName" required />
+  </div>
+</div>
+ <div class="form-row">
+  <div class="form-group">
+   <label>Birthday </label>
+   <input type="date" name="birthday">
+   </div>
+   <div class="form-group">
+    <label for="phone">Phone</label>
+    <input type="tel" id="phone" name="phone"  />
+  </div>
+   </div>
+   
+<div class="form-row">
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" />
+  </div>
+  
+</div>
+
+
+  <div class="form-group">
+  <label for="address">Address</label>
+  <input id="address" name="address" type="text" placeholder="Start typing address..." autocomplete="off" />
+</div>
+
+<!-- These will be auto-filled -->
+<input type="hidden" id="city" name="city" />
+<input type="hidden" id="postcode" name="postcode" />
+<input type="hidden" id="state" name="state" />
+<input type="hidden" id="country" name="country" />
+ 
+
+    <!-- Category Selection -->
+<div class="form-group">
+  <label>Category</label>
+  <div class="category-tags">
+    <label class="tag">
+      <input type="checkbox" name="category" value="ohana" />
+      <div class="category-label">
+        <span class="hawaiian">ʻOhana</span>
+        <span class="english">Family</span>
+      </div>
+    </label>
+    <label class="tag">
+      <input type="checkbox" name="category" value="hoaaloha" />
+      <div class="category-label">
+        <span class="hawaiian">Hoaaloha</span>
+        <span class="english">Friends</span>
+      </div>
+    </label>
+    <label class="tag">
+      <input type="checkbox" name="category" value="hana" />
+      <div class="category-label">
+        <span class="hawaiian">Hana</span>
+        <span class="english">Work</span>
+      </div>
+    </label>
+    <label class="tag">
+      <input type="checkbox" name="category" value="lawelawe" />
+      <div class="category-label">
+        <span class="hawaiian">Lawelawe</span>
+        <span class="english">Clients</span>
+      </div>
+    </label>
+    <label class="tag">
+      <input type="checkbox" name="category" value="kaiaulu" />
+      <div class="category-label">
+        <span class="hawaiian">Kaiaulu</span>
+        <span class="english">Community</span>
+      </div>
+    </label>
+    <label class="tag">
+      <input type="checkbox" name="category" value="hoola" />
+      <div class="category-label">
+        <span class="hawaiian">Hoʻōla</span>
+        <span class="english">Healers</span>
+      </div>
+    </label>
+    <label class="tag">
+      <input type="checkbox" name="category" value="kumu" />
+      <div class="category-label">
+        <span class="hawaiian">Kumu</span>
+        <span class="english">Teachers</span>
+      </div>
+    </label>
+    <label class="tag">
+      <input type="checkbox" name="category" value="eae" />
+      <div class="category-label">
+        <span class="hawaiian">ʻĒ Aʻe</span>
+        <span class="english">Other</span>
+      </div>
+    </label>
+  </div>
+</div>
+
+    <!-- Dynamic Category Fields -->
+    <div id="category-fields-container"></div>
+<div id="important-dates-section">
+  <div class="date-entry">
+    <div class="important-date-row">
+      <input type="text" name="dateLabel[]" placeholder="Label (e.g., Anniversary)">
+      <input type="date" name="dateValue[]">
+    </div>
+  </div>
+</div>
+<button type="button" onclick="addImportantDate()">+ Add Important Date</button>
+
+    <button type="button" onclick="saveContact()"id="save-contact-btn">Save Contact</button>
+  </form>
+  </div>
+</div>
+</div>
+<!-- END POPUP -->
 <script>
     const moreBtn = document.getElementById('more-button-settings');
     const moreMenu = document.getElementById('more-menu-settings');
@@ -1175,7 +1176,71 @@ if (autoAdd) {
 
 </script>
 
+<script>
+async function loadMoreMenu() {
+  const menu = document.getElementById('more-menu-settings');
+  if (!menu) return;
+  menu.innerHTML = '<div style="padding: 0.5em 1em; color:#888;">Loading...</div>';
 
+  const db = firebase.firestore();
+  let systemPillars = [];
+  let userPillars = [];
+
+  // System pillars
+  const sysSnap = await db.collection('pillars').get();
+  sysSnap.forEach(doc => {
+    systemPillars.push({ id: doc.id, ...doc.data(), source: 'system' });
+  });
+
+  // User pillars
+  let userId;
+  try { userId = firebase.auth().currentUser.uid; } catch (e) { userId = null; }
+  if (userId) {
+    const userSnap = await db.collection('users').doc(userId).collection('pillars').get();
+    userSnap.forEach(doc => {
+      userPillars.push({ id: doc.id, ...doc.data(), source: 'user' });
+    });
+  }
+
+  // Your desired order for system pillars
+  const pillarOrder = [
+    { id: 'ke_kino', label: 'Kino', url: 'pillar.html?id=ke_kino' },
+    { id: 'ka_manao', label: 'Manaʻo', url: 'pillar.html?id=ka_manao' },
+    { id: 'ka_uhane', label: 'ʻUhane', url: 'pillar.html?id=ka_uhane' },
+    { id: 'hana', label: 'Hana', url: 'pillar.html?id=hana' }
+  ];
+
+  // Clear and populate
+  menu.innerHTML = '';
+
+  // System pillars, ordered
+  pillarOrder.forEach(po => {
+    const found = systemPillars.find(p => p.id === po.id);
+    if (found) {
+      menu.innerHTML += `<button onclick="window.location.href='${po.url}'">${po.label}</button>`;
+    }
+  });
+
+  // Static extras
+  menu.innerHTML += `<button onclick="window.location.href='contact-form.html'">Kanaka</button>`;
+  menu.innerHTML += `<button onclick="window.location.href='ike.html'">Ike</button>`;
+
+  // User-created pillars
+  userPillars.forEach(p => {
+    menu.innerHTML += `<button onclick="window.location.href='pillar.html?id=${encodeURIComponent(p.id)}'">${p.title || p.id}</button>`;
+  });
+
+  // Always include Settings last
+  menu.innerHTML += `<button onclick="window.location.href='settings.html'">Settings</button>`;
+}
+
+// Call when user is logged in (like your pillars)
+document.addEventListener('DOMContentLoaded', function() {
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) loadMoreMenu();
+  });
+});
+</script>
 
 
 </body>

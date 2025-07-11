@@ -204,12 +204,7 @@
   <!-- MORE POPUP MENU -->
  <!-- MORE POPUP MENU -->
 <div class="more-menu hidden" id="more-menu-settings">
-<button onclick="window.location.href='contact-form.html'">Kanaka</button>
-<button onclick="window.location.href='uhane.html'">Uhane</button>
-<button onclick="window.location.href='kekino.html'">Kino</button>
-<button onclick="window.location.href='manao.html'">Manao</button>
-<button onclick="window.location.href='hana.html'">Hana</button>
-<button onclick="window.location.href='settings.html'">Settings</button>
+
 </div>
 <script>
     const moreBtn = document.getElementById('more-button-settings');
@@ -372,6 +367,71 @@ document.querySelectorAll('.bottom-nav a').forEach(a => {
     if (a.href.endsWith('#month')) {
       e.preventDefault(); renderCalendarView('month');
     }
+  });
+});
+</script>
+<script>
+async function loadMoreMenu() {
+  const menu = document.getElementById('more-menu-settings');
+  if (!menu) return;
+  menu.innerHTML = '<div style="padding: 0.5em 1em; color:#888;">Loading...</div>';
+
+  const db = firebase.firestore();
+  let systemPillars = [];
+  let userPillars = [];
+
+  // System pillars
+  const sysSnap = await db.collection('pillars').get();
+  sysSnap.forEach(doc => {
+    systemPillars.push({ id: doc.id, ...doc.data(), source: 'system' });
+  });
+
+  // User pillars
+  let userId;
+  try { userId = firebase.auth().currentUser.uid; } catch (e) { userId = null; }
+  if (userId) {
+    const userSnap = await db.collection('users').doc(userId).collection('pillars').get();
+    userSnap.forEach(doc => {
+      userPillars.push({ id: doc.id, ...doc.data(), source: 'user' });
+    });
+  }
+
+  // Your desired order for system pillars
+  const pillarOrder = [
+    { id: 'ke_kino', label: 'Kino', url: 'pillar.html?id=ke_kino' },
+    { id: 'ka_manao', label: 'Manaʻo', url: 'pillar.html?id=ka_manao' },
+    { id: 'ka_uhane', label: 'ʻUhane', url: 'pillar.html?id=ka_uhane' },
+    { id: 'hana', label: 'Hana', url: 'pillar.html?id=hana' }
+  ];
+
+  // Clear and populate
+  menu.innerHTML = '';
+
+  // System pillars, ordered
+  pillarOrder.forEach(po => {
+    const found = systemPillars.find(p => p.id === po.id);
+    if (found) {
+      menu.innerHTML += `<button onclick="window.location.href='${po.url}'">${po.label}</button>`;
+    }
+  });
+
+  // Static extras
+  menu.innerHTML += `<button onclick="window.location.href='contact-form.html'">Kanaka</button>`;
+  menu.innerHTML += `<button onclick="window.location.href='ike.html'">Ike</button>`;
+
+  // User-created pillars
+  userPillars.forEach(p => {
+    menu.innerHTML += `<button onclick="window.location.href='pillar.html?id=${encodeURIComponent(p.id)}'">${p.title || p.id}</button>`;
+  });
+
+  // Always include Settings last
+  menu.innerHTML += `<button onclick="window.location.href='settings.html'">Settings</button>`;
+}
+
+// Call when user is logged in (like your pillars)
+document.addEventListener('DOMContentLoaded', function() {
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) loadMoreMenu();
   });
 });
 </script>
